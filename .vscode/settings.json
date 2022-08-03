@@ -1,0 +1,9 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.fontFamily": "'Ubuntu Mono', monospace, 'monospace', monospace",
+    "workbench.colorTheme": "GitHub Dark",
+    "editor.fontSize": 15,
+    "terminal.integrated.lineHeight": 1.4,
+    "terminal.integrated.fontSize": 15
+}

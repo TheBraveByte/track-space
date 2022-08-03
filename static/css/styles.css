@@ -1,0 +1,417 @@
+/* #33465f
+#c6c9ce
+#1D2021
+#566277 */
+
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-inline: clip;
+}
+/* #c6c9ce */
+.container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+header {
+    padding-bottom: 1rem;
+    justify-content: center;
+    /* background: hsl(85, 80%, 25%); */
+    background-color: #33465f;
+}
+
+.title {
+    padding-left: 150px;
+    font-size: 2.0rem;
+    font-weight: normal;
+    color: #ffffff;
+}
+
+a h1 span {
+    color: hsl(0, 5%, 7%);
+}
+
+header .nav {
+    justify-content: center;
+
+    padding-right: 150px;
+}
+
+header .nav-link {
+    color: #ffffff;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.nav-link:hover {
+    color: hsl(0, 5%, 7%);
+}
+
+.One {
+    background: #ffffff;
+    /* background-color: #c6c9ce; */
+    padding-bottom: 3rem;
+    padding-bottom: 3rem;
+}
+
+.line {
+    border-radius: 1rem;
+    /* background-color: hsl(85, 88%, 31%); */
+    background-color: #c6c9ce;
+}
+
+.line:not([size]) {
+    height: 3px;
+}
+
+.first-grid {
+    text-align: left;
+    padding-left: 9.4rem;
+    padding-right: 7.5rem;
+}
+
+.space {
+    /* color: hsl(85, 88%, 31%); */
+    /* color: #ffffff; */
+    color: #1d2021;
+
+}
+
+.intro {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    color: #33465f;
+    font-size: 1.5rem;
+}
+
+.p-intro {
+    color: #33465f;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 2.5rem;
+    font-weight: normal;
+    text-transform: capitalize;
+    /* text-align: center; */
+}
+
+.intro p {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: #1d2021;
+    font-weight: lighter;
+}
+
+.bt {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 20px;
+    padding-left: 1rem;
+}
+
+.bt>* {
+    flex: 0 0 40%;
+}
+
+.log-bt {
+    margin-right: 4rem;
+    background-color: #33465f;
+    border-color: #33465f;
+    color: #ffffff;
+}
+
+.second-grid {
+    justify-content: center;
+    color: #1d2021;
+    text-align: center;
+    padding-right: 5rem;
+}
+
+.second-grid p {
+    font-size: 1.2rem;
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+    margin-top: 4.0rem;
+    margin-bottom: 0;
+   
+}
+
+.dev {
+    justify-content: center;
+    padding-right: 30px;
+}
+
+.row {
+    justify-content: center;
+}
+
+.dv-icon {
+    height: 100%;
+    width: 100%;
+}
+
+.main-p {
+    color: #33465f;
+}
+
+.users {
+    font-style: normal;
+
+}
+
+.second {
+
+    color: #1d2021;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    color: hsl(0, 5%, 7%);
+    
+    background-color: #566277;
+}
+
+.main-offer {
+    color:#1d2021 ;
+    text-align: center;
+    font-size: 2rem;
+  
+    font-weight: bold;
+}
+
+.offer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.offer div {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.offer div h5 {
+    margin-top: 20px;
+    text-align: center;
+ 
+    color: #ffffff;
+    
+}
+
+.offer div p {
+    padding-top: 20px;
+    text-align: left;
+    color: #1d2021;
+    font-size: 15px;
+}
+
+.fourth {
+    padding-bottom: 2rem;
+ 
+    background-color: #ffffff;
+}
+
+.com {
+    padding-top: 3rem;
+ 
+}
+
+.com p {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #33465f;
+   
+}
+
+.com-head {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.com-icon {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.com-icon div p {
+    margin-top: 20px;
+    text-align: center;
+    font-style: oblique;
+    font-weight: 500;
+    color: #33465f;
+ 
+}
+
+.logo {
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.main-footer {
+    padding: 3rem 0;
+    padding-left: 55px;
+    padding-right: 55px;
+    background-color: #33465f;
+}
+
+.ft-space {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.footer div a {
+
+    color: #fff;
+ 
+}
+
+.footer div a span {
+    font-style: italic;
+}
+
+.footer div p {
+    font-size: medium;
+    padding-right: 2rem;
+    color: #1d2021;
+}
+
+.ft-li {
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-size: small;
+}
+
+.btn.btn-tertiary {
+    background-color: #566277;
+    color: #ffffff;
+    border-radius: 30px;
+    border: none;
+    padding: 10px 20px;
+}
+
+.social li {
+    display: inline-block;
+}
+
+.social li a:hover {
+    padding: 7px;
+    color: hsl(0, 5%, 7%);
+}
+
+.main-footer .copyright {
+    border-top: 1px solid #ffffff;
+
+    color: hsl(0, 5%, 7%);
+}
+
+a {
+    text-decoration: none;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+@media screen and (max-width:800px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+    header .nav {
+        justify-content: center;
+        padding-top: 10px;
+        padding-right: 15px;
+    }
+    ul.nav.nav-pills {
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    ul.nav.nav-pills>* {
+        flex: 0 1 20%;
+    }
+    .title {
+        text-align: center;
+        padding-left: 0;
+    }
+    ul {
+        padding-right: 0;
+    }
+    .first-grid {
+        text-align: left;
+        padding-left: 30px;
+        padding-right: 0px;
+    }
+    .intro {
+        padding-left: 0;
+        padding-right: 0.5rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        color: #ffffff;
+        font-size: 1.5rem;
+    }
+    .second-grid {
+        justify-content: center;
+        color: #ffffff;
+        text-align: center;
+        padding-right: 0;
+    }
+    .second-grid p {
+        font-size: 1.5rem;
+        padding-right: 2rem;
+        padding-left: 2rem;
+        margin-top: 2.0rem;
+        margin-bottom: 0;
+    }
+    .main-dv-icon {
+        margin-top: 2rem;
+        margin-left: 7.5rem;
+        margin-right: 6.25rem;
+    }
+    dv-icon {
+        justify-self: unset;
+        width: 100%;
+        height: 100%;
+    }
+    .main-p {
+      
+        margin-right: 0;
+        padding: 0 0;
+    }
+    .main-p p {
+        padding: 0 0;
+        margin-top: 1rem;
+    }
+    .bt {
+        display: flex;
+       
+    }
+    .bt>* {
+        flex: 1 0 40%;
+    }
+    .offer {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        flex-wrap: wrap;
+    }
+    .offer>* {
+        flex: 1 1 20%;
+    }
+    .com p {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    .com-icon>* {
+        flex: 1 1 20%;
+    }
+}
