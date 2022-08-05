@@ -51,13 +51,13 @@ type User struct {
 }
 
 type Project struct {
-	ID          primitive.ObjectID `bson:"_id"`
-	ProjectName string             `json:"project_name"`
-	ToolsUse    []string           `json:"tools_use"`
-	StartTime   time.Time          `json:"start_time"`
-	EndTime     time.Time          `json:"end_time"`
-	Duration    time.Duration      `json:"duration"`
-	ProjectTask string             `json:"project_tasks"`
+	ID             primitive.ObjectID `bson:"_id"`
+	ProjectName    string             `json:"project_name"`
+	ProjectContent string             `json:"project_content"`
+	ToolsUseAs     []string           `json:"tools_use_as"`
+	StartTime      time.Time          `json:"start_time"`
+	EndTime        time.Time          `json:"end_time"`
+	Duration       time.Duration      `json:"duration"`
 }
 
 type Email struct {

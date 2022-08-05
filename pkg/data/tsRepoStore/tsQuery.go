@@ -64,7 +64,6 @@ func (tm TsMongoDBRepo) UpdateUserInfo(info map[string]interface{}, email interf
 	}}}
 	var updateDocument bson.M
 	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&updateDocument)
-
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println("cannot find and update the database", err)
@@ -73,7 +72,6 @@ func (tm TsMongoDBRepo) UpdateUserInfo(info map[string]interface{}, email interf
 		log.Fatal(err)
 	}
 	return nil
-
 }
 
 func (tm TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
@@ -95,7 +93,7 @@ func (tm TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 	return true, password
 }
 
-func (tm TsMongoDBRepo) SendUserDetails(email interface{})(primitive.M, error){
+func (tm TsMongoDBRepo) SendUserDetails(email interface{}) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -109,9 +107,35 @@ func (tm TsMongoDBRepo) SendUserDetails(email interface{})(primitive.M, error){
 		log.Fatal("cannot find document")
 		return nil, err
 	}
-	
+
 	return result, nil
 }
 
-
-
+func (tm TsMongoDBRepo) StoreWorkSpaceData(email interface{}, projectData map[string]interface{}) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+	var EndTime time.Time
+	projectData["end_time"] =  EndTime.Local().UTC()
+	var result bson.M
+	filter := bson.D{{Key: "email", Value: email}}
+	update := bson.D{
+		{Key: "project_details", Value: bson.D{
+			{Key: "$set", Value: bson.D{
+				{Key: "project_name", Value: projectData["project_name"]},
+				{Key: "tools_use_as", Value: projectData["tools_use_as"]},
+				{Key: "project_content", Value: projectData["project_content"]},
+				{Key: "start_time", Value: projectData["start_time"]},
+				{Key: "end_time", Value: projectData["end_time"]},
+			}},
+		}},
+	}
+	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return err
+		}
+		log.Fatal("cannot find document")
+		return err
+	}
+	return nil
+}

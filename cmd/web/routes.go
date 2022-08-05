@@ -27,6 +27,8 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	authRouter.Use(IsAuthorized())
 	{
 		authRouter.GET("/dashboard", h.GetDashBoard())
+		authRouter.GET("/workspace", h.WorkSpace())
+		authRouter.POST("/workspace", h.PostWorkSpace())
 	}
 
 }

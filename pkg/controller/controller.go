@@ -3,8 +3,6 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
-
-	//"github.com/gin-contrib/sessions"
 	"github.com/yusuf/track-space/pkg/data"
 	"github.com/yusuf/track-space/pkg/data/tsRepoStore"
 	"github.com/yusuf/track-space/pkg/key"
@@ -118,7 +116,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 
 		info["userID"] = primitive.NewObjectID()
 		info["firstname"] = c.Request.Form.Get("first-name")
-		info["lastName"] = c.Request.Form.Get("last-name")
+		info["lastname"] = c.Request.Form.Get("last-name")
 		info["YrsOfExp"] = c.Request.Form.Get("yrs-of-exp")
 		info["country"] = c.Request.Form.Get("nation")
 		info["phone"] = c.Request.Form.Get("phone")
@@ -215,6 +213,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
+
+//GetDashBoard :: a lot of logic will be done here ..... alot
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -236,6 +236,54 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 		c.HTML(http.StatusOK, "dash.html", gin.H{
 			"FirstName": user["first_name"],
 			"LastName":  user["last_name"],
+		})
+	}
+}
+
+var StartTime time.Time
+func (ts *TrackSpace) WorkSpace() gin.HandlerFunc{
+	return func(c *gin.Context){
+		
+		c.HTML(http.StatusOK,"work.html",gin.H{
+			"StartTime": StartTime.Local().UTC(),
+		})
+	}
+}
+
+
+func(ts *TrackSpace) PostWorkSpace() gin.HandlerFunc{
+	return func(c *gin.Context){
+		var project model.Project
+		// var EndTime time.Time
+		tsData := sessions.Default(c)
+		userEmail  := tsData.Get("email")
+
+		if validateErr := Validate.Struct(&project); validateErr != nil{
+			log.Println("cannot validate project struct")
+			_ =c.AbortWithError(http.StatusBadRequest,gin.Error{Err: validateErr})
+			return
+		}
+
+		//Getting the project data
+		if err:= c.Request.ParseForm() ; err != nil {
+			log.Println("cannot parse the workspace form")
+			return
+		}
+
+		projectData := make(map[string]interface{})
+		projectData["project_name"] = c.PostForm("project-name")
+		projectData["tools_use_as"] = c.PostForm("project-tool-use")
+		projectData["project_content"] = c.PostForm("editor")
+		projectData["start_time"] =  StartTime.Local().UTC()
+		err := ts.tsDB.StoreWorkSpaceData(userEmail, projectData)
+		if err != nil{
+			log.Println("Error while storing using user project data")
+			return
+		}
+		tsData.AddFlash("successfully submitted project")
+
+		c.HTML(http.StatusOK,"work.html",gin.H{
+			"Save":tsData.Flashes("successfully submitted project"),
 		})
 	}
 }

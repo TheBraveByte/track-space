@@ -7,4 +7,5 @@ type TrackSpaceDBRepo interface {
 	UpdateUserInfo(info map[string]interface{}, email interface{}, t1, t2 string) error
 	VerifyLogin(email string) (bool, string)
 	SendUserDetails(email interface{})(primitive.M, error)
+	StoreWorkSpaceData (email interface{}, projectData map[string]interface{}) error
 }
