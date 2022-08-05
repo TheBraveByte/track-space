@@ -1,0 +1,133 @@
+/* 
+#33465f (51,70,95,1)
+#c6c9ce (198,201,206,1)
+#1D2021 (29,32,33,1)
+#566277 (86,98,119,1)
+*/
+
+body{
+    /* height: 467px; */
+     background-image: linear-gradient(to right,rgba(198,201,206,1),rgba(86,98,119,1)); */
+} 
+
+h1{
+    font-family: ubuntu;
+    /* color :#1D2021 */
+    color: white;
+    /* font-size: 2rem; */
+}
+.track{
+    margin-top: 50px;
+    
+}
+
+hr:not([size]) {
+  height: 4px;
+}
+hr{
+    color: white;
+    margin-bottom: 50px
+}
+.work-list{
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+}
+ul li{
+    font-size:larger
+}
+
+
+.project{
+    margin-bottom: 10px;
+}
+.project p{
+    border: 2px solid #5a6063; 
+
+}
+.workspace-container {
+    margin-left: 10rem;
+    margin-right: 10rem;
+    /* background-image: linear-gradient(to right,rgba(198,201,206,1),rgba(86,98,119,1)); */ 
+
+}
+
+
+.submit-btn{
+    margin-top: 4rem;
+    margin-bottom: 5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.workspace-foot{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    
+}
+
+.editor-container{
+    border: 6px solid #1D2021; 
+}
+.ck-editor__editable_inline {
+    height: 400px;
+    background-color: white;
+    border: 10px solid  white; 
+    overflow: auto;
+
+}
+
+
+.doc-editor {
+    border: 1px solid var(--ck-color-base-border);
+    border-radius: var(--ck-border-radius);
+
+    /* Set vertical boundaries for the document editor. */
+    max-height: 700px;
+
+    /* This element is a flex container for easier rendering. */
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#document-editor__toolbar{
+    padding-left: 0;
+    padding-right:0;
+    z-index: 1;
+
+    /* Create the illusion of the toolbar floating over the editable. */
+    box-shadow: 0 0 5px hsla( 0,0%,0%,.2 );
+
+    /* Use the CKEditor CSS variables to keep the UI consistent. */
+    border-bottom: 1px solid var(--ck-color-toolbar-border);
+}
+
+.row > *{
+    padding-left: 0;
+    padding-right:0; 
+}
+
+
+editor-container {
+    background-color: white;
+    border: 10px solid  #33465f; 
+    overflow: auto;
+}
+/* 
+.ck-restricted-editing_mode_standard .ck-blurred .editor .ck .ck-content .ck-editor__editable .ck-rounded-corners .ck-editor__editable_inline{
+    border: 6px solid #33465f;
+} */
+.submit-btn{
+    margin-top: 4rem;
+    margin-bottom: 5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.workspace-foot{
+    /* display: flex;
+    justify-content: center; */
+    text-align: center;
+    
+}
