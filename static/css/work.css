@@ -39,6 +39,8 @@ ul li{
 
 
 .project{
+    display: flex;
+    gap: 15px;
     margin-bottom: 10px;
 }
 .project p{
@@ -53,12 +55,28 @@ ul li{
 }
 
 
-.submit-btn{
+.reset-submit-btn{
     margin-top: 4rem;
     margin-bottom: 5rem;
     display: flex;
     justify-content: center;
+    gap: 4rem;
 }
+
+/* .top {
+    display: flex;
+    justify-content: left;
+    gap: 1rem;
+
+}
+
+
+.top>* {
+    flex: 0 0 25%;
+
+} */
+
+
 
 .workspace-foot{
     display: flex;
