@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Track-space Login page</title>
+    <link href="/static/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/login.css" rel="stylesheet" />
+  </head>
 
-
-<head>
-    <meta charset="UTF-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Track-space Login page </title>
-    <link href="/static/bootstrap.css" rel="stylesheet">
-    <link href="/static/css/login.css" rel="stylesheet">
-</head>
-
-<body>
-<section id="login-form">
-    <form action="/sign-up" method="post">
+  <body>
+    <section id="login-form">
+      <form action="/sign-up" method="post" novalidate class="needs-validation">
         <h1>Track-space</h1>
         <div class="grid-container">
-            <div class="signUp-header mb-3">
-                <p>Sign up for your account</p>
-            </div>
-            <div class="mb-3">
-                <input aria-label="Email" class="form-control" name="email" placeholder="Enter Email" type="text">
-            </div>
-            <div class="mb-3">
-                <input aria-label="Password" class="form-control" name="password" placeholder="Enter Password"
-                       type="password">
-            </div>
+          <div class="signUp-header mb-3">
+            <p>Sign up for your account</p>
+          </div>
+          <div class="mb-3">
+            <input
+              aria-label="Email"
+              class="form-control"
+              name="email"
+              placeholder="Enter Email"
+              type="text"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              aria-label="Password"
+              class="form-control"
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+            />
+          </div>
 
-            <!-- <div class="terms mb-3">
+          <!-- <div class="terms mb-3">
                 <p>By signing up, you confirm that you have read and accept our <span>Terms of
                             service</span> and <span> Conditions </span></p>
             </div> -->
-            <div class="mt-3 signup-bt">
-                <button class="sign-up w-30 btn btn-md" type="submit">Sign-up</button>
-                <button class="sign-up w-30 btn btn-md" type="submit">Login</button>
-            </div>
-            <!-- <div class="alt mb-3">
+          <div class="mt-3 signup-bt">
+            <button class="sign-up w-30 btn btn-md" type="submit">
+              Sign-up
+            </button>
+            <button class="sign-up w-30 btn btn-md" type="submit">Login</button>
+          </div>
+          <!-- <div class="alt mb-3">
                 <p> Or Register </p>
             </div> -->
-            <!-- <div class="alt-login mb-3">
+          <!-- <div class="alt-login mb-3">
                 <button class=" bt w-75 btn btn-md" type="submit">
                     <a class="bt-link" href="#"><img alt="" src="/static/image/google-48x48-675827.png" srcset="">
                         With Google
@@ -57,22 +68,22 @@
                     </a>
                 </button>
             </div> -->
-            <br>
-            <hr>
-            <div class="mb-3">
-                <a class="ft" href="#">
-                    <p>Have you sign up ? if yes<span> Log in</span></p>
-                </a>
-            </div>
-
+          <br />
+          <hr />
+          <div class="mb-3">
+            <a class="ft" href="#">
+              <p>Have you sign up ? if yes<span> Log in</span></p>
+            </a>
+          </div>
         </div>
+      </form>
+    </section>
 
-
-    </form>
-</section>
-
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/jquery-3.5.1.min.js"></script>
-</body>
-
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+    <script src="/static/js/form-validate.js"></script>
+    <script>
+      ValidateForm();
+    </script>
+  </body>
 </html>

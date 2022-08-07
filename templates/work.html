@@ -7,13 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/static/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/work.css" />
-    <title>Document</title>
+    <title>WorkSpace</title>
 </head>
 
 <body>
     <main>
         <div class="workspace-container">
-            <form action="/auth/workspace" method="post">
+            <form action="/auth/workspace" method="post" novalidate class="needs-validation">
                 <h1 class="track">Track space Editor </h1>
                 <hr>
                 <div>
@@ -29,9 +29,9 @@
                 </div>
                 <hr>
                 <br>
-
-
+                <p class="notice">Type in the project name & the type of file use in the box below</p>
                 <div class="project">
+
                     <p><input class="form-control" type="text" name="project-name" id="project-name"
                             placeholder="Enter the name of the project"></p>
                     <p><input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
@@ -64,8 +64,14 @@
         </div>
     </main>
 
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
     <script src="/main-ckeditor5/build/ckeditor.js"></script>
+    <script src="/static/js/form-validate.js"></script>
     <script>
+        
+        ValidateForm()
+
         const watchdog = new CKSource.EditorWatchdog();
         window.watchdog = watchdog;
 
