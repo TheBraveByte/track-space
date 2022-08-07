@@ -2,13 +2,15 @@ package controller
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/yusuf/track-space/pkg/data"
 	"github.com/yusuf/track-space/pkg/data/tsRepoStore"
 	"github.com/yusuf/track-space/pkg/key"
-	"log"
-	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -72,7 +74,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		}
 
 		_, err := ts.tsDB.InsertInfo(email, password)
-
 		if err != nil {
 			log.Println(err)
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -84,7 +85,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		}
 
 		c.Redirect(http.StatusSeeOther, "/user-info")
-
 	}
 }
 
@@ -111,26 +111,23 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 			return
 		}
 
-		info := make(map[string]interface{})
+		// info := make(map[string]interface{})
 		email := tsData.Get("email")
+		user.ID = primitive.NewObjectID()
+		user.FirstName = c.Request.Form.Get("first-name")
+		user.LastName = c.Request.Form.Get("last-name")
+		user.Address = c.Request.Form.Get("address")
+		user.YrsOfExp = c.Request.Form.Get("yrs-of-exp")
+		user.Country = c.Request.Form.Get("nation")
+		user.PhoneNumber = c.Request.Form.Get("phone")
+		user.Stack = append(user.Stack, c.Request.Form.Get("stack-name"))
 
-		info["userID"] = primitive.NewObjectID()
-		info["firstname"] = c.Request.Form.Get("first-name")
-		info["lastname"] = c.Request.Form.Get("last-name")
-		info["YrsOfExp"] = c.Request.Form.Get("yrs-of-exp")
-		info["country"] = c.Request.Form.Get("nation")
-		info["phone"] = c.Request.Form.Get("phone")
+		user.CreatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		user.UpdatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
-		info["created_at"], _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		info["updated_at"], _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		t1, t2 := "", ""
 
-		info["stack"] = append(user.Stack, c.Request.Form.Get("stack-name"))
-
-		info["address"] = c.Request.Form.Get("address")
-
-		var t1, t2 = "", ""
-
-		err = ts.tsDB.UpdateUserInfo(info, email, t1, t2)
+		err = ts.tsDB.UpdateUserInfo(user, email, t1, t2)
 		if err != nil {
 			log.Println("Cannot update user info")
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -138,7 +135,6 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		}
 
 		c.Redirect(http.StatusSeeOther, "/login")
-
 	}
 }
 
@@ -151,6 +147,7 @@ func (ts *TrackSpace) GetLoginPage() gin.HandlerFunc {
 func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
+		var user model.User
 
 		if err := c.Request.ParseForm(); err != nil {
 			log.Println("error while parsing form")
@@ -162,32 +159,35 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 		IPAddress := c.Request.RemoteAddr
 
-		//Posted form value
+		// Posted form value
 		postEmail := c.PostForm("email")
 		postPassword := c.PostForm("password")
 
-		//Previous store details in the database
+		// Previous store details in the database
 		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail)
 
 		if ok {
-			ok, msg := key.VerifyPassword(postPassword, hashedPassword)
+			_, msg := key.VerifyPassword(postPassword, hashedPassword)
 			log.Println(msg)
-			if postPassword == password && postEmail == email && ok == true {
+			if postPassword == password && postEmail == email {
 				token, newToken, err := auth.GenerateJWTToken(email, password, IPAddress)
-
 				if err != nil {
 					log.Println("cannot generate json web token")
-					_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+					_ = c.AbortWithError(http.StatusBadRequest, gin.Error{
+						Err:  err,
+						Type: 0,
+						Meta: nil,
+					})
 					return
 				}
-				info := make(map[string]interface{})
+				// info := make(map[string]interface{})
 
 				authData := make(map[string][]string)
 				authData["auth"] = []string{token, newToken}
 				t1 := authData["auth"][0]
 				t2 := authData["auth"][1]
 				fmt.Println(t1, t2)
-				err = ts.tsDB.UpdateUserInfo(info, email, t1, t2)
+				err = ts.tsDB.UpdateUserInfo(user, email, t1, t2)
 				if err != nil {
 					log.Println("cannot update user info")
 					return
@@ -207,17 +207,14 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			log.Println("error from the session storage")
 		}
 
-		//c.JSON(http.StatusOK, "Successfully use token")
+		// c.JSON(http.StatusOK, "Successfully use token")
 		c.HTML(http.StatusOK, "/", gin.H{})
-
 	}
 }
 
-
-//GetDashBoard :: a lot of logic will be done here ..... alot
+// GetDashBoard :: a lot of logic will be done here ..... alot
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		tsData := sessions.Default(c)
 		email := tsData.Get("email")
 
@@ -228,7 +225,7 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			return
 		}
 
-		//this controller with still be uppdated as i progress
+		// this controller with still be uppdated as i progress
 
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
@@ -241,49 +238,97 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 }
 
 var StartTime time.Time
-func (ts *TrackSpace) WorkSpace() gin.HandlerFunc{
-	return func(c *gin.Context){
-		
-		c.HTML(http.StatusOK,"work.html",gin.H{
+
+func (ts *TrackSpace) WorkSpace() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.HTML(http.StatusOK, "work.html", gin.H{
 			"StartTime": StartTime.Local().UTC(),
 		})
 	}
 }
 
-
-func(ts *TrackSpace) PostWorkSpace() gin.HandlerFunc{
-	return func(c *gin.Context){
+func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		var project model.Project
 		// var EndTime time.Time
 		tsData := sessions.Default(c)
-		userEmail  := tsData.Get("email")
+		userEmail := tsData.Get("email")
 
-		if validateErr := Validate.Struct(&project); validateErr != nil{
+		if validateErr := Validate.Struct(&project); validateErr != nil {
 			log.Println("cannot validate project struct")
-			_ =c.AbortWithError(http.StatusBadRequest,gin.Error{Err: validateErr})
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: validateErr})
 			return
 		}
 
-		//Getting the project data
-		if err:= c.Request.ParseForm() ; err != nil {
+		// Getting the project data
+		if err := c.Request.ParseForm(); err != nil {
 			log.Println("cannot parse the workspace form")
 			return
 		}
+		project.ProjectName = strings.ToTitle(c.PostForm("project-name"))
+		project.ToolsUseAs = strings.ToLower(c.PostForm("project-tool-use"))
+		project.ProjectContent = c.PostForm("editor")
+		project.StartTime = StartTime.Local().UTC()
 
-		projectData := make(map[string]interface{})
-		projectData["project_name"] = c.PostForm("project-name")
-		projectData["tools_use_as"] = c.PostForm("project-tool-use")
-		projectData["project_content"] = c.PostForm("editor")
-		projectData["start_time"] =  StartTime.Local().UTC()
-		err := ts.tsDB.StoreWorkSpaceData(userEmail, projectData)
-		if err != nil{
+		// projectData := make(map[string]interface{})
+		// projectData["project_name"] = c.PostForm("project-name")
+		// projectData["tools_use_as"] = c.PostForm("project-tool-use")
+		// projectData["project_content"] = c.PostForm("editor")
+		// projectData["start_time"] =  StartTime.Local().UTC()
+		err := ts.tsDB.StoreWorkSpaceData(userEmail, project)
+		if err != nil {
 			log.Println("Error while storing using user project data")
 			return
 		}
 		tsData.AddFlash("successfully submitted project")
 
-		c.HTML(http.StatusOK,"work.html",gin.H{
-			"Save":tsData.Flashes("successfully submitted project"),
+		c.HTML(http.StatusOK, "work.html", gin.H{
+			"Save": tsData.Flashes("successfully submitted project"),
 		})
 	}
 }
+
+func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tsData := sessions.Default(c)
+		var projectData model.User
+		if err := c.ShouldBind(&projectData); err != nil {
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		if ValidateErr := Validate.Struct(&projectData); ValidateErr != nil {
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		projectData.Email = fmt.Sprintf("%s", tsData.Get("email"))
+
+		count, err := ts.tsDB.OrganizeWorkSpaceData(projectData, projectData.Email)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		code := count["code"]
+		text := count["text"]
+
+		c.HTML(http.StatusOK, "dash.html", gin.H{
+			"CodeCount": code,
+			"TextCount": text,
+		})
+	}
+}
+
+func (ts *TrackSpace) DailyTaskTodo() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.HTML(http.StatusOK,"daily-task.html",gin.H{})
+	}
+}
+
+
+func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc  {
+	return func (c *gin.Context)  {
+		
+		
+	}
+}
+
+
