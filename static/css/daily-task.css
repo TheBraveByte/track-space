@@ -1,0 +1,72 @@
+body {
+    background-image: linear-gradient(to top right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+}
+
+.set-task-container {
+    margin-left: 10rem;
+    margin-right: 10rem;
+
+}
+
+h1 {
+    font-family: ubuntu;
+    color: white;
+    margin-top: 3.5rem;
+}
+
+hr:not([size]) {
+    height: 4px;
+}
+
+hr {
+    color: white;
+    margin-bottom: 50px
+}
+
+.todo{
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-align: left;
+}
+
+.form-control{
+    border: 3px solid #2b3b41;
+}
+
+
+.row {
+    gap: 1rem;
+    column-gap: 3rem;
+}
+
+.col {
+    /* gap: 1rem;? */
+    column-gap: 3rem;
+}
+
+.row>* {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.set-time {
+    margin-top: 1.5rem;
+}
+
+.reset-submit-btn {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.workspace-foot {
+    margin-top: 6rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.workspace-foot p{
+    text-align: center;
+    font-weight: light;
+}
