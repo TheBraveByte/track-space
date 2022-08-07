@@ -44,6 +44,7 @@ type User struct {
 	UserType       []string           `son:"user_type"`
 	Stack          []string           `son:"stack"`
 	ProjectDetails []Project          `json:"project_details" bson:"project_details"`
+	Todo           []DailyTask        `json:"todo" bson:"todo"`
 	CreatedAt      time.Time          `json:"created_at"`
 	UpdatedAt      time.Time          `json:"updated_at"`
 	Token          string             `json:"token"`
@@ -54,7 +55,7 @@ type Project struct {
 	ID             primitive.ObjectID `bson:"_id"`
 	ProjectName    string             `json:"project_name"`
 	ProjectContent string             `json:"project_content"`
-	ToolsUseAs     []string           `json:"tools_use_as"`
+	ToolsUseAs     string             `json:"tools_use_as"`
 	StartTime      time.Time          `json:"start_time"`
 	EndTime        time.Time          `json:"end_time"`
 	Duration       time.Duration      `json:"duration"`
@@ -66,4 +67,12 @@ type Email struct {
 	Receiver     string             `json:"receiver" validate:"required"`
 	Sender       string             `json:"sender" validate:"required"`
 	MailTemplate string             `json:"mail_template"`
+}
+
+type DailyTask struct {
+	ID           primitive.ObjectID `json:"_id" bson:"_id"`
+	ToDoTask     string             `json:"to_do_task"`
+	DateSchedule string             `json:"date_schedule"`
+	StartTime    string             `json:"start_time"`
+	EndTime      string             `json:"end_time"`
 }
