@@ -6,12 +6,13 @@ import (
 	"log"
 	"time"
 
+	"github.com/yusuf/track-space/pkg/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (tm TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
+func (tm *TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 
 	defer cancelCtx()
@@ -41,7 +42,7 @@ func (tm TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
 	return 0, nil
 }
 
-func (tm TsMongoDBRepo) UpdateUserInfo(info map[string]interface{}, email interface{}, t1, t2 string) error {
+func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, email interface{}, t1, t2 string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 
 	defer cancelCtx()
@@ -49,16 +50,16 @@ func (tm TsMongoDBRepo) UpdateUserInfo(info map[string]interface{}, email interf
 	filter := bson.D{{Key: "email", Value: email}}
 
 	update := bson.D{{Key: "$set", Value: bson.D{
-		{Key: "first_name", Value: info["firstname"]},
-		{Key: "last_name", Value: info["lastname"]},
-		{Key: "address", Value: info["address"]},
-		{Key: "yrs_of_exp", Value: info["YrsOfExp"]},
-		{Key: "country", Value: info["country"]},
-		{Key: "stack", Value: info["stack"]},
-		{Key: "phone_number", Value: info["phone"]},
-		{Key: "ip_address", Value: info["IPAddress"]},
-		{Key: "created_at", Value: info["created_at"]},
-		{Key: "updated_at", Value: info["updated_at"]},
+		{Key: "first_name", Value: user.FirstName },
+		{Key: "last_name", Value:user.LastName },
+		{Key: "address", Value: user.Address},
+		{Key: "yrs_of_exp", Value:user.YrsOfExp},
+		{Key: "country", Value: user.Country},
+		{Key: "stack", Value: user.Stack},
+		{Key: "phone_number", Value: user.PhoneNumber},
+		{Key: "ip_address", Value: user.IPAddress},
+		{Key: "created_at", Value: user.CreatedAt},
+		{Key: "updated_at", Value: user.UpdatedAt},
 		{Key: "token", Value: t1},
 		{Key: "renew_token", Value: t2},
 	}}}
@@ -74,7 +75,7 @@ func (tm TsMongoDBRepo) UpdateUserInfo(info map[string]interface{}, email interf
 	return nil
 }
 
-func (tm TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
+func (tm *TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 
 	defer cancelCtx()
@@ -93,7 +94,7 @@ func (tm TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 	return true, password
 }
 
-func (tm TsMongoDBRepo) SendUserDetails(email interface{}) (primitive.M, error) {
+func (tm *TsMongoDBRepo) SendUserDetails(email interface{}) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -111,21 +112,21 @@ func (tm TsMongoDBRepo) SendUserDetails(email interface{}) (primitive.M, error) 
 	return result, nil
 }
 
-func (tm TsMongoDBRepo) StoreWorkSpaceData(email interface{}, projectData map[string]interface{}) error {
+func (tm *TsMongoDBRepo) StoreWorkSpaceData(email interface{}, project model.Project) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	var EndTime time.Time
-	projectData["end_time"] =  EndTime.Local().UTC()
+	project.EndTime =  EndTime.Local().UTC()
 	var result bson.M
 	filter := bson.D{{Key: "email", Value: email}}
 	update := bson.D{
 		{Key: "project_details", Value: bson.D{
 			{Key: "$set", Value: bson.D{
-				{Key: "project_name", Value: projectData["project_name"]},
-				{Key: "tools_use_as", Value: projectData["tools_use_as"]},
-				{Key: "project_content", Value: projectData["project_content"]},
-				{Key: "start_time", Value: projectData["start_time"]},
-				{Key: "end_time", Value: projectData["end_time"]},
+				{Key: "project_name", Value: project.ProjectName},
+				{Key: "tools_use_as", Value: project.ToolsUseAs},
+				{Key: "project_content", Value: project.ProjectContent},
+				{Key: "start_time", Value: project.StartTime},
+				{Key: "end_time", Value: project.EndTime},
 			}},
 		}},
 	}
@@ -138,4 +139,51 @@ func (tm TsMongoDBRepo) StoreWorkSpaceData(email interface{}, projectData map[st
 		return err
 	}
 	return nil
+}
+
+func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email string)(map[string]int, error){
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+	var count map[string]int
+
+	var result bson.M
+	filter := bson.D{{Key: "email", Value: email}}
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return count, err
+		}
+		log.Fatal("cannot find document")
+		return count, err
+	}
+
+	for key , value := range result{
+		if key == "project_details" {
+			switch v := value.(type){
+			
+			case []model.Project:
+				var countCode, countText int = 0, 0
+				for _, y :=range v{
+					if y.ToolsUseAs == "code"{
+						countCode +=1
+						
+					} else {
+						countText += 1
+					}
+				}
+				newFunction(count, countCode)
+				newFunction1(count, countText)
+			}
+					
+		}
+	}
+	return count, nil
+}
+
+func newFunction1(count map[string]int, countText int) {
+	count["text"] = countText
+}
+
+func newFunction(count map[string]int, countCode int) {
+	count["code"] = countCode
 }
