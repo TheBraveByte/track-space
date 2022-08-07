@@ -16,5 +16,4 @@ func NewTsMongoDBRepo(app *config.AppConfig, tsm *mongo.Client) data.TrackSpaceD
 		AppConfig: app,
 		TsMongoDB: tsm,
 	}
-
 }

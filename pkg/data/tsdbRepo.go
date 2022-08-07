@@ -12,4 +12,5 @@ type TrackSpaceDBRepo interface {
 	SendUserDetails(email interface{}) (primitive.M, error)
 	StoreWorkSpaceData(email interface{}, project model.Project) error
 	OrganizeWorkSpaceData(projectData model.User, email string)(map[string]int, error)
+	StoreDailyTaskData(task model.DailyTask, email string) error 
 }

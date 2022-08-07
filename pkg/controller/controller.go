@@ -250,7 +250,6 @@ func (ts *TrackSpace) WorkSpace() gin.HandlerFunc {
 func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
-		// var EndTime time.Time
 		tsData := sessions.Default(c)
 		userEmail := tsData.Get("email")
 
@@ -270,11 +269,6 @@ func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 		project.ProjectContent = c.PostForm("editor")
 		project.StartTime = StartTime.Local().UTC()
 
-		// projectData := make(map[string]interface{})
-		// projectData["project_name"] = c.PostForm("project-name")
-		// projectData["tools_use_as"] = c.PostForm("project-tool-use")
-		// projectData["project_content"] = c.PostForm("editor")
-		// projectData["start_time"] =  StartTime.Local().UTC()
 		err := ts.tsDB.StoreWorkSpaceData(userEmail, project)
 		if err != nil {
 			log.Println("Error while storing using user project data")
@@ -282,6 +276,9 @@ func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 		}
 		tsData.AddFlash("successfully submitted project")
 
+		if err := tsData.Save(); err != nil {
+			log.Println("error from the session storage")
+		}
 		c.HTML(http.StatusOK, "work.html", gin.H{
 			"Save": tsData.Flashes("successfully submitted project"),
 		})
@@ -326,9 +323,45 @@ func (ts *TrackSpace) DailyTaskTodo() gin.HandlerFunc {
 
 func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc  {
 	return func (c *gin.Context)  {
+		var task model.DailyTask
+		tsData := sessions.Default(c)
+
+
+		if validateErr := Validate.Struct(&task) ; validateErr != nil{
+			log.Println("cannot validate daily task struct")
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: validateErr})
+			return	
+		}
+
+		if err :=c.Request.ParseForm() ; err != nil {
+			log.Println("cannot parse the daily task form")
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+			return	
+		}
+
+		userEmail := fmt.Sprintf("%s",tsData.Get("email"))
+		task.ToDoTask = c.Request.Form.Get("task")
+		task.DateSchedule = c.Request.Form.Get("date_schedule")
+		task.StartTime = c.Request.Form.Get("start-time")
+		task.EndTime = c.Request.Form.Get("end-time")
+		err := ts.tsDB.StoreDailyTaskData(task , userEmail)
 		
-		
+		if err != nil{
+			log.Fatal("error while inserting todo data in database")
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err:err})
+			return
+		}
+		tsData.AddFlash("successfully submitted project")
+
+		if err := tsData.Save(); err != nil {
+			log.Println("error from the session storage")
+		}
+
+		c.HTML(http.StatusOK, "daily-task.html", gin.H{
+			"Save": tsData.Flashes("successfully submitted project"),
+		})
 	}
 }
+
 
 

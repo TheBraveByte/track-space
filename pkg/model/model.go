@@ -49,7 +49,7 @@ type User struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 	Token          string             `json:"token"`
 	RenewToken     string             `json:"renew_token"`
-}3
+}
 
 type Project struct {
 	ID             primitive.ObjectID `bson:"_id"`

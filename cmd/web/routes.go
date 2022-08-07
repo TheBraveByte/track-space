@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -26,9 +28,11 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	authRouter := routes.Group("/auth")
 	authRouter.Use(IsAuthorized())
 	{
+		authRouter.Handle(http.MethodConnect, "/workspace", h.ProcessWorkSpace())
 		authRouter.GET("/dashboard", h.GetDashBoard())
 		authRouter.GET("/workspace", h.WorkSpace())
 		authRouter.POST("/workspace", h.PostWorkSpace())
+		authRouter.GET("/daily-task", h.DailyTaskTodo())
+		authRouter.POST("/daily-task", h.PostDailyTaskTodo())
 	}
-
 }

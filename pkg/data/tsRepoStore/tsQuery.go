@@ -50,10 +50,10 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, email interface{}, t1, 
 	filter := bson.D{{Key: "email", Value: email}}
 
 	update := bson.D{{Key: "$set", Value: bson.D{
-		{Key: "first_name", Value: user.FirstName },
-		{Key: "last_name", Value:user.LastName },
+		{Key: "first_name", Value: user.FirstName},
+		{Key: "last_name", Value: user.LastName},
 		{Key: "address", Value: user.Address},
-		{Key: "yrs_of_exp", Value:user.YrsOfExp},
+		{Key: "yrs_of_exp", Value: user.YrsOfExp},
 		{Key: "country", Value: user.Country},
 		{Key: "stack", Value: user.Stack},
 		{Key: "phone_number", Value: user.PhoneNumber},
@@ -116,32 +116,27 @@ func (tm *TsMongoDBRepo) StoreWorkSpaceData(email interface{}, project model.Pro
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	var EndTime time.Time
-	project.EndTime =  EndTime.Local().UTC()
-	var result bson.M
-	filter := bson.D{{Key: "email", Value: email}}
-	update := bson.D{
-		{Key: "project_details", Value: bson.D{
-			{Key: "$set", Value: bson.D{
+	project.EndTime = EndTime.Local().UTC()
+	wsDocument := bson.D{
+		{
+			Key: "project_details", Value: bson.D{
 				{Key: "project_name", Value: project.ProjectName},
 				{Key: "tools_use_as", Value: project.ToolsUseAs},
 				{Key: "project_content", Value: project.ProjectContent},
 				{Key: "start_time", Value: project.StartTime},
 				{Key: "end_time", Value: project.EndTime},
-			}},
-		}},
+			},
+		},
 	}
-	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&result)
+	_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, wsDocument)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return err
-		}
 		log.Fatal("cannot find document")
 		return err
 	}
 	return nil
 }
 
-func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email string)(map[string]int, error){
+func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email string) (map[string]int, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	var count map[string]int
@@ -157,16 +152,14 @@ func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email str
 		return count, err
 	}
 
-	for key , value := range result{
+	for key, value := range result {
 		if key == "project_details" {
-			switch v := value.(type){
-			
+			switch v := value.(type) {
 			case []model.Project:
 				var countCode, countText int = 0, 0
-				for _, y :=range v{
-					if y.ToolsUseAs == "code"{
-						countCode +=1
-						
+				for _, y := range v {
+					if y.ToolsUseAs == "code" {
+						countCode += 1
 					} else {
 						countText += 1
 					}
@@ -174,7 +167,6 @@ func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email str
 				newFunction(count, countCode)
 				newFunction1(count, countText)
 			}
-					
 		}
 	}
 	return count, nil
@@ -186,4 +178,22 @@ func newFunction1(count map[string]int, countText int) {
 
 func newFunction(count map[string]int, countCode int) {
 	count["code"] = countCode
+}
+
+func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, email string) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+	todoDocument := bson.D{{Key: "todo", Value: bson.D{
+		{Key: "to_do_task", Value: task.ToDoTask},
+		{Key: "date_schedule", Value: task.DateSchedule},
+		{Key: "start_time", Value: task.StartTime},
+		{Key: "end_time", Value: task.EndTime},
+	}}}
+
+	_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, todoDocument)
+	if err != nil {
+		log.Fatal("cannot add document to the database")
+		return err
+	}
+	return nil
 }
