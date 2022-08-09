@@ -94,7 +94,8 @@ func (tm *TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 	return true, password
 }
 
-func (tm *TsMongoDBRepo) SendUserDetails(email interface{}) (primitive.M, error) {
+func (tm *TsMongoDBRepo) SendUserDetails(email string) (primitive.M, error) {
+	//this was use twice in the controllers
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -117,18 +118,18 @@ func (tm *TsMongoDBRepo) StoreWorkSpaceData(email interface{}, project model.Pro
 	defer cancelCtx()
 	var EndTime time.Time
 	project.EndTime = EndTime.Local().UTC()
-	wsDocument := bson.D{
-		{
-			Key: "project_details", Value: bson.D{
-				{Key: "project_name", Value: project.ProjectName},
-				{Key: "tools_use_as", Value: project.ToolsUseAs},
-				{Key: "project_content", Value: project.ProjectContent},
-				{Key: "start_time", Value: project.StartTime},
-				{Key: "end_time", Value: project.EndTime},
-			},
-		},
-	}
-	_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, wsDocument)
+
+	filter := bson.D{{Key: "email", Value: email}}
+	update := bson.D{{Key: "$push", Value: bson.D{
+		{Key: "todo", Value: bson.D{
+			{Key: "project_name", Value: project.ProjectName},
+			{Key: "tools_use_as", Value: project.ToolsUseAs},
+			{Key: "project_content", Value: project.ProjectContent},
+			{Key: "start_time", Value: project.StartTime},
+			{Key: "end_time", Value: project.EndTime},
+		}},
+	}}}
+	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
 		log.Fatal("cannot find document")
 		return err
@@ -136,7 +137,7 @@ func (tm *TsMongoDBRepo) StoreWorkSpaceData(email interface{}, project model.Pro
 	return nil
 }
 
-func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(projectData model.User, email string) (map[string]int, error) {
+func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(email string) (map[string]int, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	var count map[string]int
@@ -183,14 +184,18 @@ func newFunction(count map[string]int, countCode int) {
 func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, email string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
-	todoDocument := bson.D{{Key: "todo", Value: bson.D{
-		{Key: "to_do_task", Value: task.ToDoTask},
-		{Key: "date_schedule", Value: task.DateSchedule},
-		{Key: "start_time", Value: task.StartTime},
-		{Key: "end_time", Value: task.EndTime},
+	filter := bson.D{{Key: "email", Value: email}}
+	update := bson.D{{Key: "$push", Value: bson.D{
+		{Key: "todo", Value: bson.D{
+			{Key: "to_do_task", Value: task.ToDoTask},
+			{Key: "date_schedule", Value: task.DateSchedule},
+			{Key: "start_time", Value: task.StartTime},
+			{Key: "end_time", Value: task.EndTime},
+		}},
 	}}}
 
-	_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, todoDocument)
+	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
+
 	if err != nil {
 		log.Fatal("cannot add document to the database")
 		return err

@@ -212,11 +212,11 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
-// GetDashBoard :: a lot of logic will be done here ..... alot
+// GetDashBoard :: a lot of logic will be done here ..... a lot
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
-		email := tsData.Get("email")
+		email := fmt.Sprintf("%s", tsData.Get("email"))
 
 		user, err := ts.tsDB.SendUserDetails(email)
 		if err != nil {
@@ -225,7 +225,7 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			return
 		}
 
-		// this controller with still be uppdated as i progress
+		// this controller with still be updated as I progress
 
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
@@ -299,7 +299,7 @@ func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 		}
 		projectData.Email = fmt.Sprintf("%s", tsData.Get("email"))
 
-		count, err := ts.tsDB.OrganizeWorkSpaceData(projectData, projectData.Email)
+		count, err := ts.tsDB.OrganizeWorkSpaceData(projectData.Email)
 		if err != nil {
 			log.Println(err)
 			return
@@ -316,39 +316,38 @@ func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 
 func (ts *TrackSpace) DailyTaskTodo() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.HTML(http.StatusOK,"daily-task.html",gin.H{})
+		c.HTML(http.StatusOK, "daily-task.html", gin.H{})
 	}
 }
 
-
-func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc  {
-	return func (c *gin.Context)  {
+func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		var task model.DailyTask
 		tsData := sessions.Default(c)
 
-
-		if validateErr := Validate.Struct(&task) ; validateErr != nil{
+		if validateErr := Validate.Struct(&task); validateErr != nil {
 			log.Println("cannot validate daily task struct")
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: validateErr})
-			return	
+			return
 		}
 
-		if err :=c.Request.ParseForm() ; err != nil {
+		if err := c.Request.ParseForm(); err != nil {
 			log.Println("cannot parse the daily task form")
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
-			return	
+			return
 		}
 
-		userEmail := fmt.Sprintf("%s",tsData.Get("email"))
+		userEmail := fmt.Sprintf("%s", tsData.Get("email"))
 		task.ToDoTask = c.Request.Form.Get("task")
 		task.DateSchedule = c.Request.Form.Get("date_schedule")
 		task.StartTime = c.Request.Form.Get("start-time")
 		task.EndTime = c.Request.Form.Get("end-time")
-		err := ts.tsDB.StoreDailyTaskData(task , userEmail)
-		
-		if err != nil{
-			log.Fatal("error while inserting todo data in database")
-			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err:err})
+
+		err := ts.tsDB.StoreDailyTaskData(task, userEmail)
+
+		if err != nil {
+			log.Println("error while inserting todo data in database")
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
 		tsData.AddFlash("successfully submitted project")
@@ -363,5 +362,37 @@ func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc  {
 	}
 }
 
+func (ts *TrackSpace) ShowProjectData() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		proj := make(map[string]interface{})
+		tsData := sessions.Default(c)
+		userEmail := fmt.Sprintf("%s", tsData.Get("email"))
 
+		userProject, err := ts.tsDB.SendUserDetails(userEmail)
+		if err != nil {
+			log.Println("cannot get user project data from the database")
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			return
+		}
+		switch p := userProject["project_details"].(type) {
+		case []model.Project:
+			for _, x := range p {
+				proj["ProjectContent"] = x.ProjectContent
+				proj["ProjectName"] = x.ProjectName
+				proj["ToolsUseAs"] = x.ToolsUseAs
+				proj["StartTime"] = x.StartTime
+				proj["EndTime"] = x.EndTime
+				proj["Duration"] = x.Duration
+				proj["ID"] = x.ID
+			}
+			break
+		}
 
+		c.HTML(http.StatusOK, "project.html", gin.H{
+			"project":   proj,
+			"FirstName": userProject["first_name"],
+			"LastName":  userProject["last_name"],
+		})
+
+	}
+}

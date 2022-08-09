@@ -9,8 +9,8 @@ type TrackSpaceDBRepo interface {
 	InsertInfo(email, password string) (int64, error)
 	UpdateUserInfo(user model.User, email interface{}, t1, t2 string) error
 	VerifyLogin(email string) (bool, string)
-	SendUserDetails(email interface{}) (primitive.M, error)
+	SendUserDetails(email string) (primitive.M, error)
 	StoreWorkSpaceData(email interface{}, project model.Project) error
-	OrganizeWorkSpaceData(projectData model.User, email string)(map[string]int, error)
-	StoreDailyTaskData(task model.DailyTask, email string) error 
+	OrganizeWorkSpaceData(email string) (map[string]int, error)
+	StoreDailyTaskData(task model.DailyTask, email string) error
 }
