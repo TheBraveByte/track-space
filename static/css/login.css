@@ -1,51 +1,45 @@
-body {
-    background-color: #c6c9ce;
-}
 
 /*!* #33465f*/
 /*#c6c9ce*/
 /*#1D2021*/
 /*#566277 *!*/
-h1 {
-    text-align: center;
+
+body{
+    background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+
+}
+
+.form-container{
+    background-color: #33465f;
+    border-radius: 5px;
+}
+h1{
     margin-bottom: 2rem;
     color: #33465f;
     font-size: 2.0rem;
-    font-weight: bold;
-
+    font-weight: normal;
+    /* font- */
 }
-
-a {
-    color: #33465f;
-    font-weight: 600;
+#login-form{
+    margin-top: 2rem;
+    text-align: center;
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
 }
-
-#login-form {
-    padding: 7rem 6rem;
-    /* border-radius: 5px; */
-}
-
-.signUp-header {
-    display: grid;
-    justify-items: center;
-}
-
 .signUp-header p {
-
+    /* text-align: left; */
     color: #ffffff;
     font-weight: normal;
     font-size: 1.5rem;
 }
-
-.grid-container {
-    display: grid;
-    background-color: #33465f;
-    padding: 3rem 3rem;
-    border-radius: 5px;
+.details{
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
-
 .terms {
+    /* color: #ffffff; */
     text-align: left;
+
 }
 
 .terms p {
@@ -59,18 +53,10 @@ a {
 
 }
 
-.signup-bt {
-
-    display: flex;
-    gap: 1rem;
-    justify-items: center;
-    justify-content: center;
-}
-
 .sign-up {
 
     background-color: #c6c9ce;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     color: #1d2022;
     font-weight: normal;
     justify-items: center;
@@ -78,40 +64,32 @@ a {
     border-right: 0;
     border-top: 0;
     border-bottom-width: 2px;
-    border-color: grey;
-    border-bottom-style: double;
+
 }
 
 .alt {
     text-align: center;
-    color: #566277;
+    color: #ffffff;
     font-style: italic;
     font-weight: bold;
 }
 
+
 .bt {
     background-color: #c6c9ce;
-    margin-bottom: 10px;
-
-    font-weight: bold;
+    margin-bottom: 5px;
+    font-weight: normal;
+    font-size: medium;
     justify-items: center;
     border-left: 0;
     border-right: 0;
     border-top: 0;
     border-bottom-width: 2px;
-    border-color: grey;
-    border-bottom-style: double;
+ 
 }
 
 .alt-login {
-    display: grid;
-    justify-items: center;
-    margin-bottom: 1rem;
-}
-
-.bt-link {
-    text-decoration: none;
-    justify-items: center;
+    margin-bottom: 0.5rem;
 }
 
 .ft {
