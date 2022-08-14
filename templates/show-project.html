@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/work.css" />
+    <title>WorkSpace</title>
+</head>
+
+<body>
+    <main>
+        <div class="workspace-container">
+            <form action="/auth/workspace" method="post" novalidate class="needs-validation">
+                <h1 class="track">Track space Editor </h1>
+                <hr>
+                <div>
+                    <p class="work-list">Make changes to your project</p>
+                    <ul>
+                        <li>Vet through your Code.</li>
+                        <li>Check for error in your Article</li>
+                        <li>Comment to explain to others</li>
+                    </ul>
+                </div>
+                <hr>
+                <br>
+                <p class="notice">Rename the project name & the type of file use in the box below</p>
+                <div class="project">
+
+                    <p><input class="form-control" type="text" name="project-name" id="project-name"
+                            placeholder="Enter the name of the project" value="{{.ProjectName}}"></p>
+                    <p><input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
+                            placeholder="Add tools used i.e text-editor,source code & comment" value="{{.ToolsUseAs}}"></p>
+
+                </div>
+                <div class="row doc-editor">
+                    <div class="document-editor__toolbar"></div>
+                </div>
+                <div class="row row-editor edit">
+                    <div class="editor-container">
+                        <div class="editor">{{.ProjectContent}}</div>
+                    </div>
+                </div>
+                <div class="reset-submit-btn">
+
+                <!-- Remain to implement the delete button code and the submit url -->
+                    <div class="mode-btn">
+                        <button type="menu" class="w-40 btn btn-dark btn-md">Submit</button>
+                        <button type="button" class="w-40 btn btn-danger btn-md">Delete</button>
+
+                    </div>   
+                </div>
+
+
+            </form>
+            <div class="row workspace-foot">
+                <p>CkEditor | Akinleye_dev</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+    <script src="/main-ckeditor5/build/ckeditor.js"></script>
+    <script src="/static/js/form-validate.js"></script>
+    <script>
+        
+        ValidateForm()
+
+        const watchdog = new CKSource.EditorWatchdog();
+        window.watchdog = watchdog;
+
+        watchdog.setCreator((element, config) => {
+            return CKSource.Editor
+                .create(element, config)
+                .then(editor => {
+                    // Set a custom container for the toolbar.
+                    document.querySelector('.document-editor__toolbar').appendChild(editor.ui.view.toolbar.element);
+                    document.querySelector('.ck-toolbar').classList.add('ck-reset_all');
+
+                    return editor;
+                })
+        });
+
+        watchdog.setDestructor(editor => {
+            // Set a custom container for the toolbar.
+            document.querySelector('.document-editor__toolbar').removeChild(editor.ui.view.toolbar.element);
+
+            return editor.destroy();
+        });
+
+        watchdog.on('error', handleError);
+
+        watchdog
+            .create(document.querySelector('.editor'), {
+
+                licenseKey: '',
+
+            })
+            .catch(handleError);
+
+        function handleError(error) {
+            console.error('Oops, something went wrong!');
+            console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+            console.warn('Build id: 5ynjzbbaaku7-33gd3fyy8tto');
+            console.error(error);
+        };
+
+    </script>
+</body>
+
+</html>

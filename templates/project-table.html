@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Track Space Project</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="/static/css/project.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="project-container">
+    <div class="head">
+        <h1 class="title">Track Space Project</h1>
+    </div>
+    <hr>
+    <div class="acc">
+        <p><img src="/static/icon/user.ico" alt="" srcset="" width="10%">{{"FirstName"}} {{"LastName"}}</p>
+    </div>
+    <table class="table table-responsive-md table-responsive-sm table-responsive-lg table-striped table-bordered table-hover"
+           id="projectTable" style="width:100%">
+        {{$proj := index "project"}}
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Content</th>
+            <th>Date</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {{range $proj}}
+        <tr>
+            <a href="/auth/workspace/project-table/{{index "ID"}}">
+                <td>{{index "ID"}}</td>
+            </a>
+            <td>{{index "ProjectName"}}</td>
+            <td>{{index "ToolsUseAs"}}</td>
+            <td>{{index "ProjectContent"}}</td>
+            <td>{{index "EndTime"}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Content</th>
+            <th>Date</th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#projectTable").DataTable();
+    });
+</script>
+</html>
