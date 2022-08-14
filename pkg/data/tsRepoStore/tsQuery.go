@@ -95,7 +95,7 @@ func (tm *TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 }
 
 func (tm *TsMongoDBRepo) SendUserDetails(email string) (primitive.M, error) {
-	//this was use twice in the controllers
+	// this was use twice in the controllers
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -195,10 +195,22 @@ func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, email string) 
 	}}}
 
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
-
 	if err != nil {
 		log.Fatal("cannot add document to the database")
 		return err
 	}
 	return nil
+}
+
+func (tm *TsMongoDBRepo) GetProjectData(id primitive.ObjectID) (primitive.M, error) {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+
+	filter := bson.D{{Key: "project_details", Value: bson.D{{Key: "_id", Value: id}}}}
+	var result bson.M
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
 }
