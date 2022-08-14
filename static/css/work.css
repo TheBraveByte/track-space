@@ -100,7 +100,7 @@ ul li {
 }
 
 
-editor-container {
+.editor-container {
     background-color: white;
     border: 10px solid #33465f;
     overflow: auto;
@@ -111,6 +111,10 @@ editor-container {
     margin-bottom: 5rem;
     display: flex;
     justify-content: center;
+}
+.mode-btn{
+    display: flex;
+    gap: 1rem;
 }
 
 .workspace-foot {
