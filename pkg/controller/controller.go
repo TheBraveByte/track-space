@@ -206,8 +206,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
 		}
+		fmt.Println("Successfully login")
 
-		// c.JSON(http.StatusOK, "Successfully use token")
 		c.HTML(http.StatusOK, "/", gin.H{})
 	}
 }
@@ -344,7 +344,6 @@ func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
 		task.EndTime = c.Request.Form.Get("end-time")
 
 		err := ts.tsDB.StoreDailyTaskData(task, userEmail)
-
 		if err != nil {
 			log.Println("error while inserting todo data in database")
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -362,7 +361,7 @@ func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
 	}
 }
 
-func (ts *TrackSpace) ShowProjectData() gin.HandlerFunc {
+func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		proj := make(map[string]interface{})
 		tsData := sessions.Default(c)
@@ -388,11 +387,36 @@ func (ts *TrackSpace) ShowProjectData() gin.HandlerFunc {
 			break
 		}
 
-		c.HTML(http.StatusOK, "project.html", gin.H{
+		c.HTML(http.StatusOK, "project-table.html", gin.H{
 			"project":   proj,
 			"FirstName": userProject["first_name"],
 			"LastName":  userProject["last_name"],
 		})
+	}
+}
 
+func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		sourceLink := c.Param("src")
+		ok := primitive.IsValidObjectID(c.Param("id"))
+		if sourceLink != "show-project" && !ok {
+			log.Println("Invalid url parameters")
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Meta: "invalid parameter"})
+			return
+		}
+		projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
+		if err != nil {
+			log.Println("invalid ID cannot convert the Object ID")
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
+		}
+		data, err := ts.tsDB.GetProjectData(projectID)
+		if err != nil {
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
+		}
+		c.HTML(http.StatusOK, "show-project.html", gin.H{
+			"ProjectContent": data["project_content"],
+			"ProjectName":    data["project_name"],
+			"ToolsUseAs":     data["ToolsUseAs"],
+		})
 	}
 }
