@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track-Space Dashboard</title>
+  <link rel="stylesheet" href="/static/bootstrap.css" />
+  <link rel="stylesheet" href="bootstrap.min.css" />
+  <link rel="stylesheet" href="/static/css/chat.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="row chat-container">
+      <h1>Track-Space Chat Application</h1>
+      <hr>
+      <div class="col-md-6">
+        <h2>Chatroom</h2>
+        <form action="" method="post">
+          <div class="mb-3">
+            <label for="user_name" class="form-label">username</label>
+            <input type="text" name="user_name" id="user_name" class="form-control" placeholder="" aria-describedby="helpId">
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">message</label>
+            <input type="text" name="message" id="message" class="form-control" placeholder="" aria-describedby="helpId">
+          </div>
+          <div class="message-box mb-3">
+
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <h2>Online user</h2>
+        <ul class="online_user">
+
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery-3.5.1.min.js"></script>
+<script>
+  let socket = null;
+  document.addEventListener("DOMContentLoaded", function(){
+    socket = new WebSocket("ws://localhost:8080/ts-chat")
+    socket.onclose =()=>{
+      console.log("web socket successfully close")
+    }
+
+    socket.onopen = ()=>{
+      console.log("Successfully connected to the web socket")
+    }
+
+  })
+</script>
+</html>

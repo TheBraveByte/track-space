@@ -22,6 +22,7 @@ body {
 
 h2 {
     color: #ffffff;
+    font-family: Ubuntu Mono;
     /* padding-left: 150px; */
     font-size: 2.0rem;
     font-weight: normal;
@@ -29,13 +30,14 @@ h2 {
 }
 
 h4 {
-
+    font-family: Ubuntu Mono;
     color: #1D2021;
     text-align: left;
     padding-left: 1rem;
 }
 
 h5 {
+    font-family: Ubuntu Mono;
     color: #1d2021;
     font-weight: lighter;
 }
@@ -47,18 +49,21 @@ h5 {
 }
 
 .menu-link {
+    font-family: Ubuntu Mono;
     margin-bottom: 2rem;
     display: flex;
     gap: 1rem;
 }
 
 .menu-link-last {
+    font-family: Ubuntu Mono;
     margin-bottom: 4rem;
     display: flex;
     gap: 1rem;
 }
 
 .menu a {
+    font-family: Ubuntu Mono;
     text-decoration: none;
     color: #ffffff;
 
@@ -75,6 +80,7 @@ h5 {
 }
 
 .other-menu a {
+    font-family: Ubuntu Mono;
     text-decoration: none;
     color: #ffffff;
 }
@@ -95,6 +101,7 @@ h5 {
 }
 
 .other-menu-last {
+    font-family: Ubuntu Mono;
     margin-top: 15rem;
     display: flex;
     gap: 1rem;
@@ -107,6 +114,7 @@ h5 {
 
 /* seond column of the dashboard */
 .second-column {
+    font-family: Ubuntu Mono;
     padding-left: 2rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -139,6 +147,7 @@ h5 {
 }
 
 #search-bar {
+    
     border-color: #566277;
     background: #ffffff;
 }
@@ -153,6 +162,7 @@ h5 {
 }
 
 .top-2 a {
+    font-family: Ubuntu Mono;
     text-decoration: none;
     color: #ffffff;
     text-align: center;
@@ -295,6 +305,7 @@ h5 {
 
 
 .head h5 {
+    font-family: Ubuntu Mono;
     color: #ffffff;
     padding-left: 5px;
     margin-top: 10px;
@@ -315,6 +326,7 @@ h5 {
 }
 
 .time p {
+    font-family: Ubuntu Mono;
     color: #566277;
     font-style: italic;
 }

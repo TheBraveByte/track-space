@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-    font-family: ubuntu;
+    font-family: Ubuntu Mono;
     color: white;
     margin-top: 3.5rem;
 }
@@ -24,6 +24,7 @@ hr {
 }
 
 .todo{
+    font-family: Ubuntu Mono;
     font-size: 1.5rem;
     font-weight: normal;
     text-align: left;
