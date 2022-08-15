@@ -160,8 +160,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		IPAddress := c.Request.RemoteAddr
 
 		// Posted form value
-		postEmail := c.PostForm("email")
-		postPassword := c.PostForm("password")
+		postEmail := c.Request.PostForm.Get("email")
+		postPassword := c.Request.PostForm.Get("password")
 
 		// Previous store details in the database
 		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail)
@@ -385,6 +385,7 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 				proj["ID"] = x.ID
 			}
 			break
+		default:
 		}
 
 		c.HTML(http.StatusOK, "project-table.html", gin.H{
@@ -399,16 +400,19 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
+
 		if sourceLink != "show-project" && !ok {
 			log.Println("Invalid url parameters")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Meta: "invalid parameter"})
 			return
 		}
+
 		projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
 		if err != nil {
 			log.Println("invalid ID cannot convert the Object ID")
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 		}
+
 		data, err := ts.tsDB.GetProjectData(projectID)
 		if err != nil {
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
@@ -419,4 +423,48 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 			"ToolsUseAs":     data["ToolsUseAs"],
 		})
 	}
+}
+
+func (ts *TrackSpace) SettingsPage() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//is to getbthe settings htmml templates
+		c.HTML(http.StatusOK, "setting.html", gin.H{})
+	}
+}
+
+func (ts *TrackSpace) PosteSettingChange() gin.HandlerFunc{
+	return func ( c *gin.Context){
+		//Write some settings logic program
+	}
+}
+
+
+func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tsData := sessions.Default(c)
+		tsData.Clear()
+		tsData.Options(sessions.Options{MaxAge :-1})
+		tsData.Save()
+		c.Redirect(http.StatusSeeOther, "/")
+	}
+}
+
+
+func (ts *TrackSpace) Statistic() gin.HandlerFunc{
+	return func (c *gin.Context){
+		//Statistic report base on the projects and the ToDo schedules
+		//implemeted using D3.js
+		var _  model.User
+		
+	}
+}
+
+func (ts *TrackSpace) ChatRoom () gin.HandlerFunc{
+	return func(c *gin.Context){
+		c.HTML(http.StatusOK, "chat.html",gin.H{})
+	}
+}
+
+func (ts * TrackSpace) ChatRoomEndpoint(){
+	
 }
