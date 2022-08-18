@@ -27,6 +27,7 @@
             <label for="message" class="form-label">message</label>
             <input type="text" name="message" id="message" class="form-control" placeholder="" aria-describedby="helpId">
           </div>
+          <input type="text" name="action" id="action" class="hidden">
           <div class="message-box mb-3">
 
           </div>
@@ -55,6 +56,13 @@
     socket.onopen = ()=>{
       console.log("Successfully connected to the web socket")
     }
+    // response from the server
+    socket.onmessage = (msg) =>{
+      let respData = JSON.parse(msg)
+    }
+
+    //send data/payload back to the server through socket
+    
 
   })
 </script>
