@@ -27,11 +27,22 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	{
 		// authRouter.Handle(http.MethodConnect, "/workspace", h.ProcessWorkSpace())
 		authRouter.GET("/user/dashboard", h.GetDashBoard())
+		
 		authRouter.GET("/user/workspace", h.WorkSpace())
 		authRouter.POST("/user/workspace/save", h.PostWorkSpace())
-		authRouter.GET("user/daily-task", h.DailyTaskTodo())
-		authRouter.POST("user/daily-task/save", h.PostDailyTaskTodo())
-		authRouter.GET("user/orkspace/:src/:id/show-project", h.ShowUserProject())
+		
+		authRouter.GET("/user/daily-task", h.DailyTaskTodo())
+		authRouter.POST("/user/daily-task/save", h.PostDailyTaskTodo())
+		
+		authRouter.GET("/user/workspace/:src/:id/show-project", h.ShowUserProject())
+		
+		authRouter.GET("/user/setting", h.SettingPage())
+		authRouter.POST("/user/setting", h.PostSettingChange())
+		
+		//Routes for websocket handlers
+		authRouter.GET("/user/chat",h.ChatRoom())
+		authRouter.GET("/ts-chat", h.ChatRoomEndpoint())
+		
 		authRouter.POST("/user/logout")
 	}
 }

@@ -40,7 +40,6 @@ func GenerateJWTToken(email interface{}, password interface{}, ipaddress string)
 		Issuer:    "trackSpace",
 	}
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, trackToken).SignedString([]byte(os.Getenv("TOKEN")))
-	// if err ==jwt.ErrTokenInvalidClaims
 	if err != nil {
 		log.Println(err)
 		return "", "", err

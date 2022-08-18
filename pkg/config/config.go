@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/gin-contrib/sessions"
 	"html/template"
 	"log"
+
+	"github.com/gin-contrib/sessions"
 )
 
 type AppConfig struct {
@@ -13,4 +14,7 @@ type AppConfig struct {
 	UseTempCache    bool
 	TsData          sessions.Session
 	TemplateCache   map[string]*template.Template
+
 }
+
+

@@ -11,6 +11,7 @@ import (
 	"github.com/yusuf/track-space/pkg/data"
 	"github.com/yusuf/track-space/pkg/data/tsRepoStore"
 	"github.com/yusuf/track-space/pkg/key"
+	"github.com/yusuf/track-space/pkg/ws"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -22,6 +23,7 @@ import (
 	"github.com/yusuf/track-space/pkg/model"
 )
 
+// Validate - to help check for a validated json database model
 var Validate = validator.New()
 
 // TrackSpace Implement the repository pattern to access multiple package all at once
@@ -45,12 +47,16 @@ func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	}
 }
 
+// SignUpPage - Handler to get the sign up page for user
 func (ts *TrackSpace) SignUpPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "signup-page.html", gin.H{})
 	}
 }
 
+// PostSignUpPage - this validate the user input and store the value in
+// session as cookies for future usage, insert user input in the database
+// and also check for existing user
 func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
@@ -88,12 +94,16 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 	}
 }
 
+// GetUserInfo - handler to get the user-details/ info page
 func (ts *TrackSpace) GetUserInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "user-info.html", gin.H{})
 	}
 }
 
+// PostUserInfo - this validdate the user model and get the user input details
+// and store the details in the database and this helps to redirect
+// the user to a login page
 func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
@@ -138,12 +148,17 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 	}
 }
 
+// GetLoginPage - this handlers get the user login-page
 func (ts *TrackSpace) GetLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login-page.html", gin.H{})
 	}
 }
 
+// PostLoginPage : this handler help to verify the user password, authenicate other
+// user login details with respect to the database,generate a authorization token
+// for the user, as well as authorize the user and set the Response Header
+// with the Bearer Token
 func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
@@ -160,8 +175,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		IPAddress := c.Request.RemoteAddr
 
 		// Posted form value
-		postEmail := c.Request.PostForm.Get("email")
-		postPassword := c.Request.PostForm.Get("password")
+		postEmail := c.Request.Form.Get("email")
+		postPassword := c.Request.Form.Get("password")
 
 		// Previous store details in the database
 		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail)
@@ -180,7 +195,6 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					})
 					return
 				}
-				// info := make(map[string]interface{})
 
 				authData := make(map[string][]string)
 				authData["auth"] = []string{token, newToken}
@@ -212,8 +226,10 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
-// GetDashBoard :: a lot of logic will be done here ..... a lot
+// GetDashBoard - this show the user dashboard with respect to all the database
+// details and queries; full brief or user activites
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
+	// a lot of logic will be done here ..... a lot
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
 		email := fmt.Sprintf("%s", tsData.Get("email"))
@@ -239,6 +255,8 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 
 var StartTime time.Time
 
+// WorkSpace -  this show the user workspace/ worksheet to execute
+// projects and also to make use of other tools
 func (ts *TrackSpace) WorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "work.html", gin.H{
@@ -247,6 +265,8 @@ func (ts *TrackSpace) WorkSpace() gin.HandlerFunc {
 	}
 }
 
+// PostWorkSpace - this will validate the project model and help to insert
+// the projects details in the database
 func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
@@ -285,6 +305,8 @@ func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 	}
 }
 
+// ProcessWorkSpace - this will help execute the queries to help group different
+// type of projects in a map[string]interface{}
 func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
@@ -314,12 +336,16 @@ func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 	}
 }
 
+// DailyTaskTodo - this will help the user to get the todo-page
+//  to set up a schedule
 func (ts *TrackSpace) DailyTaskTodo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "daily-task.html", gin.H{})
 	}
 }
 
+// PostDailyTaskTodo - this get the user schedule details from the form and store in the
+// database
 func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var task model.DailyTask
@@ -361,6 +387,8 @@ func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
 	}
 }
 
+// ShowProjectTable - this give the full projects details of a particular
+// user and help the user to modify each projects
 func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		proj := make(map[string]interface{})
@@ -384,7 +412,6 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 				proj["Duration"] = x.Duration
 				proj["ID"] = x.ID
 			}
-			break
 		default:
 		}
 
@@ -396,6 +423,8 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 	}
 }
 
+// ShowUserProject : this  handler direct the user to a page to make changes and modify their
+// existing projects store in the database
 func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sourceLink := c.Param("src")
@@ -425,46 +454,64 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 	}
 }
 
-func (ts *TrackSpace) SettingsPage() gin.HandlerFunc {
+// SettingsPage - handlers to make general changes to user platform
+// dashboard
+func (ts *TrackSpace) SettingPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//is to getbthe settings htmml templates
+		// is to getbthe settings htmml templates
 		c.HTML(http.StatusOK, "setting.html", gin.H{})
 	}
 }
 
-func (ts *TrackSpace) PosteSettingChange() gin.HandlerFunc{
-	return func ( c *gin.Context){
-		//Write some settings logic program
+// PosteSettingChange - to execute and implemented the change in  settings
+// page
+func (ts *TrackSpace) PostSettingChange() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Write some settings logic program
 	}
 }
 
-
+// ExecuteLogOut - to log out user from the dashboard
 func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
 		tsData.Clear()
-		tsData.Options(sessions.Options{MaxAge :-1})
+		tsData.Options(sessions.Options{MaxAge: -1})
 		tsData.Save()
 		c.Redirect(http.StatusSeeOther, "/")
 	}
 }
 
-
-func (ts *TrackSpace) Statistic() gin.HandlerFunc{
-	return func (c *gin.Context){
-		//Statistic report base on the projects and the ToDo schedules
-		//implemeted using D3.js
-		var _  model.User
-		
+func (ts *TrackSpace) Statistic() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Statistic report base on the projects and the ToDo schedules
+		// implemeted using D3.js
+		var _ model.User
+		c.HTML(http.StatusOK, "stat.html", gin.H{})
 	}
 }
 
-func (ts *TrackSpace) ChatRoom () gin.HandlerFunc{
-	return func(c *gin.Context){
-		c.HTML(http.StatusOK, "chat.html",gin.H{})
+func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.HTML(http.StatusOK, "chat.html", gin.H{})
 	}
 }
 
-func (ts * TrackSpace) ChatRoomEndpoint(){
-	
+
+//
+func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var res model.SocketResponse
+		wsConn, err := ws.UpgradeSocketConn.Upgrade(ctx.Writer, ctx.Request, nil)
+		if err != nil {
+			log.Fatal("Unable to connect to socket")
+			return
+		}
+		connect := model.SocketConnection{Conn: wsConn}
+		model.Client[connect] = ""
+
+		go ws.SendDataToChannel(&connect, ctx)
+
+		wsConn.WriteJSON(res.Message)
+	}
 }
