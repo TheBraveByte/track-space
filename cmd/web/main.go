@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"html/template"
 	"log"
 	"os"
 
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
 	"github.com/yusuf/track-space/pkg/db"
+	"github.com/yusuf/track-space/pkg/ws"
 )
 
 var app config.AppConfig
@@ -27,12 +29,15 @@ func main() {
 	mongodbUri := os.Getenv("MONGODB_URI")
 	if mongodbUri == "" {
 		log.Println("mongodb cluster uri not found : ")
+		return
 	}
 
 	portNumber := os.Getenv("PORT_NUMBER")
 	if portNumber == "" {
 		log.Println("No local server port number created!")
+		return
 	}
+	go ws.GetDataFromChannel()
 
 	Client := db.DatabaseConnection(mongodbUri)
 	// mail = data.MailData(Client, "mail")
