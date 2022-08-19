@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"sort"
@@ -34,6 +35,18 @@ func GetDataFromChannel() {
 			users := GetAllUsers()
 			resp.Condition= "username"
 			resp.ConnectedUSer= users 
+			BroadCastToAll(resp)
+		case "sendMessage":
+			resp.Message = fmt.Sprintf("<em>%v</em> : %v", getdata.UserName, getdata.Message)
+			resp.Condition= "message"
+			BroadCastToAll(resp)
+
+		case "serveroffline":
+			resp.Condition= "serveroffline"
+			delete(model.Client, getdata.SocketConn)
+			users := GetAllUsers()
+			resp.ConnectedUSer= users 
+
 		}
 	}
 }

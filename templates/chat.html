@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="/static/bootstrap.css" />
   <link rel="stylesheet" href="bootstrap.min.css" />
   <link rel="stylesheet" href="/static/css/chat.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
+    integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -21,21 +24,31 @@
         <form action="" method="post">
           <div class="mb-3">
             <label for="user_name" class="form-label">username</label>
-            <input type="text" name="user_name" id="user_name" class="form-control" placeholder="" aria-describedby="helpId">
+            <input type="text" name="user-name" id="user-name" class="form-control" placeholder=""
+              aria-describedby="helpId">
           </div>
           <div class="mb-3">
             <label for="message" class="form-label">message</label>
-            <input type="text" name="message" id="message" class="form-control" placeholder="" aria-describedby="helpId">
+            <input type="text" name="message" id="message" class="form-control" placeholder=""
+              aria-describedby="helpId">
+              <hr>
+            <a href="javascript:void(0);" class="btn btn-outline-dark mt-3" id="send">send message</a>
           </div>
-          <input type="text" name="action" id="action" class="hidden">
-          <div class="message-box mb-3">
+          <input type="hidden" name="condition" id="condition">
+          <div class="mt-3 float-end" id="indicator">
 
           </div>
+
+          <div class="message-box mb-3" id="message-box">
+
+          </div>
+
+
         </form>
       </div>
       <div class="col-md-6">
         <h2>Online user</h2>
-        <ul class="online_user">
+        <ul id="online_user">
 
         </ul>
       </div>
@@ -45,25 +58,120 @@
 </body>
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+  integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/static/js/reconnecting-websocket.min.js"></script>
 <script>
+  let msgInput = document.getElementById("message")
+  let userNameInput = document.getElementById("user-name")
   let socket = null;
-  document.addEventListener("DOMContentLoaded", function(){
-    socket = new WebSocket("ws://localhost:8080/ts-chat")
-    socket.onclose =()=>{
+  let userStatus = document.getElementById("indicator")
+  let onlineBadge = `<span class="badge bg-success">online</span>`
+  let offlineBadge = `<span class="badge bg-dark">offline</span>`
+
+
+  function OffServer() {
+    let jsonData = {}
+    console.log("Server is turn off");
+    jsonData["condition"] = "serveroffline"
+    socket.send(JSON.stringify(jsonData))
+  }
+
+  window.onbeforeunload = OffServer
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    socket = new ReconnectingWebSocket("ws://localhost:8080/ts-chat", null, { debug: true, reconnectInterval: 5000 })
+    socket.onclose = () => {
+      userStatus.innerHTML = offlineBadge
       console.log("web socket successfully close")
     }
 
-    socket.onopen = ()=>{
+    socket.onopen = () => {
+      userStatus.innerHTML = onlineBadge
       console.log("Successfully connected to the web socket")
+      notifyUser("Successfully connected to the web socket")
+
     }
     // response from the server
-    socket.onmessage = (msg) =>{
+    socket.onmessage = (msg) => {
       let respData = JSON.parse(msg)
+      console.log("server condition : ", respData.condition)
+      switch (respData.condition) {
+        
+        case "username":
+          user_list = document.getElementById("online-user");
+          
+          while (user_list.firstChild) {
+            user_list.removeChild(user_list.firstChild)
+          }
+
+          if (respData.connected_user.length > 0) {
+            respData.connected_user.array.forEach(element => {
+              newUser = document.createElement(li)
+              newUser = document.appendChild(document.createTextNode(element))
+              user_list.appendChild(newUser)
+            });
+          }
+          break
+        
+          case "message":
+          let messageBox = document.getElementById("message-box")
+          messageBox = messageBox + respData.message + "/n"
+          break
+      }
     }
+    
+    document.getElementById("send").addEventListener("click", function () {
+      if ((msgInput === "") || (userNameInput === "")) {
+        notifyUser("error : input username and message !")
+        return false
+      }
+      else {
+        SendMessage()
+      }
+    })
+
+
+
+    msgInput.addEventListener("keydown", function (action) {
+      if (action.code === "Enter") {
+        if (!socket) {
+          notifyUser("error not connected to the socket")
+          return false
+        }
+        else {
+          action.stopPropagation;
+          action.preventDefault
+          SendMessage()
+        }
+      }
+    })
 
     //send data/payload back to the server through socket
-    
+    userNameInput.addEventListener("change", function () {
+      let jsonData = {};
+      jsonData["condition"] = "username"
+      jsonData["user_name"] = userNameInput.value
+      socket.send(JSON.stringify(jsonData))
+    })
 
+    function SendMessage() {
+      let jsonData = {};
+      jsonData["condition"] = "sendMessage"
+      jsonData["user_name"] = userNameInput.value
+      jsonData["message"] = msgInput.value
+      socket.send(JSON.stringify(jsonData))
+      jsonData["message"] = msgInput = ""
+    }
+
+    function notifyUser(msg) {
+      notie.alert({
+        text: msg,
+      })
+    }
   })
 </script>
+
 </html>

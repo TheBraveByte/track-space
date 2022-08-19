@@ -19,3 +19,10 @@ h2{
     min-height: 12.5rem;
     border: 3px solid #1D2021;
 }
+#indicator{
+    padding: 0.5rem;
+}
+
+input{
+    border: 3px solid #1d2021;
+}

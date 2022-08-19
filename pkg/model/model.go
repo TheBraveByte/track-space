@@ -104,7 +104,7 @@ type SocketResponse struct{
 	Condition string `json:"condition"`
 	Message string `json:"message"`
 	MessageType string `json:"message_type"`
-	UserName string `json:"user_name"`
+	// UserName string `json:"user_name"`
 	ConnectedUSer []string `json:"connected_user"`
 
 }
