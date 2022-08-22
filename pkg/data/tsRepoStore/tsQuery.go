@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
 	"github.com/yusuf/track-space/pkg/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,13 +20,10 @@ func (tm *TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
 	defer cancelCtx()
 
 	filter := bson.D{{Key: "email", Value: email}}
-	count, err := UserData(tm.TsMongoDB, "user").CountDocuments(ctx, filter)
+	opt := options.Count().SetMaxTime(2 * time.Second)
+	count, err := UserData(tm.TsMongoDB, "user").CountDocuments(ctx, filter, opt)
 	if err != nil {
-		log.Println(err)
-		return 0, err
-	}
-	if count == 1 {
-		return 0, nil
+		log.Panic(err)
 	}
 
 	if count == 0 {
@@ -35,11 +34,11 @@ func (tm *TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
 		_, err = UserData(tm.TsMongoDB, "user").InsertOne(ctx, documents)
 
 		if err != nil {
-			log.Println("cannot insert user sign up details in the database")
-			return 0, err
+			log.Panic("cannot insert user sign up details in the database")
 		}
+		return count, nil
 	}
-	return 0, nil
+	return count, nil
 }
 
 func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, email interface{}, t1, t2 string) error {
@@ -63,8 +62,31 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, email interface{}, t1, 
 		{Key: "token", Value: t1},
 		{Key: "renew_token", Value: t2},
 	}}}
-	var updateDocument bson.M
-	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&updateDocument)
+	// var updateDocument bson.M
+	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			log.Println("cannot find and update the database", err)
+			return err
+		}
+		log.Fatal(err)
+	}
+	return nil
+}
+
+func (tm *TsMongoDBRepo) UpdateUserField(email, v1, v2 string) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+
+	defer cancelCtx()
+
+	filter := bson.D{{Key: "email", Value: email}}
+
+	update := bson.D{{Key: "$set", Value: bson.D{
+		{Key: "token", Value: v1},
+		{Key: "renew_token", Value: v2},
+	}}}
+	// var updateDocument bson.M
+	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println("cannot find and update the database", err)
