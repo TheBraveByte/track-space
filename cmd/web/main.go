@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"html/template"
 	"log"
 	"os"
+	"net/http"
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -12,12 +15,18 @@ import (
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
 	"github.com/yusuf/track-space/pkg/db"
+	"github.com/yusuf/track-space/pkg/model"
 	"github.com/yusuf/track-space/pkg/ws"
 )
 
 var app config.AppConfig
 
 func main() {
+	gob.Register(model.User{})
+	gob.Register(model.Auth{})
+	gob.Register(model.Project{})
+	gob.Register(model.DailyTask{})
+	gob.Register(model.Email{})
 	app.AppInProduction = false
 	app.UseTempCache = false
 
@@ -61,7 +70,10 @@ func main() {
 	}
 
 	appRouter.SetFuncMap(template.FuncMap{})
+	
 	appRouter.Static("/static", "./static")
+	appRouter.StaticFS("./static", http.Dir("static"))
+	appRouter.StaticFile("/favicon.ico", "./resources/favicon.ico")
 	appRouter.LoadHTMLGlob("templates/*.html")
 
 	Routes(appRouter, *repo)
