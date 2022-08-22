@@ -11,6 +11,7 @@ import (
 	"github.com/yusuf/track-space/pkg/data"
 	"github.com/yusuf/track-space/pkg/data/tsRepoStore"
 	"github.com/yusuf/track-space/pkg/key"
+	"github.com/yusuf/track-space/pkg/temp"
 	"github.com/yusuf/track-space/pkg/ws"
 
 	"github.com/gin-gonic/gin"
@@ -26,9 +27,11 @@ import (
 // Validate - to help check for a validated json database model
 var Validate = validator.New()
 
-// TrackSpace Implement the repository pattern to access multiple package all at once
-// this will give me access to the app configuration package
-// and the database collections as well
+/*
+TrackSpace Implement the repository pattern to access multiple package
+all at once this will give me access to the app configuration package
+and the database collections as well
+*/
 type TrackSpace struct {
 	AppConfig *config.AppConfig
 	tsDB      data.TrackSpaceDBRepo
@@ -43,35 +46,48 @@ func NewTrackSpace(appConfig *config.AppConfig, tsm *mongo.Client) *TrackSpace {
 
 func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "home-page.html", gin.H{})
+		var templateData temp.TemplateData
+
+		// templateData.
+		templateData.IsAuthenticated = 0
+		c.HTML(http.StatusOK, "home-page.html", gin.H{
+			"authenticate": templateData.IsAuthenticated,
+		})
 	}
 }
 
-// SignUpPage - Handler to get the sign up page for user
+// SignUpPage - Handler to get the sign-up page for user
 func (ts *TrackSpace) SignUpPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "signup-page.html", gin.H{})
 	}
 }
 
-// PostSignUpPage - this validate the user input and store the value in
-// session as cookies for future usage, insert user input in the database
-// and also check for existing user
+/*
+PostSignUpPage - this validates the user input and store the value in
+session as cookies for future usage, insert user input in the database
+check for existing user and hashed the user password as well
+*/
 func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
 
-		if err := Validate.Struct(&user); err != nil {
+		if err := Validate.Struct(user); err != nil {
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
+		if err := c.Request.ParseForm(); err != nil {
+			log.Panic("form not parsed")
+			return
+		}
 
-		email := c.PostForm("email")
-		password := key.HashPassword(c.PostForm("password"))
+		user.Email = c.Request.Form.Get("email")
+		user.Password = key.HashPassword(c.Request.Form.Get("password"))
+		log.Println(user.Email, user.Password)
 
 		tsData := sessions.Default(c)
-		tsData.Set("email", email)
-		tsData.Set("password", password)
+		tsData.Set("email", user.Email)
+		tsData.Set("password", user.Password)
 
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
@@ -79,18 +95,22 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 			return
 		}
 
-		_, err := ts.tsDB.InsertInfo(email, password)
+		count, err := ts.tsDB.InsertInfo(user.Email, user.Password)
 		if err != nil {
 			log.Println(err)
+			c.Next()
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
 
-		if err == nil {
-			c.Redirect(http.StatusSeeOther, "/")
+		if count > 0 {
+			c.HTML(http.StatusSeeOther, "home-page.html", gin.H{
+				"msg":          "You have previously sign-up\nlog-in into your account",
+				"authenticate": 1,
+			})
+		} else {
+			c.Redirect(http.StatusSeeOther, "/user-info")
 		}
-
-		c.Redirect(http.StatusSeeOther, "/user-info")
 	}
 }
 
@@ -101,9 +121,11 @@ func (ts *TrackSpace) GetUserInfo() gin.HandlerFunc {
 	}
 }
 
-// PostUserInfo - this validdate the user model and get the user input details
-// and store the details in the database and this helps to redirect
-// the user to a login page
+/*
+PostUserInfo - this validates the user model and get the user input details
+and store the details in the database and this helps to redirect
+the user to a login page
+*/
 func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
@@ -155,37 +177,39 @@ func (ts *TrackSpace) GetLoginPage() gin.HandlerFunc {
 	}
 }
 
-// PostLoginPage : this handler help to verify the user password, authenicate other
-// user login details with respect to the database,generate a authorization token
-// for the user, as well as authorize the user and set the Response Header
-// with the Bearer Token
+/*
+PostLoginPage : this handler help to verify the user password, authenticate other
+user login details with respect to the database,generate an authorization token
+for the user, as well as authorize the user and set the Response Header
+with the Bearer Token
+*/
 func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
-		var user model.User
+		// var user model.User
 
 		if err := c.Request.ParseForm(); err != nil {
 			log.Println("error while parsing form")
 			return
 		}
 
-		email := tsData.Get("email")
-		password := tsData.Get("password")
-
+		email := fmt.Sprintf("%s", tsData.Get("email"))
+		// password := fmt.Sprintf("%s",tsData.Get("password"))
 		IPAddress := c.Request.RemoteAddr
 
 		// Posted form value
 		postEmail := c.Request.Form.Get("email")
 		postPassword := c.Request.Form.Get("password")
 
-		// Previous store details in the database
+		// check to verify for the stored hashed password in database
 		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail)
 
 		if ok {
-			_, msg := key.VerifyPassword(postPassword, hashedPassword)
+			// check to match hashed password and the user password input
+			ok, msg := key.VerifyPassword(postPassword, hashedPassword)
 			log.Println(msg)
-			if postPassword == password && postEmail == email {
-				token, newToken, err := auth.GenerateJWTToken(email, password, IPAddress)
+			if ok {
+				token, newToken, err := auth.GenerateJWTToken(postEmail, postPassword, IPAddress)
 				if err != nil {
 					log.Println("cannot generate json web token")
 					_ = c.AbortWithError(http.StatusBadRequest, gin.Error{
@@ -200,13 +224,14 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				authData["auth"] = []string{token, newToken}
 				t1 := authData["auth"][0]
 				t2 := authData["auth"][1]
-				fmt.Println(t1, t2)
-				err = ts.tsDB.UpdateUserInfo(user, email, t1, t2)
+				err = ts.tsDB.UpdateUserField(email, t1, t2)
 				if err != nil {
 					log.Println("cannot update user info")
 					return
 				}
-				c.Writer.Header().Set("Authorization", fmt.Sprintf("BearerToken %s", t1))
+				// c.Writer.Header().Set("Authorization", fmt.Sprintf("BearerToken %s", t1))
+				c.SetCookie("bearerToken", t1, 60*60*24, "/", "localhost", false, true)
+
 				tsData.AddFlash("Successfully login")
 
 			} else {
@@ -220,36 +245,44 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
 		}
-		fmt.Println("Successfully login")
 
-		c.HTML(http.StatusOK, "/", gin.H{})
+		var templateData temp.TemplateData
+		templateData.IsAuthenticated = 1
+		c.HTML(http.StatusOK, "home-page.html", gin.H{
+			"success":      tsData.Flashes("successfully login... Click the dashboard"),
+			"authenticate": templateData.IsAuthenticated,
+		})
 	}
 }
 
 // GetDashBoard - this show the user dashboard with respect to all the database
-// details and queries; full brief or user activites
+// details and queries; full brief or user activities
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	// a lot of logic will be done here ..... a lot
 	return func(c *gin.Context) {
-		tsData := sessions.Default(c)
-		email := fmt.Sprintf("%s", tsData.Get("email"))
+		t, ok := c.Get("token")
+		if ok {
+			tsData := sessions.Default(c)
+			email := fmt.Sprintf("%s", tsData.Get("email"))
 
-		user, err := ts.tsDB.SendUserDetails(email)
-		if err != nil {
-			log.Println(err)
-			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
-			return
+			user, err := ts.tsDB.SendUserDetails(email)
+			if err != nil {
+				log.Println(err)
+				_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
+				return
+			}
+
+			// this controller with still be updated as I progress
+
+			if err := tsData.Save(); err != nil {
+				log.Println("error from the session storage")
+			}
+			c.HTML(http.StatusOK, "dash.html", gin.H{
+				"FirstName": user["first_name"],
+				"LastName":  user["last_name"],
+				"token":     t,
+			})
 		}
-
-		// this controller with still be updated as I progress
-
-		if err := tsData.Save(); err != nil {
-			log.Println("error from the session storage")
-		}
-		c.HTML(http.StatusOK, "dash.html", gin.H{
-			"FirstName": user["first_name"],
-			"LastName":  user["last_name"],
-		})
 	}
 }
 
@@ -337,7 +370,8 @@ func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 }
 
 // DailyTaskTodo - this will help the user to get the todo-page
-//  to set up a schedule
+//
+//	to set up a schedule
 func (ts *TrackSpace) DailyTaskTodo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "daily-task.html", gin.H{})
@@ -442,28 +476,28 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 		}
 
-		data, err := ts.tsDB.GetProjectData(projectID)
+		projectData, err := ts.tsDB.GetProjectData(projectID)
 		if err != nil {
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 		}
 		c.HTML(http.StatusOK, "show-project.html", gin.H{
-			"ProjectContent": data["project_content"],
-			"ProjectName":    data["project_name"],
-			"ToolsUseAs":     data["ToolsUseAs"],
+			"ProjectContent": projectData["project_content"],
+			"ProjectName":    projectData["project_name"],
+			"ToolsUseAs":     projectData["ToolsUseAs"],
 		})
 	}
 }
 
-// SettingsPage - handlers to make general changes to user platform
+// SettingPage - handlers to make general changes to user platform
 // dashboard
 func (ts *TrackSpace) SettingPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// is to getbthe settings htmml templates
+		// is to together settings html templates
 		c.HTML(http.StatusOK, "setting.html", gin.H{})
 	}
 }
 
-// PosteSettingChange - to execute and implemented the change in  settings
+// PostSettingChange - to execute and implemented the change in  settings
 // page
 func (ts *TrackSpace) PostSettingChange() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -477,15 +511,19 @@ func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 		tsData := sessions.Default(c)
 		tsData.Clear()
 		tsData.Options(sessions.Options{MaxAge: -1})
-		tsData.Save()
+		err := tsData.Save()
+		if err != nil {
+			return
+		}
 		c.Redirect(http.StatusSeeOther, "/")
 	}
 }
 
 func (ts *TrackSpace) Statistic() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var _ temp.TemplateData
 		// Statistic report base on the projects and the ToDo schedules
-		// implemeted using D3.js
+		// implemented using D3.js
 		var _ model.User
 		c.HTML(http.StatusOK, "stat.html", gin.H{})
 	}
@@ -497,8 +535,6 @@ func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
 	}
 }
 
-
-//
 func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var res model.SocketResponse
@@ -512,6 +548,9 @@ func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
 
 		go ws.SendDataToChannel(&connect, ctx)
 
-		wsConn.WriteJSON(res.Message)
+		err = wsConn.WriteJSON(res.Message)
+		if err != nil {
+			return
+		}
 	}
 }
