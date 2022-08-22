@@ -15,17 +15,17 @@
     <h1>Track-space</h1>
     <div class="col-md-3"></div>
     <div class="col-md-6 form-container">
-      <form action="/login" method="post" novalidate class="needs-validation">
+      <form action="/login" method="post" class="needs-validation" novalidate >
         <div class="signUp-header mt-5">
           <p>Login into your account</p>
         </div>
         <div class="row mb-3 details">
           <div>
-            <input aria-label="Email" class="form-control mb-3" name="email" placeholder="Enter Email" type="text" />
+            <input aria-label="Email" class="form-control mb-3" name="email" placeholder="Enter Email" type="text" required/>
           </div>
           <div class="mb-3">
             <input aria-label="Password" class="form-control mb-3" name="password" placeholder="Enter Password"
-              type="password" />
+              type="password" required />
           </div>
         </div>
 

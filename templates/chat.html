@@ -82,6 +82,7 @@
 
 
   document.addEventListener("DOMContentLoaded", function () {
+    //Setting up the server
     socket = new ReconnectingWebSocket("ws://localhost:8080/ts-chat", null, { debug: true, reconnectInterval: 5000 })
     socket.onclose = () => {
       userStatus.innerHTML = offlineBadge
@@ -118,7 +119,7 @@
         
           case "message":
           let messageBox = document.getElementById("message-box")
-          messageBox = messageBox + respData.message + "/n"
+          messageBox = messageBox.innerHTML + respData.message + "/n"
           break
       }
     }
