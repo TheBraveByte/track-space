@@ -14,7 +14,4 @@ type AppConfig struct {
 	UseTempCache    bool
 	TsData          sessions.Session
 	TemplateCache   map[string]*template.Template
-
 }
-
-

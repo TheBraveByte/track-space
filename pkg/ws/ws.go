@@ -2,14 +2,13 @@ package ws
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"github.com/yusuf/track-space/pkg/model"
 	"log"
 	"net/http"
 	"sort"
 	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-	"github.com/yusuf/track-space/pkg/model"
 )
 
 // initialize the websocket connection and channel
@@ -28,52 +27,53 @@ var UpgradeSocketConn = websocket.Upgrader{
 func GetDataFromChannel() {
 	var resp model.SocketResponse
 	for {
-		getdata := <- WebSkChan
-		switch getdata.Condition{
+		getdata := <-WebSkChan
+		switch getdata.Condition {
 		case "username":
 			model.Client[getdata.SocketConn] = getdata.UserName
 			users := GetAllUsers()
-			resp.Condition= "username"
-			resp.ConnectedUSer= users 
+			resp.Condition = "username"
+			resp.ConnectedUSer = users
 			BroadCastToAll(resp)
 		case "sendMessage":
 			resp.Message = fmt.Sprintf("<em>%v</em> : %v", getdata.UserName, getdata.Message)
-			resp.Condition= "message"
+			resp.Condition = "message"
 			BroadCastToAll(resp)
 
 		case "serveroffline":
-			resp.Condition= "serveroffline"
+			resp.Condition = "serveroffline"
 			delete(model.Client, getdata.SocketConn)
 			users := GetAllUsers()
-			resp.ConnectedUSer= users 
+			resp.ConnectedUSer = users
 
 		}
 	}
 }
-//To get the list of user connected to the web socket
-func GetAllUsers() []string{
+
+// To get the list of user connected to the web socket
+func GetAllUsers() []string {
 	var userSlices []string
-	for _, user :=  range model.Client{
-		if user !=  ""{
+	for _, user := range model.Client {
+		if user != "" {
 			userSlices = append(userSlices, user)
 		}
-
 	}
 	sort.Strings(userSlices)
 	return userSlices
 }
 
-//BroadCastToAll - this  functions write a responses to all connected users
+// BroadCastToAll - this  functions write a responses to all connected users
 func BroadCastToAll(resp model.SocketResponse) {
-	for x :=range model.Client{
+	for x := range model.Client {
 		err := x.WriteJSON(resp)
-		if err != nil{
+		if err != nil {
 			log.Println("error write a json response")
 			_ = x.Close()
 			return
 		}
 	}
 }
+
 // SendDataToChannel - goroutine method that will send back response data
 // back to the channel
 func SendDataToChannel(socketConn *model.SocketConnection, c *gin.Context) {

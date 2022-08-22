@@ -6,7 +6,7 @@ import (
 
 // UserData Setting up the database for the user data collection
 func UserData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
-	var userCollection =dbClient.Database("track_space").Collection(collectionName)
+	var userCollection = dbClient.Database("track_space").Collection(collectionName)
 	return userCollection
 }
 

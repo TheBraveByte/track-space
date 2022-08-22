@@ -5,7 +5,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
 )
 
 type Auth struct {
@@ -79,32 +78,26 @@ type DailyTask struct {
 	EndTime      string             `json:"end_time"`
 }
 
-
-
 /*Working with Web Socket*/
 
 var WebSkChan = make(chan SocketPayLoad)
 var Client = make(map[SocketConnection]string)
 
-
-type SocketConnection struct{
+type SocketConnection struct {
 	*websocket.Conn
 }
 
-type SocketPayLoad struct{
-	Condition string `json:"condition"`
-	Message string `json:"message"`
-	UserName string `json:"user_name"`
+type SocketPayLoad struct {
+	Condition  string           `json:"condition"`
+	Message    string           `json:"message"`
+	UserName   string           `json:"user_name"`
 	SocketConn SocketConnection `json:"-"`
-
-	
 }
 
-type SocketResponse struct{
-	Condition string `json:"condition"`
-	Message string `json:"message"`
+type SocketResponse struct {
+	Condition   string `json:"condition"`
+	Message     string `json:"message"`
 	MessageType string `json:"message_type"`
 	// UserName string `json:"user_name"`
 	ConnectedUSer []string `json:"connected_user"`
-
 }
