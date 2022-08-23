@@ -465,7 +465,7 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 		ok := primitive.IsValidObjectID(c.Param("id"))
 
 		if sourceLink != "show-project" && !ok {
-			log.Println("Invalid url parameters")
+			log.Fatalln("Invalid url parameters")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Meta: "invalid parameter"})
 			return
 		}

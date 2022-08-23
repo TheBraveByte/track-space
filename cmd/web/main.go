@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"log"
 	"os"
-	"net/http"
+	
 
 
 	"github.com/gin-gonic/gin"
@@ -72,8 +72,9 @@ func main() {
 	appRouter.SetFuncMap(template.FuncMap{})
 	
 	appRouter.Static("/static", "./static")
-	appRouter.StaticFS("./static", http.Dir("static"))
-	appRouter.StaticFile("/favicon.ico", "./resources/favicon.ico")
+	appRouter.Static("/main-ckeditor5", "./main-ckeditor5")
+	// appRouter.StaticFS("./static/", http.Dir("static"))
+	// appRouter.StaticFile("/favicon.ico", "./resources/favicon.ico")
 	appRouter.LoadHTMLGlob("templates/*.html")
 
 	Routes(appRouter, *repo)
