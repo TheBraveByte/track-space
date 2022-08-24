@@ -37,7 +37,7 @@
                 {{if eq .authenticate 0}}
                 <li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
                 {{else}}
-                <li class="nav-item"><a class="nav-link" href="/auth/user/dashboard">Log out</a></li>
+                <li class="nav-item"><a class="nav-link" href="/auth/user/dashboard">Account</a></li>
                 {{end}}
                 <!-- <li class="nav-item"><a class="nav-link" href="/login">Login</a></li> -->
                 <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
@@ -250,6 +250,8 @@
     notifyMsg("{{.success}}", "success")
 
     notifyMsg("{{.msg}}", "info")
+
+    notifyMsg("{{.error}}", "error")
 
 
 </script>

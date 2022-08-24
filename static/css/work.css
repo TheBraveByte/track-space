@@ -10,12 +10,14 @@ body {
 }
 
 h1 {
-    font-family: ubuntu, monospace;
+    font-family: ubuntu Mono, monospace;
 }
 
 .track {
-    margin-top: 3.5rem;
+    margin-top: 2.0rem;
     color: white;
+    font-family: ubuntu Mono, monospace;
+
 
 
 }
@@ -26,31 +28,41 @@ hr:not([size]) {
 
 hr {
     color: white;
-    margin-bottom: 50px
+    margin-bottom: 30px
 }
 
 .work-list {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: left;
+    font-family: ubuntu Mono, monospace;
+
 }
 
 ul li {
-    font-size: larger
+    font-size: larger;
+    font-family: ubuntu Mono, monospace;
+
 }
 
 .notice {
     font-size: large;
+    font-family: ubuntu Mono, monospace;
+
 }
 
 .project {
     display: flex;
     gap: 15px;
     margin-bottom: 10px;
+    font-family: ubuntu Mono, monospace;
+
 }
 
 .project p {
     border: 2px solid #5a6063;
+    font-family: ubuntu Mono, monospace;
+
 
 }
 
@@ -61,28 +73,20 @@ ul li {
 }
 
 .form-control {
-    border: 3px solid #2b3b41;
+    border-radius: 0;
+    border: 1px solid #2b3b41;
 }
 
 .reset-submit-btn {
-    margin-top: 4rem;
-    margin-bottom: 5rem;
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
-}
+   margin-top: 2rem;
+} 
 
 
 .workspace-foot {
-    display: flex;
-    justify-content: center;
     text-align: center;
-
+    font-family: ubuntu Mono, monospace;
 }
 
-.editor-container {
-    border: 6px solid #1D2021;
-}
 
 .ck-editor__editable_inline {
     height: 400px;
@@ -102,23 +106,25 @@ ul li {
 
 .editor-container {
     background-color: white;
-    border: 10px solid #33465f;
+    border: 5px solid #33465f;
     overflow: auto;
+     font-family: ubuntu Mono, monospace;
 }
 
 .submit-btn {
-    margin-top: 4rem;
-    margin-bottom: 5rem;
-    display: flex;
-    justify-content: center;
+    font-family: ubuntu Mono, monospace;
+
 }
 .mode-btn{
-    display: flex;
-    gap: 1rem;
+    justify-items: left;
+    font-family: ubuntu Mono, monospace;
+
 }
 
 .workspace-foot {
     text-align: center;
+    font-family: ubuntu Mono, monospace;
+
 
 }
 

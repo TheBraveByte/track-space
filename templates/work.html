@@ -12,8 +12,8 @@
 
 <body>
     <main>
-        <div class="workspace-container">
-            <form action="/auth/workspace" method="post" novalidate class="needs-validation">
+        <div class="workspace-container row">
+            <form action="/auth/user/workspace" method="post" novalidate class="needs-validation">
                 <h1 class="track">Track space Editor </h1>
                 <hr>
                 <div>
@@ -33,9 +33,10 @@
                 <div class="project">
 
                     <p><input class="form-control" type="text" name="project-name" id="project-name"
-                            placeholder="Enter the name of the project"></p>
+                            placeholder="Enter the name of the project" required autocomplete="off"></p>
                     <p><input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
-                            placeholder="Add tools used i.e text-editor,source code & comment"></p>
+                            placeholder="Add tools used i.e text-editor,source code & comment" required
+                            autocomplete="off"></p>
 
                 </div>
                 <div class="row doc-editor">
@@ -46,21 +47,18 @@
                         <div class="editor"></div>
                     </div>
                 </div>
-                <div class="reset-submit-btn">
-                    <div>
-                        <button type="reset" class="w-40 btn btn-dark  btn-lg">Back</button>
-            
+                <div class="reset-submit-btn row mt-md-5">
+                    <div class="col-2 float-start">
+                        <button type="reset" class="w-40 btn btn-dark  btn-md">Back</button>
                     </div>
-                    <div class="mode-btn">
-                        <button type="submit" class="w-40 btn btn-dark btn-md ">Submit</button>
+                    <div class="mode-btn col-10 float-xxl-end">
+                        <button id="submit" type="submit" class="w-40 btn btn-dark btn-md">Submit</button>
+                        <!-- will need to work on this delete button-->
                         <button type="button" class="w-40 btn btn-danger btn-md">Delete</button>
-
                     </div>
                 </div>
-
-
             </form>
-            <div class="row workspace-foot">
+            <div class="row workspace-foot mt-md-5">
                 <p>CkEditor | Akinleye_dev</p>
             </div>
         </div>
@@ -70,8 +68,17 @@
     <script src="/static/js/jquery-3.5.1.min.js"></script>
     <script src="/main-ckeditor5/build/ckeditor.js"></script>
     <script src="/static/js/form-validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+        integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        
+
         ValidateForm()
 
         const watchdog = new CKSource.EditorWatchdog();
@@ -112,6 +119,19 @@
             console.warn('Build id: 5ynjzbbaaku7-33gd3fyy8tto');
             console.error(error);
         };
+        document.querySelector('#submit').addEventListener('click', () => {
+            const editorData = watchdog.getData();
+            function notifyMsg(msg, type) {
+                notie.alert({
+                    type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+                    text: msg,
+                })
+            }
+
+
+            notifyMsg("{{.save}}", "success")
+
+        });
 
     </script>
 </body>
