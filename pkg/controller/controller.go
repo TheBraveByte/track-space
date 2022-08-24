@@ -103,7 +103,7 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 			return
 		}
 
-		if count > 0 {
+		if count == 1 {
 			c.HTML(http.StatusSeeOther, "home-page.html", gin.H{
 				"msg":          "You have previously sign-up\nlog-in into your account",
 				"authenticate": 1,
@@ -194,7 +194,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		}
 
 		email := fmt.Sprintf("%s", tsData.Get("email"))
-		// password := fmt.Sprintf("%s",tsData.Get("password"))
+		password := fmt.Sprintf("%s", tsData.Get("password"))
 		IPAddress := c.Request.RemoteAddr
 
 		// Posted form value
@@ -202,47 +202,44 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		postPassword := c.Request.Form.Get("password")
 
 		// check to verify for the stored hashed password in database
-		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail)
+		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail, password, postPassword)
 
 		if ok {
 			// check to match hashed password and the user password input
-			ok, msg := key.VerifyPassword(postPassword, hashedPassword)
-			log.Println(msg)
-			if ok {
-				token, newToken, err := auth.GenerateJWTToken(postEmail, postPassword, IPAddress)
-				if err != nil {
-					log.Println("cannot generate json web token")
-					_ = c.AbortWithError(http.StatusBadRequest, gin.Error{
-						Err:  err,
-						Type: 0,
-						Meta: nil,
-					})
-					return
-				}
 
-				authData := make(map[string][]string)
-				authData["auth"] = []string{token, newToken}
-				t1 := authData["auth"][0]
-				t2 := authData["auth"][1]
-				err = ts.tsDB.UpdateUserField(email, t1, t2)
-				if err != nil {
-					log.Println("cannot update user info")
-					return
-				}
-				// c.Writer.Header().Set("Authorization", fmt.Sprintf("BearerToken %s", t1))
-				c.SetCookie("bearerToken", t1, 60*60*24, "/", "localhost", false, true)
-
-				tsData.AddFlash("Successfully login")
-
-			} else {
-				c.AbortWithStatus(http.StatusUnauthorized)
-				tsData.AddFlash("Incorrect Email or Password")
-				c.Abort()
+			token, newToken, err := auth.GenerateJWTToken(postEmail, postPassword, IPAddress)
+			if err != nil {
+				log.Println("cannot generate json web token")
+				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{
+					Err:  err,
+					Type: 0,
+					Meta: nil,
+				})
 				return
 			}
+
+			authData := make(map[string][]string)
+			authData["auth"] = []string{token, newToken}
+			t1 := authData["auth"][0]
+			t2 := authData["auth"][1]
+			err = ts.tsDB.UpdateUserField(email, t1, t2)
+			if err != nil {
+				log.Println("cannot update user info")
+				return
+			}
+			// c.Writer.Header().Set("Authorization", fmt.Sprintf("BearerToken %s", t1))
+			c.SetCookie("bearerToken", t1, 60*60*24, "/", "localhost", false, true)
+
+			tsData.AddFlash("Successfully login")
+		} else {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			tsData.AddFlash("Incorrect Email or Password")
+			c.Abort()
+			return
 		}
 
-		if err := tsData.Save(); err != nil {
+		err := tsData.Save()
+		if err != nil {
 			log.Println("error from the session storage")
 		}
 

@@ -8,6 +8,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/yusuf/track-space/pkg/key"
 	"github.com/yusuf/track-space/pkg/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,26 +20,25 @@ func (tm *TsMongoDBRepo) InsertInfo(email, password string) (int64, error) {
 
 	defer cancelCtx()
 
+	var userInfo bson.M
 	filter := bson.D{{Key: "email", Value: email}}
-	opt := options.Count().SetMaxTime(2 * time.Second)
-	count, err := UserData(tm.TsMongoDB, "user").CountDocuments(ctx, filter, opt)
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&userInfo)
 	if err != nil {
-		log.Panic(err)
-	}
-
-	if count == 0 {
-		documents := bson.D{
-			{Key: "email", Value: email},
-			{Key: "password", Value: password},
+		if err == mongo.ErrNoDocuments {
+			// This error means your query did not match any documents.
+			documents := bson.D{
+				{Key: "email", Value: email},
+				{Key: "password", Value: password},
+			}
+			_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, documents)
+			if err != nil {
+				log.Panic("cannot insert user sign up details in the database")
+			}
+			return 0, nil
 		}
-		_, err = UserData(tm.TsMongoDB, "user").InsertOne(ctx, documents)
-
-		if err != nil {
-			log.Panic("cannot insert user sign up details in the database")
-		}
-		return count, nil
+		panic(err)
 	}
-	return count, nil
+	return 1, nil
 }
 
 func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, email interface{}, t1, t2 string) error {
@@ -97,13 +97,13 @@ func (tm *TsMongoDBRepo) UpdateUserField(email, v1, v2 string) error {
 	return nil
 }
 
-func (tm *TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
+func (tm *TsMongoDBRepo) VerifyLogin(email, hashedPassword, postPassword string) (bool, string) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 
 	defer cancelCtx()
 
 	var result bson.M
-	filter := bson.D{{Key: "email", Value: email}}
+	filter := bson.D{{Key: "email", Value: email}, {Key: "password", Value: hashedPassword}}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -112,8 +112,8 @@ func (tm *TsMongoDBRepo) VerifyLogin(email string) (bool, string) {
 		log.Fatal(err)
 		return false, "No match document found"
 	}
-	password := fmt.Sprintf("%v", result["password"])
-	return true, password
+	ok, msg := key.VerifyPassword(postPassword, hashedPassword)
+	return ok, msg
 }
 
 func (tm *TsMongoDBRepo) SendUserDetails(email string) (primitive.M, error) {

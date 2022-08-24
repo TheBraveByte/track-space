@@ -30,10 +30,10 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.GET("/user/dashboard", h.GetDashBoard())
 
 		authRouter.GET("/user/workspace", h.WorkSpace())
-		authRouter.POST("/user/workspace/save", h.PostWorkSpace())
+		authRouter.POST("/user/workspace", h.PostWorkSpace())
 
 		authRouter.GET("/user/daily-task", h.DailyTaskTodo())
-		authRouter.POST("/user/daily-task/save", h.PostDailyTaskTodo())
+		authRouter.POST("/user/daily-task", h.PostDailyTaskTodo())
 
 		authRouter.GET("/user/project-table", h.ShowProjectTable())
 		authRouter.GET("/user/workspace/:src/:id/show-project", h.ShowUserProject())
