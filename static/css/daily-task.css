@@ -35,20 +35,7 @@ hr {
 }
 
 
-.row {
-    gap: 1rem;
-    column-gap: 3rem;
-}
 
-.col {
-    /* gap: 1rem;? */
-    column-gap: 3rem;
-}
-
-.row>* {
-    padding-left: 0;
-    padding-right: 0;
-}
 
 .set-time {
     margin-top: 1.5rem;
@@ -56,9 +43,9 @@ hr {
 
 .reset-submit-btn {
     margin-top: 3rem;
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
+    
+    justify-content: space-between;
+    /* gap: 4rem; */
 }
 
 .workspace-foot {

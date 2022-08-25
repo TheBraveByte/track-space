@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Track Space Daily Task</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
-            rel="stylesheet"
-    />
-    <link href="/static/bootstrap.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/css/daily-task.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
+        rel="stylesheet" />
+    <link href="/static/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/daily-task.css" />
 </head>
+
 <body>
-<main>
-    <div class="row set-task-container">
-        <div class="col-md-6">
-            <form action="/auth/user/daily-task" method="post" novalidate class="needs-validation">
-                <h1>Track Space ToDo</h1>
-                <hr/>
-                <p class="todo">Schedule Your Daily Task Ahead for Easily Work Flow</p>
-                <!-- <div class="col-md-3"></div> -->
-                <div class="row">
-                    <label for="task">Task or Event</label>
-                    <input type="text" name="task" id="" class="form-control"/>
+    <main>
+        <div class="row set-task-container">
+            <!-- <div class="col-md-6"></div> -->
+            <div class="col-md-6">
+                <form action="/auth/user/daily-task" method="post" novalidate class="needs-validation">    
+                    <h1>Track Space ToDo</h1>
+                    <hr />
+                    <p class="todo">Schedule Your Daily Task Ahead for Easily Work Flow</p>
+                    <!-- <div class="col-md-3"></div> -->
+                    <div class="row">
+                        <label for="task" class="form-label">Task or Event</label>
+                        <input type="text" name="task" id="" class="form-control" />
 
-                    <label for="schedule-date">Set Date</label>
-                    <input type="date" name="date_schedule" id="" class="form-control"/>
-                </div>
+                        <label class="form-label" for="schedule-date">Set Date</label>
+                        <input type="date" name="date_schedule" id="" class="form-control" />
+                    </div>
 
-                <div class="row set-time">
-                    <div class="col">
-                        <label for="start-time">Set Start Time</label>
-                        <input type="time" name="start-time" id="" class="form-control"/>
+                    <div class="row set-time">
+                        <div class="col">
+                            <label for="start-time" class="form-label">Set Start Time</label>
+                            <input type="time" name="start-time" id="" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <label for="end-time" class="form-label">Set End Time</label>
+                            <input type="time" name="end-time" id="" class="form-control" />
+                        </div>
                     </div>
-                    <div class="col">
-                        <label for="end-time">Set End Time</label>
-                        <input type="time" name="end-time" id="" class="form-control"/>
+                    <div class="row reset-submit-btn  mt-xxl-5">
+                        <div class=" col-2 float-start">
+                            <button type="reset" class="w-30 btn btn-dark btn-md">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-10 float-end">
+                            <button type="submit" class="w-30 btn btn-md btn-success btn-md" id="submit-btn">
+                                Submit
+                            </button>
+                        </div>
                     </div>
+                </form>
+                <div class="workspace-foot">
+                    <p>CkEditor | Akinleye_dev</p>
                 </div>
-                <div class="reset-submit-btn">
-                    <div class="reset">
-                        <button type="reset" class="w-40 btn btn-dark btn-lg">
-                            Back
-                        </button>
-                    </div>
-                    <div class="submit">
-                        <button type="menu" class="w-40 btn btn-dark btn-lg">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <div class="workspace-foot">
-                <p>CkEditor | Akinleye_dev</p>
             </div>
+            <div class="col-md-6"></div>
         </div>
-        <div class="col-md-6"></div>
-    </div>
-</main>
+    </main>
 
 
 </body>
@@ -75,5 +76,18 @@
         format: "yyyy-mm-dd",
         minDate: new Date(),
     });
+    document.getElementById("submit-btn").addEventListener("click", function () {
+        function notifyMsg(msg, type) {
+            notie.alert({
+                type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+                text: msg,
+            })
+        }
+     
+
+
+        notifyMsg("{{.taskSaved}}", "success")
+    })
 </script>
+
 </html>
