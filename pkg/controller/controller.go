@@ -46,12 +46,9 @@ func NewTrackSpace(appConfig *config.AppConfig, tsm *mongo.Client) *TrackSpace {
 
 func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var templateData temp.TemplateData
-
-		// templateData.
-		templateData.IsAuthenticated = 0
+		// var templateData temp.TemplateData
 		c.HTML(http.StatusOK, "home-page.html", gin.H{
-			"authenticate": templateData.IsAuthenticated,
+			"authenticate": 0,
 		})
 	}
 }
@@ -98,7 +95,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		count, err := ts.tsDB.InsertInfo(user.Email, user.Password)
 		if err != nil {
 			log.Println(err)
-			c.Next()
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
@@ -186,7 +182,8 @@ with the Bearer Token
 func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
-		// var user model.User
+		var templateData temp.TemplateData
+		templateData.IsAuthenticated = 1
 
 		if err := c.Request.ParseForm(); err != nil {
 			log.Println("error while parsing form")
@@ -202,11 +199,10 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		postPassword := c.Request.Form.Get("password")
 
 		// check to verify for the stored hashed password in database
-		ok, hashedPassword := ts.tsDB.VerifyLogin(postEmail, password, postPassword)
+		ok, _ := ts.tsDB.VerifyLogin(postEmail, password, postPassword)
 
 		if ok {
 			// check to match hashed password and the user password input
-
 			token, newToken, err := auth.GenerateJWTToken(postEmail, postPassword, IPAddress)
 			if err != nil {
 				log.Println("cannot generate json web token")
@@ -222,20 +218,20 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			authData["auth"] = []string{token, newToken}
 			t1 := authData["auth"][0]
 			t2 := authData["auth"][1]
+
 			err = ts.tsDB.UpdateUserField(email, t1, t2)
+
 			if err != nil {
 				log.Println("cannot update user info")
 				return
 			}
-			// c.Writer.Header().Set("Authorization", fmt.Sprintf("BearerToken %s", t1))
-			c.SetCookie("bearerToken", t1, 60*60*24, "/", "localhost", false, true)
-
+			c.SetCookie("bearerToken", t1, 120*60*60*24, "/", "localhost", false, true)
 			tsData.AddFlash("Successfully login")
+
 		} else {
-			c.AbortWithStatus(http.StatusUnauthorized)
-			tsData.AddFlash("Incorrect Email or Password")
-			c.Abort()
-			return
+			c.HTML(http.StatusOK, "home-page.html", gin.H{
+				"error": "incorrect email or password",
+			})
 		}
 
 		err := tsData.Save()
@@ -243,10 +239,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			log.Println("error from the session storage")
 		}
 
-		var templateData temp.TemplateData
-		templateData.IsAuthenticated = 1
 		c.HTML(http.StatusOK, "home-page.html", gin.H{
-			"success":      tsData.Flashes("successfully login... Click the dashboard"),
+			"success":      "successfully login! click dashboard",
 			"authenticate": templateData.IsAuthenticated,
 		})
 	}
@@ -268,9 +262,17 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 				return
 			}
+			// Count different projects type
+			count, err := ts.tsDB.OrganizeWorkSpaceData(email)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			code := count["code"]
+			text := count["text"]
+			article := count["article"]
 
 			// this controller with still be updated as I progress
-
 			if err := tsData.Save(); err != nil {
 				log.Println("error from the session storage")
 			}
@@ -278,19 +280,21 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				"FirstName": user["first_name"],
 				"LastName":  user["last_name"],
 				"token":     t,
+				"CodeCount": code,
+				"TextCount": text,
+				"ArticleCount": article,
 			})
 		}
 	}
 }
 
-var StartTime time.Time
-
 // WorkSpace -  this show the user workspace/ worksheet to execute
 // projects and also to make use of other tools
 func (ts *TrackSpace) WorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var startTime time.Time
 		c.HTML(http.StatusOK, "work.html", gin.H{
-			"StartTime": StartTime.Local().UTC(),
+			"StartTime": startTime,
 		})
 	}
 }
@@ -314,29 +318,29 @@ func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 			log.Println("cannot parse the workspace form")
 			return
 		}
+		var startTime time.Time
 		project.ProjectName = strings.ToTitle(c.PostForm("project-name"))
 		project.ToolsUseAs = strings.ToLower(c.PostForm("project-tool-use"))
-		project.ProjectContent = c.PostForm("editor")
-		project.StartTime = StartTime.Local().UTC()
+		project.ProjectContent = c.Request.Form.Get("myText")
+		project.StartTime = startTime
 
 		err := ts.tsDB.StoreWorkSpaceData(userEmail, project)
 		if err != nil {
 			log.Println("Error while storing using user project data")
 			return
 		}
-		tsData.AddFlash("successfully submitted project")
 
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
 		}
 		c.HTML(http.StatusOK, "work.html", gin.H{
-			"Save": tsData.Flashes("successfully submitted project"),
+			"save": fmt.Sprintf("%v suubmitted successfully", project.ProjectName),
 		})
 	}
 }
 
-// ProcessWorkSpace - this will help execute the queries to help group different
-// type of projects in a map[string]interface{}
+/*ProcessWorkSpace - this will help execute the queries to help group different
+type of projects in a map[string]interface{}
 func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
@@ -360,11 +364,12 @@ func (ts *TrackSpace) ProcessWorkSpace() gin.HandlerFunc {
 		text := count["text"]
 
 		c.HTML(http.StatusOK, "dash.html", gin.H{
-			"CodeCount": code,
-			"TextCount": text,
-		})
-	}
-}
+ 			"CodeCount": code,
+ 			"TextCount": text,
+ 		})
+ 	}
+ }
+*/
 
 // DailyTaskTodo - this will help the user to get the todo-page
 //
@@ -413,7 +418,7 @@ func (ts *TrackSpace) PostDailyTaskTodo() gin.HandlerFunc {
 		}
 
 		c.HTML(http.StatusOK, "daily-task.html", gin.H{
-			"Save": tsData.Flashes("successfully submitted project"),
+			"taskSaved": "Schedule task added",
 		})
 	}
 }

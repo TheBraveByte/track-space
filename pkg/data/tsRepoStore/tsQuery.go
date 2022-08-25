@@ -2,11 +2,8 @@ package tsRepoStore
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
-
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/yusuf/track-space/pkg/key"
 	"github.com/yusuf/track-space/pkg/model"
@@ -103,11 +100,14 @@ func (tm *TsMongoDBRepo) VerifyLogin(email, hashedPassword, postPassword string)
 	defer cancelCtx()
 
 	var result bson.M
-	filter := bson.D{{Key: "email", Value: email}, {Key: "password", Value: hashedPassword}}
+	filter := bson.D{
+		{Key: "email", Value: email},
+		{Key: "password", Value: hashedPassword},
+	}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return false, "No previous user document match found"
+			return false, "not a registered user"
 		}
 		log.Fatal(err)
 		return false, "No match document found"
@@ -179,28 +179,36 @@ func (tm *TsMongoDBRepo) OrganizeWorkSpaceData(email string) (map[string]int, er
 		if key == "project_details" {
 			switch v := value.(type) {
 			case []model.Project:
-				var countCode, countText int = 0, 0
+				var countCode, countText, countArticle int = 0, 0, 0
 				for _, y := range v {
 					if y.ToolsUseAs == "code" {
 						countCode += 1
-					} else {
+					}
+					if y.ToolsUseAs == "text" {
 						countText += 1
+					} else {
+						countArticle += 1
 					}
 				}
-				newFunction(count, countCode)
-				newFunction1(count, countText)
+				Code(count, countCode)
+				Text(count, countText)
+				Article(count, countArticle)
 			}
 		}
 	}
 	return count, nil
 }
 
-func newFunction1(count map[string]int, countText int) {
+func Code(count map[string]int, countText int) {
 	count["text"] = countText
 }
 
-func newFunction(count map[string]int, countCode int) {
+func Text(count map[string]int, countCode int) {
 	count["code"] = countCode
+}
+
+func Article(count map[string]int, countArticle int) {
+	count["article"] = countArticle
 }
 
 func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, email string) error {
