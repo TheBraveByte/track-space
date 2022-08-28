@@ -26,7 +26,7 @@ func GenerateJWTToken(email string, password string, ipaddress string) (string, 
 	trackToken := TrackClaims{
 		jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
-			ExpiresAt: time.Now().Local().Add(time.Duration(10) * time.Hour).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Duration(12045) * time.Hour).Unix(),
 			Issuer:    "trackSpace",
 		},
 		email,
@@ -35,7 +35,7 @@ func GenerateJWTToken(email string, password string, ipaddress string) (string, 
 	}
 	refreshToken := jwt.StandardClaims{
 		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Local().Add(time.Duration(24) * time.Hour).Unix(),
+		ExpiresAt: time.Now().Local().Add(time.Duration(485994) * time.Hour).Unix(),
 		Issuer:    "trackSpace",
 	}
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, trackToken).SignedString([]byte(os.Getenv("TOKEN")))
