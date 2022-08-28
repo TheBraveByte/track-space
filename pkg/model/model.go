@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Auth struct {
@@ -32,56 +31,58 @@ type Auth struct {
 // }
 
 type User struct {
-	ID             primitive.ObjectID `json:"_id" bson:"_id"`
-	FirstName      string             `json:"first_name"`
-	LastName       string             `json:"last_name"`
-	Email          string             `json:"email"`
-	Password       string             `json:"password"`
-	YrsOfExp       string             `json:"yrs_of_exp"`
-	Country        string             `json:"country"`
-	PhoneNumber    string             `json:"phone_number"`
-	IPAddress      string             `json:"ip_address"`
-	Address        string             `json:"address"`
-	UserType       []string           `son:"user_type"`
-	Stack          []string           `son:"stack"`
-	ProjectDetails []Project          `json:"project_details" bson:"project_details"`
-	Todo           []DailyTask        `json:"todo" bson:"todo"`
-	CreatedAt      time.Time          `json:"created_at"`
-	UpdatedAt      time.Time          `json:"updated_at"`
-	Token          string             `json:"token"`
-	RenewToken     string             `json:"renew_token"`
+	ID             string      `json:"_id" bson:"_id"`
+	FirstName      string      `json:"first_name"`
+	LastName       string      `json:"last_name"`
+	Email          string      `json:"email"`
+	Password       string      `json:"password"`
+	YrsOfExp       string      `json:"yrs_of_exp"`
+	Country        string      `json:"country"`
+	PhoneNumber    string      `json:"phone_number"`
+	IPAddress      string      `json:"ip_address"`
+	Address        string      `json:"address"`
+	UserType       []string    `son:"user_type"`
+	Stack          []string    `json:"stack"`
+	ProjectDetails []Project   `json:"project_details" bson:"project_details"`
+	Todo           []DailyTask `json:"todo" bson:"todo"`
+	CreatedAt      time.Time   `json:"created_at"`
+	UpdatedAt      time.Time   `json:"updated_at"`
+	Token          string      `json:"token"`
+	RenewToken     string      `json:"renew_token"`
 }
 
 type Project struct {
-	ID             primitive.ObjectID `bson:"_id"`
-	ProjectName    string             `json:"project_name"`
-	ProjectContent string             `json:"project_content"`
-	ToolsUseAs     string             `json:"tools_use_as"`
-	StartTime      time.Time          `json:"start_time"`
-	EndTime        time.Time          `json:"end_time"`
-	Duration       time.Duration      `json:"duration"`
+	ID             string    `bson:"_id"`
+	ProjectName    string    `json:"project_name"`
+	ProjectContent string    `json:"project_content"`
+	ToolsUseAs     string    `json:"tools_use_as"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	CreatedAt      time.Time `json:"created_at"`
+	Status         string    `json:"status"`
 }
 
 type Email struct {
-	ID           primitive.ObjectID `json:"_id" bson:"_id"`
-	Message      string             `json:"message"`
-	Receiver     string             `json:"receiver" validate:"required"`
-	Sender       string             `json:"sender" validate:"required"`
-	MailTemplate string             `json:"mail_template"`
+	ID           string `json:"_id" bson:"_id"`
+	Message      string `json:"message"`
+	Receiver     string `json:"receiver" validate:"required"`
+	Sender       string `json:"sender" validate:"required"`
+	MailTemplate string `json:"mail_template"`
 }
 
 type DailyTask struct {
-	ID           primitive.ObjectID `json:"_id" bson:"_id"`
-	ToDoTask     string             `json:"to_do_task"`
-	DateSchedule string             `json:"date_schedule"`
-	StartTime    string             `json:"start_time"`
-	EndTime      string             `json:"end_time"`
+	ID           string `json:"_id" bson:"_id"`
+	ToDoTask     string `json:"to_do_task"`
+	DateSchedule string `json:"date_schedule"`
+	StartTime    string `json:"start_time"`
+	EndTime      string `json:"end_time"`
 }
 
 /*Working with Web Socket*/
 
-var WebSkChan = make(chan SocketPayLoad)
-var Client = make(map[SocketConnection]string)
+var (
+	WebSkChan = make(chan SocketPayLoad)
+	Client    = make(map[SocketConnection]string)
+)
 
 type SocketConnection struct {
 	*websocket.Conn
@@ -101,3 +102,4 @@ type SocketResponse struct {
 	// UserName string `json:"user_name"`
 	ConnectedUSer []string `json:"connected_user"`
 }
+
