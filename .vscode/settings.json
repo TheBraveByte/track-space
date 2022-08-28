@@ -5,5 +5,17 @@
     "workbench.colorTheme": "GitHub Dark",
     "editor.fontSize": 15,
     "terminal.integrated.lineHeight": 1.4,
-    "terminal.integrated.fontSize": 15
+    "terminal.integrated.fontSize": 15,
+    "editor.lineHeight": 0,
+    "editor.defaultFormatter": "golang.go",
+    "liveServer.settings.port": 5501,
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

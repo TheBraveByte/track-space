@@ -247,11 +247,13 @@
     }
 
 
-    notifyMsg("{{.success}}", "success")
-
-    notifyMsg("{{.msg}}", "info")
-
-    notifyMsg("{{.error}}", "error")
+    {{with .success}}
+    notifyMsg("{{.}}", "success")
+    {{end}}
+    
+    {{with .error}}
+    notifyMsg("{{.}}", "error")
+    {{end}}
 
 
 </script>
