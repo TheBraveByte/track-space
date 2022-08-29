@@ -37,7 +37,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 
 		authRouter.GET("/user/project-table", h.ShowProjectTable())
 		authRouter.GET("/user/workspace/:src/:id/show-project", h.ShowUserProject())
-		authRouter.POST("user/workspcae/:src/:id/change", h.ModifyUserProject())
+		authRouter.POST("/user/workspcae/:src/:id/change", h.ModifyUserProject())
 
 		authRouter.GET("/user/setting", h.SettingPage())
 		authRouter.POST("/user/setting", h.PostSettingChange())

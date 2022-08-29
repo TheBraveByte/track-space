@@ -522,7 +522,7 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 		projectID := c.Param("id")
 		ok := primitive.IsValidObjectID(c.Param("id"))
 
-		if sourceLink != "show-project" && !ok {
+		if sourceLink != "project-table" && !ok {
 			log.Fatalln("Invalid url parameters")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Meta: "invalid parameter"})
 			return
@@ -550,7 +550,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		var project model.Project
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
-		if sourceLink != "show-project" && !ok {
+		if sourceLink != "project-table" && !ok {
 			log.Fatalln("Invalid url parameters")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Meta: "invalid parameter"})
 			return
@@ -562,7 +562,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 			log.Println("invalid ID cannot convert the Object ID")
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("project id is invalid")})
 		}
-		project.ProjectName = strings.ToTitle(c.PostForm("project-name"))
+		project.ProjectName = strings.ToLower(c.PostForm("project-name"))
 		project.ToolsUseAs = strings.ToLower(c.PostForm("project-tool-use"))
 		project.ProjectContent = c.Request.Form.Get("myText")
 		project.Status = "modified"
