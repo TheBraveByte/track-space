@@ -1,28 +1,63 @@
-.chat-container{
-    margin-top: 2rem;
+body {
+    background: #77889e;
+
 }
 
-h1{
-    font-family: Ubuntu Mono;
-    font-weight: bold;
+.chat-container {
+    margin-top: 2rem;
+    background-color: #ffffff;
+    padding-left: 3rem;
+    padding-right: 3rem;
+
+}
+
+h1 {
+    font-weight: normal;
+    font-size: 2rem;
+    margin-top: 2rem;
+    color: #33465f;
+}
+
+p {
     font-size: 1.5rem;
+    font-weight: normal;
+    color: #33465f
+    
 }
 
-h2{
-    margin-top: 2rem;
-    font-family: Ubuntu Mono;
+h2 {
     font-weight: normal;
     font-size: larger;
 }
 
-.message-box{
-    min-height: 12.5rem;
-    border: 3px solid #1D2021;
+.form-label {
+    color: #1D2021;;
 }
-#indicator{
+
+.message-box {
+    min-height: 12.5rem;
+    border: 2px solid #33465f;
+    border-radius: 10px;
+}
+
+.btn {
+    color: #1D2021;
+}
+
+#indicator {
     padding: 0.5rem;
 }
 
-input{
+input {
     border: 3px solid #1d2021;
+}
+
+.btn-back {
+    border: 4px solid #1D2021;
+
+}
+
+.btn-back a {
+    color: #1D2021;
+    text-decoration: none;
 }

@@ -60,19 +60,16 @@
           
           <tr>
             {{range $a, $b := $v}}
-            {{if eq $a "$oid"}}
+            {{if eq $a "_id"}}
             <td>
-              <a href="/auth/workspace/project-table/{{$b}}/show-project"
+              <a href="/auth/user/workspace/project-table/{{$b}}/show-project"
                 >{{$b}}
               </a>
             </td>
             {{ else if (eq $a "project_name")}}
-
             <td>{{$b}}</td>
             {{else if (eq $a "tools_use_as")}}
-
             <td>{{$b}}</td>
-
             {{else if (eq $a "updated_at")}}
             <td>{{$b}}</td>
             {{else if (eq $a "status")}}
