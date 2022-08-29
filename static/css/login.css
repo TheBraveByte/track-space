@@ -1,103 +1,72 @@
-
-/*!* #33465f*/
-/*#c6c9ce*/
-/*#1D2021*/
-/*#566277 *!*/
-
 body{
-    background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    background: #77889e;
+    /* background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
 
 }
 
 .form-container{
-    background-color: #33465f;
+    background-color: #ffffff;
+    min-height: 500px;
     border-radius: 5px;
+   
+   
 }
 h1{
     margin-bottom: 2rem;
     color: #33465f;
     font-size: 2.0rem;
-    font-weight: normal;
-    /* font- */
+    font-weight: normal;  
 }
+
 #login-form{
     margin-top: 2rem;
+    margin-left: 50;
+    margin-right: 50;
     text-align: center;
-    padding-left: 3.5rem;
-    padding-right: 3.5rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+.signUp-header{
+    padding-left: 4rem;
+    padding-right: 4rem;
+    margin-bottom: 1rem;
 }
 .signUp-header p {
-    /* text-align: left; */
-    color: #ffffff;
+    text-align: center;
+    color: #33465f;
     font-weight: normal;
     font-size: 1.5rem;
-}
+} 
 .details{
     padding-left: 4rem;
     padding-right: 4rem;
 }
-.terms {
-    /* color: #ffffff; */
-    text-align: left;
 
-}
-
-.terms p {
-    color: #ffffff;
-    font-style: normal;
-    font-weight: 600;
-}
-
-.terms span {
-    color: #c6c9ce;
-
-}
-
-.sign-up {
-
-    background-color: #c6c9ce;
-    margin-bottom: 15px;
-    color: #1d2022;
+.sign-in {
+    background-color: #ffffff;
+    /* background-image: linear-gradient(180deg, rgba(86, 98, 119, 1), rgba(198, 201, 206, 1)); */
+    margin-bottom: 10px;
+    border-radius: 25px;
     font-weight: normal;
+    font-size: larger;
     justify-items: center;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    border-bottom-width: 2px;
-
-}
-
-.alt {
-    text-align: center;
-    color: #ffffff;
-    font-style: italic;
-    font-weight: bold;
+    border: 3px solid #6b7d9c;;
+    color: #33465f;
 }
 
 
-.bt {
-    background-color: #c6c9ce;
-    margin-bottom: 5px;
-    font-weight: normal;
-    font-size: medium;
+.login-bt{
     justify-items: center;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-    border-bottom-width: 2px;
- 
+    padding-left: 13rem;
+    padding-right: 13rem;
+}
+.sign-in:hover{
+    background-color: #6b7d9c;;
 }
 
-.alt-login {
-    margin-bottom: 0.5rem;
-}
-
-.ft {
-    text-decoration: none;
-}
-
-.ft p {
-    color: #ffffff;
+.fp{
     text-align: left;
-    text-decoration: none;
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
+

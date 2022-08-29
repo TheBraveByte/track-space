@@ -1,51 +1,57 @@
 body {
-    background-image: linear-gradient(to top right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
 }
 
 .set-task-container {
-    margin-left: 10rem;
-    margin-right: 10rem;
+    background-color: #ffffff;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
 
 }
 
 h1 {
     font-family: Ubuntu Mono;
-    color: white;
-    margin-top: 3.5rem;
+    color: #33465f;
+    margin-top: 1.5rem;
 }
 
 hr:not([size]) {
-    height: 4px;
+    height: 3px;
 }
 
 hr {
-    color: white;
-    margin-bottom: 50px
+    color: #33465f;
+    /* margin-bottom: 50px */
 }
 
-.todo{
+.todo {
     font-family: Ubuntu Mono;
     font-size: 1.5rem;
     font-weight: normal;
     text-align: left;
 }
 
-.form-control{
-    border: 3px solid #2b3b41;
+.btn-back {
+    border: 4px solid #1D2021;
+
 }
 
-
-
-
-.set-time {
-    margin-top: 1.5rem;
+.btn-back a {
+    color: #1D2021;
+    text-decoration: none;
 }
 
-.reset-submit-btn {
-    margin-top: 3rem;
-    
-    justify-content: space-between;
-    /* gap: 4rem; */
+.btn-submit {
+    border: 4px solid #c6c9ce;
+    color: #ffffff;
+    background: #33465f;
+
+}
+
+.btn-submit a {
+    color: #ffffff;
 }
 
 .workspace-foot {
@@ -54,7 +60,8 @@ hr {
     justify-content: center;
     text-align: center;
 }
-.workspace-foot p{
+
+.workspace-foot p {
     text-align: center;
     font-weight: light;
 }
