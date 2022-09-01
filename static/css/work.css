@@ -6,20 +6,15 @@
 */
 
 body {
-    background-image: linear-gradient(0deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    background-color: #ffffff;
+    /* background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
 }
 
-h1 {
-    font-family: ubuntu Mono, monospace;
-}
 
 .track {
     margin-top: 2.0rem;
-    color: white;
-    font-family: ubuntu Mono, monospace;
-
-
-
+    color: #33465f;
+    font-weight: normal;
 }
 
 hr:not([size]) {
@@ -27,130 +22,63 @@ hr:not([size]) {
 }
 
 hr {
-    color: white;
+    color: #1D2021;
     margin-bottom: 30px
 }
 
 .work-list {
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: light;
     text-align: left;
-    font-family: ubuntu Mono, monospace;
 
 }
 
 ul li {
-    font-size: larger;
-    font-family: ubuntu Mono, monospace;
+    font-size: large;
 
 }
 
 .notice {
     font-size: large;
-    font-family: ubuntu Mono, monospace;
-
-}
-
-.project {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
-    font-family: ubuntu Mono, monospace;
-
-}
-
-.project p {
-    border: 2px solid #5a6063;
-    font-family: ubuntu Mono, monospace;
-
 
 }
 
 .workspace-container {
-    margin-left: 10rem;
-    margin-right: 10rem;
+    background-color: #ffffff;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
 
 }
 
 .form-control {
-    border-radius: 0;
-    border: 1px solid #2b3b41;
+    border-radius: 2px;
+    border: 2px solid #33465f;
 }
 
+.tox-tinymce{
+    border: 3px solid #1D2021;
+}
 .reset-submit-btn {
-   margin-top: 2rem;
-} 
-
+    margin-top: 2rem;
+}
 
 .workspace-foot {
     margin-top: 40px;
     text-align: center;
-    font-family: ubuntu Mono, monospace;
 }
 
-
-.ck-editor__editable_inline {
-    height: 400px;
-    color: #1D2021;
-    background-color: white;
-    border: 10px solid white;
-    overflow: auto;
-
-}
-
-
-.row>* {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-
-.editor-container {
-    background-color: white;
-    border: 5px solid #33465f;
-    overflow: auto;
-     font-family: ubuntu Mono, monospace;
-}
-
-.submit-btn {
-    font-family: ubuntu Mono, monospace;
-
-}
-.mode-btn{
+.mode-btn {
     justify-items: left;
-    font-family: ubuntu Mono, monospace;
 
 }
 
 .workspace-foot {
     text-align: center;
-    font-family: ubuntu Mono, monospace;
-
 
 }
 
-/* from the online documentation */
-.doc-editor {
-    border: 1px solid var(--ck-color-base-border);
-    border-radius: var(--ck-border-radius);
-
-    /* Set vertical boundaries for the document editor. */
-    max-height: 700px;
-
-    /* This element is a flex container for easier rendering. */
-    display: flex;
-    flex-flow: column nowrap;
+.editor{
+    border: 3px solid #1D2021;
 }
-
-#document-editor__toolbar {
-    padding-left: 0;
-    padding-right: 0;
-    z-index: 1;
-
-    /* Create the illusion of the toolbar floating over the editable. */
-    box-shadow: 0 0 5px hsla(0, 0%, 0%, .2);
-
-    /* Use the CKEditor CSS variables to keep the UI consistent. */
-    border-bottom: 1px solid var(--ck-color-toolbar-border);
-}
-
