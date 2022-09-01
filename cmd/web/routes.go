@@ -23,7 +23,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	router.POST("/login", h.PostLoginPage())
 
 	authRouter := routes.Group("/auth")
-	
+
 	authRouter.Use(IsAuthorized())
 	{
 		// authRouter.Handle(http.MethodConnect, "/workspace", h.ProcessWorkSpace())

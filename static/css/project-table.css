@@ -1,0 +1,72 @@
+body{
+    background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+}
+
+h1{
+    color: white;
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+.acc{
+    display: flex;
+    justify-content: flex-end;
+    gap: 2px;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1px;
+}
+.acc p{
+    color: #33465f;
+    font-weight: bold;
+}
+
+.head{
+    text-align: left;
+    padding-top: 1rem;
+}
+hr:not([size]) {
+    height: 4px;
+}
+
+hr {
+    background-color:white;
+}
+
+.project-container{
+    /* background-image: linear-gradient(0deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
+    padding-left: 4rem;
+    padding-right: 2rem;
+    padding-bottom: 5rem;
+    /*margin-top: 2rem;*/
+}
+
+table{
+   color: #566277;
+}
+table tfoot tr th{
+    color: #33465f;
+}
+
+thead>tr>th{
+    color: ghostwhite;
+}
+table.dataTable{
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+table.dataTable > tbody > tr {
+    background-color: white ;
+}
+
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+}
+.page-item.active .page-link{
+    background-color: #33465f;
+    border-color: #33465f;
+}
