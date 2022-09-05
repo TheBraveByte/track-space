@@ -13,27 +13,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (tm *TsMongoDBRepo) InsertInfo(email, password, id string) (int64, error) {
+func (tm *TsMongoDBRepo) InsertUserInfo(user_id, email, password string) (int64, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
-
 	defer cancelCtx()
 
 	var userInfo bson.M
 	filter := bson.D{
-		{Key: "_id", Value: id},
+		{Key: "_id", Value: user_id},
 	}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&userInfo)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			// This error means your query did not match any documents.
 			documents := bson.D{
-				{Key: "_id", Value: id},
+				{Key: "_id", Value: user_id},
 				{Key: "email", Value: email},
 				{Key: "password", Value: password},
 			}
 			_, err := UserData(tm.TsMongoDB, "user").InsertOne(ctx, documents)
 			if err != nil {
-				log.Panic("cannot insert user sign up details in the database")
+				panic(err)
 			}
 			return 0, nil
 		}
@@ -42,11 +41,10 @@ func (tm *TsMongoDBRepo) InsertInfo(email, password, id string) (int64, error) {
 	return 1, nil
 }
 
-func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id interface{}, t1, t2 string) error {
+func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id, t1, t2 string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 
 	defer cancelCtx()
-
 	filter := bson.D{{Key: "_id", Value: id}}
 
 	update := bson.D{{Key: "$set", Value: bson.D{
@@ -63,7 +61,7 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id interface{}, t1, t2 
 		{Key: "token", Value: t1},
 		{Key: "renew_token", Value: t2},
 	}}}
-	// var updateDocument bson.M
+
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -72,20 +70,17 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id interface{}, t1, t2 
 		}
 		log.Fatal(err)
 	}
-
 	return nil
 }
 
-func (tm *TsMongoDBRepo) UpdateUserField(id, v1, v2 string) error {
+func (tm *TsMongoDBRepo) UpdateUserField(id, t1, t2 string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
-
 	defer cancelCtx()
 
 	filter := bson.D{{Key: "_id", Value: id}}
-
 	update := bson.D{{Key: "$set", Value: bson.D{
-		{Key: "token", Value: v1},
-		{Key: "renew_token", Value: v2},
+		{Key: "token", Value: t1}, 
+		{Key: "renew_token", Value: t2},
 	}}}
 	// var updateDocument bson.M
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
@@ -107,7 +102,6 @@ func (tm *TsMongoDBRepo) VerifyLogin(id, hashedPassword, postPassword string) (b
 	var result bson.M
 	filter := bson.D{
 		{Key: "_id", Value: id},
-
 	}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
 	if err != nil {
@@ -134,13 +128,13 @@ func (tm *TsMongoDBRepo) SendUserDetails(id string) (primitive.M, error) {
 			return nil, err
 		}
 		log.Panic("cannot find document")
-		
+
 	}
 
 	return user, nil
 }
 
-func (tm *TsMongoDBRepo) StoreWorkSpaceData(id interface{}, project model.Project) error {
+func (tm *TsMongoDBRepo) StoreWorkSpaceData(id string, project model.Project) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -164,10 +158,10 @@ func (tm *TsMongoDBRepo) StoreWorkSpaceData(id interface{}, project model.Projec
 	return nil
 }
 
-func (tm *TsMongoDBRepo) ModifyProjectData(ID string, project model.Project) error {
+func (tm *TsMongoDBRepo) ModifyProjectData(id string, project model.Project) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
-	filter := bson.D{{Key: "_id", Value: ID}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.D{{Key: "$set", Value: bson.D{
 		{Key: "project_details", Value: bson.D{
 			{Key: "project_name", Value: project.ProjectName},
@@ -184,7 +178,6 @@ func (tm *TsMongoDBRepo) ModifyProjectData(ID string, project model.Project) err
 	}
 	return nil
 }
-
 
 func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, id string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
@@ -211,14 +204,64 @@ func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, id string) err
 func (tm *TsMongoDBRepo) GetProjectData(project_id string) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
-
-	filter := bson.D{{Key :"_id", Value:project_id }}
-	projection := bson.D{{Key : "project_details", Value: 1}}
-	opt := options.FindOne().SetProjection(projection)
-	var result bson.M
-	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter,opt).Decode(&result)
-	if err != nil {
-		return result, err
+	
+	filter := bson.D{{"project_details.project_name", project_name}}
+	opt :=  options.Find().SetProjection(bson.D{
+		{"_id", "63134643e3c4d8b40db322f2"},
+		{"project_details", bson.D{{"$elemMatch", bson.D{{"project_name", "newcode"}}}}},
+	})
 	}
+	// opt :=  options.Find().SetProjection() //bson.M{"project_details":bson.M{"$elemMatch": bson.M{"_id":project_id}}}
+	var data bson.M
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&data)
+	if err != nil{
+		if err == mongo.ErrNoDocuments {
+			log.Panic(err)
+		}
+	}
+	log.Println(len(data))
+	log.Println(data)
+	// for k,v :=range data{
+		
+	// }
+	return data, nil
+}
+
+func (tm *TsMongoDBRepo) UpdateProjectStat(data model.Data, id string) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.D{{Key: "$push", Value: bson.D{{Key: "data", Value: bson.D{
+		{Key: "date", Value: data.Date},
+		{Key: "code", Value: data.Code},
+		{Key: "article", Value: data.Article},
+		{Key: "text", Value: data.Text},
+		{Key: "todo", Value: data.Todo},
+		{Key: "total", Value: data.Total},
+	}}}}}
+
+	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
+	if err != nil {
+		log.Println("cannot update user document")
+		panic(err)
+	}
+	return nil
+}
+
+func (tm *TsMongoDBRepo) GetProjectStatByID(id string) (primitive.M, error) {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+
+	var result bson.M
+	filter := bson.D{{Key: "_id", Value: id}}
+	err := UserData(tm.TsMongoDB, "stat").FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			log.Println(err)
+			panic(err)
+		}
+		return nil, err
+	}
+
 	return result, nil
 }

@@ -33,7 +33,7 @@ func IsAuthorized() gin.HandlerFunc {
 		}
 		c.Set("token", authToken.Value)
 		c.Set("email", authClaims.Email)
-		c.Set("password", authClaims.Password)
+		c.Set("password", authClaims.ID)
 		c.Set("uid", authClaims.IPAddress)
 		c.Next()
 	}

@@ -8,21 +8,20 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	// "github.com/dgrijalva/jwt-go"
 )
 
 // TrackClaims type struct which is used to create / generate jwt token
 type TrackClaims struct {
 	jwt.StandardClaims
 	Email     string
-	Password  string
+	ID        string
 	IPAddress string
 }
 
 // GenerateJWTToken : This functions helps to create a JWT token using the
 // SignedStringMethod of the ES256 algorithm using a TOKEN_KEY and the claims
 // to generate a token
-func GenerateJWTToken(email string, password string, ipaddress string) (string, string, error) {
+func GenerateJWTToken(email, id, ipaddress  string) (string, string, error) {
 	trackToken := TrackClaims{
 		jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
@@ -30,7 +29,7 @@ func GenerateJWTToken(email string, password string, ipaddress string) (string, 
 			Issuer:    "trackSpace",
 		},
 		email,
-		password,
+		id,
 		ipaddress,
 	}
 	refreshToken := jwt.StandardClaims{
@@ -71,5 +70,4 @@ func ParseToken(tokenValue string) (*TrackClaims, error) {
 		log.Println(http.StatusUnauthorized, "Generate token invalid")
 	}
 	return tokenClaim, nil
-
 }
