@@ -10,63 +10,55 @@ type Auth struct {
 	Token string
 }
 
-// type User struct {
-// 	ID             primitive.ObjectID `json:"_id" bson:"_id"`
-// 	FirstName      string             `form:"first_name" json:"first_name" Usage:"required max=32 min=3" binding:"required max=32 min=3"`
-// 	LastName       string             `form:"last_name" json:"last_name" Usage:"required max=32 min=3" binding:"required max=32 min=3"`
-// 	Email          string             `form:"email" json:"email" Usage:"email required" binding:"required max=32 min=3" `
-// 	Password       string             `form:"password" json:"password" Usage:"required_with=Email alphanum" binding:"required max=32 min=3"`
-// 	YrsOfExp       string             `form:"yrs_of_exp" json:"yrs_of_exp" Usage:"numeric omitempty"`
-// 	Country        string             `form:"country" json:"country" Usage:"required" binding:"required max=32 min=3"`
-// 	PhoneNumber    string             `form:"phone_number" json:"phone_number" Usage:"required max=15 min=8" binding:"required max=32 min=3"`
-// 	IPAddress      string             `form:"ip_address" json:"ip_address"`
-// 	Address        string             `form:"address" json:"address" Usage:"required" binding:"required max=32 min=3"`
-// 	UserType       []string           `form:"user_type" json:"user_type" Usage:"omitempty"`
-// 	Stack          []string           `form:"stack" json:"stack" Usage:"omitempty"`
-// 	ProjectDetails []Project          `form:"project_details" json:"project_details" bson:"project_details"`
-// 	CreatedAt      time.Time          `json:"created_at"`
-// 	UpdatedAt      time.Time          `json:"updated_at"`
-// 	Token          string             `json:"token"`
-// 	RenewToken     string             `json:"renew_token"`
-// }
-
 type User struct {
-	ID             string      `json:"_id" bson:"_id"`
-	FirstName      string      `json:"first_name"`
-	LastName       string      `json:"last_name"`
-	Email          string      `json:"email"`
-	Password       string      `json:"password"`
-	YrsOfExp       string      `json:"yrs_of_exp"`
-	Country        string      `json:"country"`
-	PhoneNumber    string      `json:"phone_number"`
+	ID             string      `json:"_id" bson:"_id" Usage:"required,alphanumeric"`
+	FirstName      string      `json:"first_name" Usage:"required,alpha"`
+	LastName       string      `json:"last_name" Usage:"required,alpha"`
+	Email          string      `json:"email" Usage:"required,email"`
+	Password       string      `json:"password" Usage:"min=8,max=20"`
+	YrsOfExp       string      `json:"yrs_of_exp" Usage:"numeric"`
+	Country        string      `json:"country" Usage:"required,alpha"`
+	PhoneNumber    string      `json:"phone_number" Usage:"required"`
 	IPAddress      string      `json:"ip_address"`
-	Address        string      `json:"address"`
+	Address        string      `json:"address" Usage:"required"`
 	UserType       []string    `son:"user_type"`
 	Stack          []string    `json:"stack"`
 	ProjectDetails []Project   `json:"project_details" bson:"project_details"`
 	Todo           []DailyTask `json:"todo" bson:"todo"`
-	CreatedAt      time.Time   `json:"created_at"`
-	UpdatedAt      time.Time   `json:"updated_at"`
-	Token          string      `json:"token"`
-	RenewToken     string      `json:"renew_token"`
+	Data           []Data      `json:"data" bson:"data"`
+	CreatedAt      time.Time   `json:"created_at" Usage:"datetime=2006-01-02"`
+	UpdatedAt      time.Time   `json:"updated_at" Usage:"datetime=2006-01-02"`
+	Token          string      `json:"token" Usage:"jwt"`
+	RenewToken     string      `json:"renew_token" Usage:"jwt"`
 }
 
 type Project struct {
-	ID             string    `bson:"_id"`
-	ProjectName    string    `json:"project_name"`
-	ProjectContent string    `json:"project_content"`
-	ToolsUseAs     string    `json:"tools_use_as"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	CreatedAt      time.Time `json:"created_at"`
-	Status         string    `json:"status"`
+	ID             string `bson:"_id"`
+	ProjectName    string `json:"project_name" Usage:"required"`
+	ProjectContent string `json:"project_content"`
+	ToolsUseAs     string `json:"tools_use_as" Usage:"required"`
+	UpdatedAt      string `json:"updated_at"`
+	CreatedAt      string `json:"created_at"`
+	Status         string `json:"status"`
+}
+
+type Data struct {
+	ID      string `json:"_id" bson:"_id"`
+	Date    string `json:"date"`
+	Code    int    `json:"code"`
+	Article int    `json:"article"`
+	Text    int    `json:"text"`
+	Todo    int    `json:"todo"`
+	Total   int    `json:"total"`
 }
 
 type Email struct {
-	ID           string `json:"_id" bson:"_id"`
-	Message      string `json:"message"`
-	Receiver     string `json:"receiver" validate:"required"`
-	Sender       string `json:"sender" validate:"required"`
-	MailTemplate string `json:"mail_template"`
+	ID       string `json:"_id" bson:"_id"`
+	Subject  string `json:"subject"`
+	Content  string `json:"content"`
+	Receiver string `json:"receiver" Usage:"required"`
+	Sender   string `json:"sender" Usage:"required"`
+	Template string `json:"template"`
 }
 
 type DailyTask struct {
@@ -102,4 +94,3 @@ type SocketResponse struct {
 	// UserName string `json:"user_name"`
 	ConnectedUSer []string `json:"connected_user"`
 }
-

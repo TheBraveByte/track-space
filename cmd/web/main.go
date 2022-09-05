@@ -6,8 +6,6 @@ import (
 	"html/template"
 	"log"
 	"os"
-	
-
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,11 +20,20 @@ import (
 var app config.AppConfig
 
 func main() {
+
 	gob.Register(model.User{})
 	gob.Register(model.Auth{})
 	gob.Register(model.Project{})
 	gob.Register(model.DailyTask{})
 	gob.Register(model.Email{})
+	gob.Register(model.Data{})
+	gob.Register(model.SocketConnection{})
+	gob.Register(model.SocketPayLoad{})
+	gob.Register(model.SocketResponse{})
+
+	mailChannel := make(chan model.Email)
+	
+	app.MailChan = mailChannel
 	app.AppInProduction = false
 	app.UseTempCache = false
 
@@ -46,10 +53,14 @@ func main() {
 		log.Println("No local server port number created!")
 		return
 	}
-	go ws.GetDataFromChannel()
 
+	defer close(app.MailChan)
+	
+	log.Println("Application starting mail server listening to channel")
+	ListenToMailChannel()
+	
+	go ws.GetDataFromChannel()
 	Client := db.DatabaseConnection(mongodbUri)
-	// mail = data.MailData(Client, "mail")
 
 	defer func() {
 		if err = Client.Disconnect(context.TODO()); err != nil {
@@ -70,11 +81,8 @@ func main() {
 	}
 
 	appRouter.SetFuncMap(template.FuncMap{})
-	
+
 	appRouter.Static("/static", "./static")
-	appRouter.Static("/main-ckeditor5", "./main-ckeditor5")
-	// appRouter.StaticFS("./static/", http.Dir("static"))
-	// appRouter.StaticFile("/favicon.ico", "./resources/favicon.ico")
 	appRouter.LoadHTMLGlob("templates/*.html")
 
 	Routes(appRouter, *repo)

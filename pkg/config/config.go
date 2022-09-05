@@ -1,10 +1,9 @@
 package config
 
 import (
-	"html/template"
 	"log"
 
-	"github.com/gin-contrib/sessions"
+	"github.com/yusuf/track-space/pkg/model"
 )
 
 type AppConfig struct {
@@ -12,6 +11,5 @@ type AppConfig struct {
 	ErrorLogger     *log.Logger
 	AppInProduction bool
 	UseTempCache    bool
-	TsData          sessions.Session
-	TemplateCache   map[string]*template.Template
+	MailChan        chan model.Email
 }
