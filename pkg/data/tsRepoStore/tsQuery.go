@@ -79,7 +79,7 @@ func (tm *TsMongoDBRepo) UpdateUserField(id, t1, t2 string) error {
 
 	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.D{{Key: "$set", Value: bson.D{
-		{Key: "token", Value: t1}, 
+		{Key: "token", Value: t1},
 		{Key: "renew_token", Value: t2},
 	}}}
 	// var updateDocument bson.M
@@ -134,7 +134,7 @@ func (tm *TsMongoDBRepo) SendUserDetails(id string) (primitive.M, error) {
 	return user, nil
 }
 
-func (tm *TsMongoDBRepo) StoreWorkSpaceData(id string, project model.Project) error {
+func (tm *TsMongoDBRepo) StoreProjectData(id string, project model.Project) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -204,30 +204,22 @@ func (tm *TsMongoDBRepo) StoreDailyTaskData(task model.DailyTask, id string) err
 func (tm *TsMongoDBRepo) GetProjectData(project_id string) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
-	
-	filter := bson.D{{"project_details.project_name", project_name}}
-	opt :=  options.Find().SetProjection(bson.D{
-		{"_id", "63134643e3c4d8b40db322f2"},
-		{"project_details", bson.D{{"$elemMatch", bson.D{{"project_name", "newcode"}}}}},
+
+	filter := bson.D{{Key: "project_details._id", Value: project_id}}
+	opt := options.FindOne().SetProjection(bson.D{
+		{Key: "_id", Value: project_id},
+		{Key: "project_details", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: project_id}}}}},
 	})
-	}
-	// opt :=  options.Find().SetProjection() //bson.M{"project_details":bson.M{"$elemMatch": bson.M{"_id":project_id}}}
+
 	var data bson.M
-	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&data)
-	if err != nil{
-		if err == mongo.ErrNoDocuments {
-			log.Panic(err)
-		}
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter, opt).Decode(&data)
+	if err != nil {
+		log.Panic(err)
 	}
-	log.Println(len(data))
-	log.Println(data)
-	// for k,v :=range data{
-		
-	// }
 	return data, nil
 }
 
-func (tm *TsMongoDBRepo) UpdateProjectStat(data model.Data, id string) error {
+func (tm *TsMongoDBRepo) UpdateUserStat(data model.Data, id string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "_id", Value: id}}
@@ -248,7 +240,7 @@ func (tm *TsMongoDBRepo) UpdateProjectStat(data model.Data, id string) error {
 	return nil
 }
 
-func (tm *TsMongoDBRepo) GetProjectStatByID(id string) (primitive.M, error) {
+func (tm *TsMongoDBRepo) GetUserStatByID(id string) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
@@ -264,4 +256,26 @@ func (tm *TsMongoDBRepo) GetProjectStatByID(id string) (primitive.M, error) {
 	}
 
 	return result, nil
+}
+
+func (tm *TsMongoDBRepo) DeleteUserProject(project_id string) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+
+	filter := bson.D{{Key: "project_details._id", Value: project_id}}
+	opt := options.FindOneAndDelete().SetProjection(bson.D{
+		{Key: "_id", Value: project_id},
+		{Key: "project_details", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: project_id}}}}},
+	})
+	var deletedProject bson.M
+	err := UserData(tm.TsMongoDB, "user").FindOneAndDelete(ctx, filter, opt).Decode(&deletedProject)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			log.Panic(err)
+			return err
+		}
+		log.Fatal(err)
+		return err
+	}
+	return nil
 }
