@@ -7,14 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/xhit/go-simple-mail/v2"
+	mail "github.com/xhit/go-simple-mail/v2"
 	"github.com/yusuf/track-space/pkg/model"
 )
 
 func SendMailToUser(m model.Email) {
 	mailServer := mail.NewSMTPClient()
 	mailServer.Host = "localhost"
-	mailServer.Port = 8025
+	mailServer.Port = 1025
 	// mailServer.Encryption = mail.EncryptionSTARTTLS
 	mailServer.ConnectTimeout = 100 * time.Second
 	mailServer.SendTimeout = 100 * time.Second
@@ -31,6 +31,7 @@ func SendMailToUser(m model.Email) {
 		email.SetBody(mail.TextHTML, m.Content)
 	}else{
 		byteData, err := ioutil.ReadFile(fmt.Sprintf("./mail-template/%s",m.Template))
+		// fs.ReadFile("./mail-template",m.Template)
 		if err != nil{
 			log.Panic(err)
 		}

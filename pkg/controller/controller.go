@@ -165,40 +165,40 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
-		// message := fmt.Sprintf(`
-		// 	<strong>Confirmation for Account Created</strong><br>
-		// 	Hi, %s:<br>
-		// 	<p>This is to confirm that your have sign up for track-space.
-		// 	We hope you have a wonderful experience using our platform as
-		// 	your workspace for your project
-		// 	</p>
-		// 	`, user.FirstName)
-		// mailMsg := model.Email{
-		// 	Subject: "Confirmation for Account Created",
-		// 	Content: message,
-		// 	Sender:"yusufakinleye@gmail.com",
-		// 	Receiver: user.Email,
-		// 	Template: "email.html",
-		// }
+		message := fmt.Sprintf(`
+			<strong>Confirmation for Account Created</strong><br>
+			Hi, %s:<br>
+			<p>This is to confirm that your have sign up for track-space.
+			We hope you have a wonderful experience using our platform as
+			your workspace for your project
+			</p>
+			`,user.FirstName)
+		mailMsg := model.Email{
+			Subject: "Confirmation for Account Created",
+			Content: message,
+			Sender:"yusufakinleye@gmail.com",
+			Receiver: user.Email,
+			Template: "email.html",
+		}
 
-		// ts.AppConfig.MailChan <- mailMsg
+		ts.AppConfig.MailChan <- mailMsg
 
-		// message = fmt.Sprintf(`
-		// 	<strong>New User Account Notification</strong><br>
-		// 	Hi, %s:<br>
-		// 	<p>This is notify you guys that new user with an <strong> ID:</strong> %s 
-		// 	and <strong>IPAddress : </strong> of %s sign up for track-space.
-		// 	</p>
-		// 	`,"track-space Team",user.ID, user.IPAddress)
-		// mailMsg = model.Email{
-		// 	Subject: "Confirmation for Account Created",
-		// 	Content: message,
-		// 	Sender:"yusufakinleye@gmail.com",
-		// 	Receiver: "yusufakinleye@gmail.com",
-		// 	Template: "email.html",
-		// }
+		TeamMessage := fmt.Sprintf(`
+			<strong>New User Account Notification</strong><br>
+			Hi, %s:<br>
+			<p>This is notify you guys that new user with an <strong> ID:</strong> %s 
+			and <strong>IPAddress : </strong> of %s sign up for track-space.
+			</p>
+			`,"track-space Team",userID, user.IPAddress)
+		TeamMailMsg := model.Email{
+			Subject: "Confirmation for Account Created",
+			Content: TeamMessage,
+			Sender:"yusufakinleye@gmail.com",
+			Receiver: "yusufakinleye@gmail.com",
+			Template: "email.html",
+		}
 
-		// ts.AppConfig.MailChan <- mailMsg
+		ts.AppConfig.MailChan <- TeamMailMsg
 		c.Redirect(http.StatusSeeOther, "/login")
 	}
 }
@@ -385,7 +385,7 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			data.Total = totalProjects
 
 			if currentDate == storedDate{
-				_ = ts.tsDB.UpdateProjectStat(data, userID)
+				_ = ts.tsDB.UpdateUserStat(data, userID)
 
 			}
 
@@ -440,7 +440,7 @@ func (ts *TrackSpace) PostWorkSpace() gin.HandlerFunc {
 			}
 		}
 
-		err := ts.tsDB.StoreWorkSpaceData(userID, project)
+		err := ts.tsDB.StoreProjectData(userID, project)
 		if err != nil {
 			log.Println("Error while storing using user project data")
 			return
@@ -558,53 +558,53 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
-		// projectMap := make(map[string]string)
+		projectMap := make(map[string]string)
 		sourceLink := c.Param("src")
 		projectID := c.Param("id")
+		// projectName := c.Param("project-name")
 		ok := primitive.IsValidObjectID(c.Param("id"))
 
-		if sourceLink != "project-table" && !ok {
+		if sourceLink != "project-table" && !ok{
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
 
-		_, err := ts.tsDB.GetProjectData(projectID)
+		projectData, err := ts.tsDB.GetProjectData(projectID)
 		if err != nil {
 			log.Println("cannot get user project data from the database")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 
-		// log.Println(projectData)
 		
-		// switch p := projectData["project_details"].(type) {
-		// case primitive.E:
-		// 	for _, x := range p {
-		// 		log.Println(len(p))
-		// 		switch k := x.(type) {
-		// 		case primitive.M:
-		// 			for i, j := range k {
-		// 				projectMap[i] = fmt.Sprint(j)
-		// 			}
-		// 		}
-		// 	}
-		// }
+		switch p := projectData["project_details"].(type) {
+		case primitive.A:
+			for _, x := range p {
+				log.Println(len(p))
+				switch k := x.(type) {
+				case primitive.M:
+					for i, j := range k {
+						projectMap[i] = fmt.Sprint(j)
+					}
+				}
+			}
+		}
 	
-		// for x, y := range projectMap {
-		// 	fmt.Println(x,y)
-		// 	if x == "project_name" {
-		// 		project.ProjectName = y
-		// 	} 
-		// 	if x == "tools_use_as"{
-		// 		project.ToolsUseAs = y
-		// 	}
-		// 	if x == "project_content"{
-		// 		project.ProjectContent = y
-		// 	}
-		// 	if x == "_id"{
-		// 		project.ID = y
-		// 	}
-		// }
+		for x, y := range projectMap {
+			fmt.Println(x,y)
+			if x == "project_name" {
+				project.ProjectName = y
+			} 
+			if x == "tools_use_as"{
+				project.ToolsUseAs = y
+			}
+			if x == "project_content"{
+				project.ProjectContent = y
+			}
+			if x == "_id"{
+				project.ID = y
+			}
+		}
 
 		c.HTML(http.StatusOK, "show-project.html", gin.H{
 			"projectID" : project.ID,
@@ -625,7 +625,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		var project model.Project
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
-		if sourceLink != "project-table" && !ok {
+		if sourceLink != "show-project" && !ok {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
@@ -650,6 +650,27 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 	}
 }
 
+
+func(ts *TrackSpace) DeleteProject() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var project model.Project
+		sourceLink := c.Param("src")
+		ok := primitive.IsValidObjectID(c.Param("id"))
+		if sourceLink != "project" && !ok {
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
+			return
+		}
+
+		project.ID = c.Param("id")
+		ok = primitive.IsValidObjectID(project.ID)
+		if !ok {
+			log.Println("invalid ID cannot convert the Object ID")
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("project id is invalid")})
+		}
+
+
+	}
+}
 // SettingPage - handlers to make general changes to user platform
 // dashboard
 func (ts *TrackSpace) SettingPage() gin.HandlerFunc {
