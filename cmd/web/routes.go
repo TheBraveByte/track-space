@@ -36,8 +36,9 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.POST("/user/daily-task", h.PostDailyTaskTodo())
 
 		authRouter.GET("/user/project-table", h.ShowProjectTable())
-		authRouter.GET("/user/workspace/:src/:id/show-project", h.ShowUserProject())
-		authRouter.POST("/user/workspcae/:src/:id/change", h.ModifyUserProject())
+		authRouter.GET("/user/:src/:id/show-project", h.ShowUserProject())
+		authRouter.POST("/user/project-table/:src/:id/change", h.ModifyUserProject())
+		authRouter.DELETE("/user/:src/:id/delete", h.DeleteProject())
 
 		authRouter.GET("/user/setting", h.SettingPage())
 		authRouter.POST("/user/setting", h.PostSettingChange())
