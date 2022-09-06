@@ -1,0 +1,143 @@
+ @keyframes animationValue {
+     0% {
+         opacity: 0;
+     }
+
+     40% {
+         opacity: 0;
+     }
+
+     80% {
+         opacity: 1;
+     }
+
+     100% {
+         opacity: 1;
+     }
+ }
+
+ .main-visual {
+     display: grid;
+     width: 100vw;
+     height: 100vh;
+     background-color: #ffffff;
+ }
+
+ .chart {
+     position: relative;
+     margin: auto;
+     font-weight: 900;
+ }
+
+ .chart__figure {
+     display: flex;
+     justify-content: space-between;
+     height: 160px;
+ }
+
+ @media screen and (max-width: 540px) {
+     .chart {
+         flex-direction: column;
+         height: auto;
+     }
+
+     .chart__figure {
+         flex-direction: column;
+         height: auto;
+     }
+ }
+
+
+ .chart__canvas {
+     margin: auto;
+ }
+
+ .chart__caption {
+     display: flex;
+     justify-content: center;
+     flex-direction: column;
+     margin-left: 30px;
+     letter-spacing: 0.3px;
+     font-size: 30px;
+     line-height: 50px;
+     height: 100%;
+     width: calc(80px + 160);
+     font-family: ubuntu;
+     color: #566277;
+ }
+
+ @media screen and (max-width: 540px) {
+     .chart__caption {
+         margin: 15px auto auto;
+         text-align: center;
+         min-width: 160px;
+     }
+ }
+
+
+ span {
+     font-size: 16px;
+     line-height: 24px;
+     font-family: ubuntu;
+     color: #c6c9ce;
+ }
+
+ .chart__value {
+     display: grid;
+     position: absolute;
+     top: 0;
+     left: 40px;
+     height: calc(40px + 160px);
+     width: 160px;
+     animation: animationValue 1400ms;
+ }
+
+ @media screen and (max-width: 540px) {
+     .chart__value {
+         left: 0;
+         right: 0;
+         width: 100%;
+     }
+ }
+
+ p {
+     font-size: 40px;
+     margin: auto;
+     padding-left: 6px;
+     font-family: ubuntu;
+     color: #566277;
+     background-color: black;
+ }
+
+ body,
+ html {
+     background: #181E24;
+     padding-top: 10px;
+ }
+
+ .wrapper,
+ .wrapper2 {
+     width: 50%;
+     display: block;
+     overflow: hidden;
+     margin: 0 auto;
+     padding: 60px 50px;
+     background: #fff;
+     border-radius: 4px;
+
+ }
+
+ canvas {
+     background: #fff;
+     height: 250px;
+ }
+
+ h1 {
+     font-family: Roboto;
+     color: #fff;
+     margin-top: 50px;
+     font-weight: 200;
+     text-align: center;
+     display: block;
+     text-decoration: none;
+ }
