@@ -24,7 +24,7 @@ type User struct {
 	UserType       []string    `son:"user_type"`
 	Stack          []string    `json:"stack"`
 	ProjectDetails []Project   `json:"project_details" bson:"project_details"`
-	Todo           []DailyTask `json:"todo" bson:"todo"`
+	Todo           []Todo `json:"todo" bson:"todo"`
 	Data           []Data      `json:"data" bson:"data"`
 	CreatedAt      time.Time   `json:"created_at" Usage:"datetime=2006-01-02"`
 	UpdatedAt      time.Time   `json:"updated_at" Usage:"datetime=2006-01-02"`
@@ -59,14 +59,17 @@ type Email struct {
 	Receiver string `json:"receiver" Usage:"required"`
 	Sender   string `json:"sender" Usage:"required"`
 	Template string `json:"template"`
+
 }
 
-type DailyTask struct {
+type Todo struct {
 	ID           string `json:"_id" bson:"_id"`
 	ToDoTask     string `json:"to_do_task"`
 	DateSchedule string `json:"date_schedule"`
 	StartTime    string `json:"start_time"`
 	EndTime      string `json:"end_time"`
+	Status         string `json:"status"`
+
 }
 
 /*Working with Web Socket*/
@@ -91,6 +94,5 @@ type SocketResponse struct {
 	Condition   string `json:"condition"`
 	Message     string `json:"message"`
 	MessageType string `json:"message_type"`
-	// UserName string `json:"user_name"`
 	ConnectedUSer []string `json:"connected_user"`
 }
