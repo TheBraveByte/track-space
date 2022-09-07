@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
         rel="stylesheet" />
     <link href="/static/bootstrap.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/daily-task.css" />
+    <link rel="stylesheet" href="/static/css/todo.css" />
 </head>
 
 <body>
@@ -17,38 +17,38 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6 set-task-container">
-                <form action="/auth/user/daily-task" method="post" novalidate class="needs-validation">
+                <form action="/auth/user/todo" method="post" novalidate class="needs-validation">
                     <h1>Track Space ToDo</h1>
                     <hr />
                     <p class="todo">
                         Schedule Your Daily Task Ahead for Easily Work Flow
                     </p>
-                    <!-- <div class="col-md-3"></div> -->
                     <div class="row mt-3">
                         <label for="task" class="form-label">Task or Event</label>
-                        <input type="text" name="task" id="" class="form-control" />
+                        <input type="text" name="task" id="" class="form-control" required autocomplete="off" />
 
                         <label class="form-label" for="schedule-date">Set Date</label>
-                        <input type="date" name="date_schedule" id="" class="form-control" />
+                        <input type="date" name="date_schedule" id="" class="form-control" required autocomplete="off" />
                     </div>
 
                     <div class="row mt-5">
                         <div class="col-md-6">
                             <label for="start-time" class="form-label">Set Start Time</label>
-                            <input type="time" name="start-time" id="" class="form-control" />
+                            <input type="time" name="start-time" id="" class="form-control" required autocomplete="off"/>
                         </div>
                         <div class="col-md-6">
                             <label for="end-time" class="form-label">Set End Time</label>
-                            <input type="time" name="end-time" id="" class="form-control" />
+                            <input type="time" name="end-time" id="" class="form-control" required autocomplete="off" />
                         </div>
+                       
                     </div>
                     <div class="row reset-submit-btn mt-xxl-5">
-                        <div class="col-md-4">
-                            <button class="w-30 btn btn-md btn-back">
+                        <div class="col-md-4 mt-5">
+                            <button class="w-30 btn btn-md btn-back btn-dark">
                                 <a href="/auth/user/dashboard"> Back </a>
                             </button>
                         </div>
-                        <div class="col-md-4 offset-md-4">
+                        <div class="col-md-4 offset-md-4 mt-5">
                             <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
                                 Submit
                             </button>

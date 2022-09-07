@@ -11,15 +11,14 @@ body {
 
 }
 
-h1 {
+h2 {
     font-weight: normal;
-    font-size: 2rem;
     margin-top: 2rem;
     color: #33465f;
 }
 
 p {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: normal;
     color: #33465f
     
@@ -27,7 +26,6 @@ p {
 
 h2 {
     font-weight: normal;
-    font-size: larger;
 }
 
 .form-label {

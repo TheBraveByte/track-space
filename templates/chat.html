@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-8 chat-container">
-        <h1>Track-Space Chatroom</h1>
+        <h2>Track-Space Chatroom</h1>
         <hr class="mb-2" color="#33465f" />
         <p class="mb-3">Communicate with other developer all other the world</p>
         <form action="" method="post">
@@ -63,7 +63,7 @@
               <div class="message-box mt-5" id="message-box"></div>
             </div>
             <div class="col-md-4">
-              <h2 class="">Online user</h2>
+              <h4 class="">Online user</h4>
               <hr />
               <div>
                 <ul id="online_user"></ul>
@@ -152,7 +152,6 @@
             break;
         }
       };
-
       document.getElementById("send").addEventListener("click", function () {
         if (msgInput === "" || userNameInput === "") {
           notifyUser("error : input username and message !");

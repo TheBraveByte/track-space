@@ -27,19 +27,19 @@ hr {
 }
 
 .work-list {
-    font-size: 1.5rem;
+    font-size: large;
     font-weight: light;
     text-align: left;
 
 }
 
 ul li {
-    font-size: large;
+    font-size: 1rem;
 
 }
 
 .notice {
-    font-size: large;
+    font-size: 1rem;
 
 }
 
@@ -80,5 +80,13 @@ ul li {
 }
 
 .editor{
-    border: 3px solid #1D2021;
+    border: 2px solid #1D2021;
+    border-radius: 0.75rem;
 }
+
+/* #submit{
+    background-color: #ffffff;  
+}
+#submit:hover{
+    background-color: #33465f;
+} */

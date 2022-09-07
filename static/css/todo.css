@@ -33,18 +33,15 @@ hr {
     text-align: left;
 }
 
-.btn-back {
-    border: 4px solid #1D2021;
-
-}
 
 .btn-back a {
-    color: #1D2021;
+    color: #ffffff;
     text-decoration: none;
+
 }
 
 .btn-submit {
-    border: 4px solid #c6c9ce;
+    border: 2px solid #c6c9ce;
     color: #ffffff;
     background: #33465f;
 
