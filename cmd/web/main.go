@@ -12,7 +12,7 @@ import (
 
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
-	"github.com/yusuf/track-space/pkg/db"
+	"github.com/yusuf/track-space/pkg/driver"
 	"github.com/yusuf/track-space/pkg/model"
 	"github.com/yusuf/track-space/pkg/ws"
 )
@@ -24,7 +24,7 @@ func main() {
 	gob.Register(model.User{})
 	gob.Register(model.Auth{})
 	gob.Register(model.Project{})
-	gob.Register(model.DailyTask{})
+	gob.Register(model.Todo{})
 	gob.Register(model.Email{})
 	gob.Register(model.Data{})
 	gob.Register(model.SocketConnection{})
