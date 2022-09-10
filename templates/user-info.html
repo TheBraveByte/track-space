@@ -34,12 +34,36 @@
             </div>
           </div>
           <div class="row mt-4">
-            <div class="info col mt-2">
-              <label class="form-label" for="address">Home address</label>
-              <input autocomplete="disabled" class="form-control" id="address" name="address" required type="text" />
+            <div class="col">
+              <label class="form-label" for="professsion">Profession</label>
+              <input autocomplete="disabled" class="form-control" id="professsion" name="professsion" required
+                type="text" />
+            </div>
+            <div class="info col">
+              <label class="form-label" for="yrs-of-exp">Years of experience</label>
+              <input type="text" name="yrs-of-exp" id="yrs-of-exp" list="yrs" autocomplete="disabled"
+                class="form-control" />
+              <datalist id="yrs">
+                <option value="1"></option>
+                <option value="1.5"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="3+"></option>
+              </datalist>
             </div>
           </div>
           <div class="row mt-4">
+            <div class="info col">
+              <label class="form-label" for="stack-name">stack tools e.g Framework,Software 
+              </label>
+              <input class="form-control" id="stack-name" name="stack-name" type="text" autocomplete="disabled" />
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="info col">
+              <label class="form-label" for="address">Home address</label>
+              <input autocomplete="disabled" class="form-control" id="address" name="address" required type="text" />
+            </div>
             <div class="info col">
               <label class="form-label" for="phone">Phone</label>
               <input autocomplete="disabled" class="form-control" id="phone" name="phone" required type="text" />
@@ -364,46 +388,18 @@
               </datalist>
             </div>
           </div>
-          <div class="row mt-4">
-            <div class="info col-9">
-              <label class="form-label" for="stack-name">Tech stack toolse.g React, Go, Nodejs
-              </label>
-              <input class="form-control" id="stack-name" name="stack-name" type="text" autocomplete="disabled" />
-            </div>
-
-            <div class="info mb-3 col-3">
-              <label class="form-label" for="yrs-of-exp">Years of experience</label>
-              <input type="text" name="yrs-of-exp" id="yrs-of-exp" list="yrs" autocomplete="disabled"
-                class="form-control" />
-              <datalist id="yrs">
-                <option value="1"></option>
-                <option value="1.5"></option>
-                <option value="2"></option>
-                <option value="3"></option>
-                <option value="3+"></option>
-              </datalist>
-            </div>
-          </div>
-          <div>
-            <div class="col-2 mb-3">
-              <input class="form-check-input form-control" id="fill-form" name="fill-form" type="checkbox"
-                autocomplete="disabled" class="form-control" />
-              <label class="form-check-label box" for="fill-form">check box</label>
-            </div>
-            <div class="col-10"></div>
-          </div>
-          <div class="row pb-5">
+          <div class="row pb-5 mt-5">
             <div class="col-md-4">
               <button class="btn btn-back" type="submit">
-                <a href="login-page.html">Back</a>
+                <a href="/sign-up">Back</a>
               </button>
             </div>
 
             <div class="col-md-4 offset-md-4">
-              <button class="btn btn-reset" type="reset">
-                <a href="#">Reset form</a>
+              <button class="btn btn-dark" type="reset">
+                <a href="#" class="text-decoration-none">Reset form</a>
               </button>
-              <button class="btn btn-submit" type="submit">Submit</button>
+              <button class="btn btn-success" type="submit">Submit</button>
             </div>
           </div>
         </form>

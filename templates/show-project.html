@@ -33,7 +33,7 @@
 
         <form action="/auth/project-table/show-project/{{.projectID}}/change" method="post" novalidate
           class="needs-validation">
-          <h1 class="track">Track space Editor</h1>
+          <h2 class="track">Track space Editor</h2>
           <hr />
           <div>
             <p class="work-list">
@@ -55,7 +55,7 @@
 
             <div class="col">
               <input class="form-control" type="text" name="project-name" id="project-name"
-                placeholder="Enter the name of the project" required autocomplete="off" value="{{.projectName}}" />
+                placeholder="Enter the name of your project" required autocomplete="off" value="{{.projectName}}" />
             </div>
 
             <div class="col">
@@ -80,7 +80,7 @@
                 Submit
               </button>
               <!-- will need to work on this delete button-->
-              <a href="/auth/user/project/{{.projectID}}/delete" type="button" class="w-40 btn btn-danger btn-md">
+              <a href="/auth/user/project-table/{{.projectID}}/delete" type="button" class="w-40 btn btn-danger btn-md">
                 Delete
               </a>
             </div>
