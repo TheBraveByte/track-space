@@ -15,7 +15,7 @@ func SendMailToUser(m model.Email) {
 	mailServer := mail.NewSMTPClient()
 	mailServer.Host = "localhost"
 	mailServer.Port = 1025
-	// mailServer.Encryption = mail.EncryptionSTARTTLS
+	mailServer.Encryption = mail.EncryptionSTARTTLS
 	mailServer.ConnectTimeout = 100 * time.Second
 	mailServer.SendTimeout = 100 * time.Second
 
@@ -49,7 +49,7 @@ func SendMailToUser(m model.Email) {
 }
 
 func ListenToMailChannel()  {
-	go func() {
+	func() {
 		for {
 			mailMsg := <-app.MailChan
 			SendMailToUser(mailMsg)
