@@ -35,7 +35,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.GET("/user/project-table", h.ShowProjectTable())
 		authRouter.GET("/user/:src/:id/show-project", h.ShowUserProject())
 		authRouter.POST("/user/project-table/:src/:id/change", h.ModifyUserProject())
-		authRouter.DELETE("/user/:src/:id/delete", h.DeleteProject())
+		authRouter.GET("/user/:src/:id/delete", h.DeleteProject())
 
 		authRouter.GET("/user/todo", h.GetTodo())
 		authRouter.POST("/user/todo", h.PostTodoData())
@@ -43,14 +43,18 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.GET("/user/todo-table", h.ShowTodoTable())
 		authRouter.GET("/user/:src/:id/show-todo", h.ShowTodoSchedule())
 		authRouter.POST("/user/todo-table/:src/:id/change", h.ModifyUserTodo())
-		authRouter.GET("/user/:src/:id/delete", h.DeleteTodo())
+		authRouter.GET("/user/todo/:src/:id/delete", h.DeleteTodo())
 
 	
 
 		// Routes for websocket handlers
 		authRouter.GET("/user/chat", h.ChatRoom())
 		authRouter.GET("/ts-chat", h.ChatRoomEndpoint())
-
 		authRouter.POST("/user/logout")
+
+		//Admin routes
+		authRouter.GET("/admin",h.AdminPage())
+		authRouter.GET("/:src/dashboard/:id/delete", h.AdminDeleteUser())
+
 	}
 }
