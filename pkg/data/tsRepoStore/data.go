@@ -11,7 +11,7 @@ func UserData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
 }
 
 // MailData Setting up the database for the mail data collection
-func MailData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
-	var mailCollection = dbClient.Database("track_space").Collection(collectionName)
-	return mailCollection
+func AdminData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
+	var Admin = dbClient.Database("track_space").Collection(collectionName)
+	return Admin
 }
