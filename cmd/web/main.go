@@ -57,7 +57,7 @@ func main() {
 	defer close(app.MailChan)
 	
 	log.Println("Application starting mail server listening to channel")
-	ListenToMailChannel()
+	go ListenToMailChannel()
 	
 	go ws.GetDataFromChannel()
 	Client := db.DatabaseConnection(mongodbUri)
