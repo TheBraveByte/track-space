@@ -40,7 +40,7 @@ body {
   }
   
   #sidebarMenu{
-    background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    background-color:  #c6c9ce;
 
   }
   .sidebar .nav-link {
@@ -60,7 +60,7 @@ body {
   
   .sidebar .nav-link:hover .feather,
   .sidebar .nav-link.active .feather {
-    color: inherit;
+    color: #33465f;
   }
   
   .sidebar-heading {
@@ -76,14 +76,20 @@ body {
     padding-top: .75rem;
     padding-bottom: .75rem;
     font-size: 1.5rem;
-    color:#33465f
+    color: #ffffff;
   }
-  
+  .navbar-brand:hover{
+    color: #c6c9ce;
+  }
   .navbar .navbar-toggler {
     top: .25rem;
     right: 1rem;
-    background: #fff;
-    border: 2px solid #1d2021;
+    background: #33465f;
+    border: 1.5px solid #ffffff;
+  }
+  .navbar-toggler-icon{
+    border-radius: 0.3rem;
+    background-color: #ffffff;
   }
   
   .navbar .form-control {
@@ -101,6 +107,10 @@ body {
     border-color: transparent;
   }
   .navbar{
-    background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    background-color: #3e5574;
+
+  }
+  h3{
+    color: #33465f;
   }
   

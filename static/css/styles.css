@@ -1,17 +1,8 @@
-/* #33465f
-#c6c9ce
-#1D2021
-#566277 */
-
 body {
     overflow-x: hidden;
     overflow-y: scroll;
     overflow-inline: clip;
 }
-
-/* #c6c9ce */
-/* #3c5787 */
-/* #203a68 */
 .container {
     max-width: 100%;
     padding-left: 0;
