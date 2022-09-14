@@ -8,8 +8,10 @@ body {
     overflow-y: scroll;
     overflow-inline: clip;
 }
-/* #c6c9ce */
 
+/* #c6c9ce */
+/* #3c5787 */
+/* #203a68 */
 .container {
     max-width: 100%;
     padding-left: 0;
@@ -22,46 +24,40 @@ header {
     background-color: #33465f;
 }
 
+.title-link {
+    padding-left: 3.6rem;
+}
+
 .title {
-    padding-left: 150px;
     font-size: 2.0rem;
     font-weight: normal;
     color: #ffffff;
 }
 
-a h1 span {
-    color: hsl(0, 5%, 7%);
-}
-
 header .nav {
     justify-content: center;
-
     padding-right: 150px;
 }
 
 header .nav-link {
     color: #ffffff;
-    font-size: 15px;
-    text-transform: uppercase;
+    font-size: 1rem;
+    text-transform: capitalize;
 }
 
 .nav-link:hover {
-    color: hsl(0, 5%, 7%);
+    color: #c6c9ce;
 }
+
+.title:hover {
+    color: #c6c9ce;
+}
+
 
 .One {
     background: #ffffff;
     padding-bottom: 3rem;
     padding-bottom: 3rem;
-}
-
-.line {
-    border-radius: 1rem;
-    background-color: #c6c9ce;
-}
-
-.line:not([size]) {
-    height: 3px;
 }
 
 .first-grid {
@@ -88,7 +84,7 @@ header .nav-link {
     color: #33465f;
     padding-left: 1rem;
     padding-right: 1rem;
-    font-size: 2.5rem;
+    font-size: 2.0rem;
     font-weight: normal;
     text-transform: capitalize;
 }
@@ -97,25 +93,21 @@ header .nav-link {
     padding-left: 1rem;
     padding-right: 1rem;
     color: #1d2021;
-    font-weight: lighter;
+    font-weight: initial;
 }
-
-.bt {
-    display: flex;
-    justify-content: left;
-    padding-right: 20px;
-    padding-left: 1rem;
-}
-/* 
-.bt>* {
-    flex: 0 0 40%;
-} */
 
 .log-bt {
     margin-right: 4rem;
     background-color: #33465f;
     border-color: #33465f;
     color: #ffffff;
+    height: 3.5rem;
+    font-family: cursive;
+    font-size: 1.5rem;
+}
+
+.log-bt:hover {
+    background-color: #c6c9ce;
 }
 
 .second-grid {
@@ -126,12 +118,11 @@ header .nav-link {
 }
 
 .second-grid p {
-    font-size: 1.2rem;
-    padding-right: 2.5rem;
-    padding-left: 2.5rem;
-    margin-top: 4.0rem;
+    font-size: 1.4rem;
+
+    margin-top: 3.0rem;
     margin-bottom: 0;
-   
+
 }
 
 .dev {
@@ -145,7 +136,7 @@ header .nav-link {
 
 .dv-icon {
     height: 100%;
-    width: 100%;
+    width: 80%;
 }
 
 .main-p {
@@ -158,65 +149,56 @@ header .nav-link {
 }
 
 .second {
-
-    color: #1d2021;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    color: hsl(0, 5%, 7%);
-    
-    background-color: #566277;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #c6c9ce;
 }
 
 .main-offer {
-    color:#1d2021 ;
-    text-align: center;
     font-size: 2rem;
-  
-    font-weight: bold;
+    color: #33465f;
 }
 
-.offer {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+.offer-img {
+    margin: 0 auto;
 }
 
-.offer div {
-    padding-left: 2rem;
-    padding-right: 2rem;
+.card {
+    background-color: #566277;
+    border: 0px solid #c6c9ce;
+    box-shadow: #33465f;
+
 }
 
-.offer div h5 {
-    margin-top: 20px;
-    text-align: center;
- 
-    color: #ffffff;
-    
+.offer-container {
+    border-radius: 0.75rem;
+    border-color: #c6c9ce;
 }
 
-.offer div p {
-    padding-top: 20px;
-    text-align: left;
-    color: #1d2021;
-    font-size: 15px;
+.items {
+    background-color: #ffffff;
+    padding: 2rem 2rem;
+    margin-bottom: 2rem;
 }
 
 .fourth {
     padding-bottom: 2rem;
- 
+
     background-color: #ffffff;
 }
 
 .com {
     padding-top: 3rem;
- 
+
 }
 
 .com p {
     text-align: center;
     margin-bottom: 10px;
     color: #33465f;
-   
+
 }
 
 .com-head {
@@ -238,7 +220,7 @@ header .nav-link {
     font-style: oblique;
     font-weight: 500;
     color: #33465f;
- 
+
 }
 
 .logo {
@@ -262,7 +244,7 @@ header .nav-link {
 .footer div a {
 
     color: #fff;
- 
+
 }
 
 .footer div a span {
@@ -320,32 +302,39 @@ a {
     .bd-placeholder-img-lg {
         font-size: 3.5rem;
     }
+
     header .nav {
         justify-content: center;
         padding-top: 10px;
         padding-right: 15px;
     }
+
     ul.nav.nav-pills {
         padding-left: 10px;
         padding-right: 10px;
         display: flex;
         flex-wrap: nowrap;
     }
+
     ul.nav.nav-pills>* {
         flex: 0 1 20%;
     }
+
     .title {
         text-align: center;
         padding-left: 0;
     }
+
     ul {
         padding-right: 0;
     }
+
     .first-grid {
         text-align: left;
         padding-left: 30px;
         padding-right: 0px;
     }
+
     .intro {
         padding-left: 0;
         padding-right: 0.5rem;
@@ -354,12 +343,14 @@ a {
         color: #ffffff;
         font-size: 1.5rem;
     }
+
     .second-grid {
         justify-content: center;
         color: #ffffff;
         text-align: center;
         padding-right: 0;
     }
+
     .second-grid p {
         font-size: 1.5rem;
         padding-right: 2rem;
@@ -367,45 +358,55 @@ a {
         margin-top: 2.0rem;
         margin-bottom: 0;
     }
+
     .main-dv-icon {
         margin-top: 2rem;
         margin-left: 7.5rem;
         margin-right: 6.25rem;
     }
+
     dv-icon {
         justify-self: unset;
         width: 100%;
         height: 100%;
     }
+
     .main-p {
-      
+
         margin-right: 0;
         padding: 0 0;
     }
+
     .main-p p {
         padding: 0 0;
         margin-top: 1rem;
     }
+
     .bt {
         display: flex;
-       
+
     }
+
     .bt>* {
         flex: 1 0 40%;
     }
+
     .offer {
         display: flex;
         justify-content: center;
         text-align: center;
         flex-wrap: wrap;
     }
+
     .offer>* {
         flex: 1 1 20%;
     }
+
     .com p {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
     }
+
     .com-icon>* {
         flex: 1 1 20%;
     }

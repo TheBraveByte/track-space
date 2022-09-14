@@ -6,8 +6,8 @@
 */
 
 body {
-    background-color: #ffffff;
-    /* background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
+    background-color: #566277;
+    /* background-image: linear-gradient(1deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
 }
 
 
@@ -57,9 +57,10 @@ ul li {
     border: 2px solid #33465f;
 }
 
-.tox-tinymce{
+.tox-tinymce {
     border: 3px solid #1D2021;
 }
+
 .reset-submit-btn {
     margin-top: 2rem;
 }
@@ -79,7 +80,7 @@ ul li {
 
 }
 
-.editor{
+.editor {
     border: 2px solid #1D2021;
     border-radius: 0.75rem;
 }
