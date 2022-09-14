@@ -9,7 +9,7 @@ import (
 	"github.com/yusuf/track-space/pkg/auth"
 )
 
-//Middleware for Authenticating the user
+// Middleware for Authenticating the user
 func IsAuthorized() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authToken, err := c.Request.Cookie("bearerToken")

@@ -17,6 +17,9 @@ import (
 	"github.com/yusuf/track-space/pkg/key"
 	"github.com/yusuf/track-space/pkg/temp"
 	"github.com/yusuf/track-space/pkg/ws"
+	"github.com/yusuf/track-space/pkg/wsconfig"
+	"github.com/yusuf/track-space/pkg/wsmodel"
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -284,7 +287,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				}
 				c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
 				log.Println("Successfully login")
-			
+
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
 					"success":      "successfully login! Go to dashboard",
 					"authenticate": templateData.IsAuthenticated,
@@ -293,7 +296,6 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			} else {
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
 					"error": msg,
-					
 				})
 			}
 		case user.Email == "trackspace@admin.com" && user.Password == "@_trackspace_":
@@ -348,7 +350,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			}
 			c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
 			log.Println("Successfully login")
-			
+
 			c.HTML(http.StatusOK, "home-page.html", gin.H{
 				"success":      "logged in successfully! Go to Admin",
 				"authenticate": templateData.IsAuthenticated,
@@ -491,7 +493,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		var project model.Project
 		tsData := sessions.Default(c)
 		userID := fmt.Sprint(tsData.Get("userID"))
-		
+
 		if err := tsData.Save(); err != nil {
 			c.AbortWithError(http.StatusNoContent, gin.Error{Err: err})
 			return
@@ -509,7 +511,6 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		project.CreatedAt = time.Now().Format("2006-01-02")
 		project.UpdatedAt = time.Now().Format("2006-01-02")
 
-		
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&project); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
@@ -519,8 +520,8 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 			}
 		}
 
-		log.Printf("\nUserID ---> %v",userID)
-		log.Printf("\nProjectID ---> %v",project.ID)
+		log.Printf("\nUserID ---> %v", userID)
+		log.Printf("\nProjectID ---> %v", project.ID)
 
 		err := ts.tsDB.StoreProjectData(userID, project)
 		if err != nil {
@@ -528,7 +529,6 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 			return
 		}
 
-		
 		// c.Redirect(http.StatusSeeOther, "/auth/user/workspace")
 		c.HTML(http.StatusOK, "work.html", gin.H{
 			"save": fmt.Sprintf("%v suubmitted successfully", project.ProjectName),
@@ -549,7 +549,7 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 		userID := fmt.Sprintf("%s", tsData.Get("userID"))
 
 		// fmt.Println(tsData.Get("userID"))
-		fmt.Println("user id --> in show project table ",userID)
+		fmt.Println("user id --> in show project table ", userID)
 
 		user, err := ts.tsDB.SendUserDetails(userID)
 		if err != nil {
@@ -668,9 +668,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
-		c.HTML(http.StatusOK, "dash.html",gin.H{
-
-		})
+		c.HTML(http.StatusOK, "dash.html", gin.H{})
 	}
 }
 
@@ -938,31 +936,6 @@ func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 	}
 }
 
-func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "chat.html", gin.H{})
-	}
-}
-
-func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var res model.SocketResponse
-		wsConn, err := ws.UpgradeSocketConn.Upgrade(ctx.Writer, ctx.Request, nil)
-		if err != nil {
-			log.Fatal("Unable to connect to socket")
-			return
-		}
-		connect := model.SocketConnection{Conn: wsConn}
-		model.Client[connect] = ""
-
-		go ws.SendDataToChannel(&connect, ctx)
-
-		err = wsConn.WriteJSON(res.Message)
-		if err != nil {
-			return
-		}
-	}
-}
 
 func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -1073,5 +1046,35 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 		ts.AppConfig.MailChan <- mailMsg
 
 		c.Redirect(http.StatusSeeOther, "/auth/admin")
+	}
+}
+
+
+func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.HTML(http.StatusOK, "chat.html", gin.H{})
+	}
+}
+
+func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var res wsmodel.SocketResponse
+		wsConn, err := ws.UpgradeSocketConn.Upgrade(ctx.Writer, ctx.Request, nil)
+		if err != nil {
+			log.Fatal("Unable to connect to socket")
+			return
+		}
+
+		res.Message = `<p>chatroom handler upgrade</p>`
+
+		connect := wsconfig.SocketConnection{Conn: wsConn}
+		ws.Client[connect] = ""
+
+		err = wsConn.WriteJSON(res.Message)
+		if err != nil {
+			return
+		}
+		go ws.SendDataToChannel(&connect)
+
 	}
 }
