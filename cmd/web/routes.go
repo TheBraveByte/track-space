@@ -21,6 +21,8 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 
 	router.GET("/login", h.GetLoginPage())
 	router.POST("/login", h.PostLoginPage())
+	// router.GET("/chat", h.ChatRoom())
+	// router.GET("/ts", h.ChatRoomEndpoint())
 
 	authRouter := routes.Group("/auth")
 
@@ -45,15 +47,13 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.POST("/user/todo-table/:src/:id/change", h.ModifyUserTodo())
 		authRouter.GET("/user/todo/:src/:id/delete", h.DeleteTodo())
 
-	
-
 		// Routes for websocket handlers
 		authRouter.GET("/user/chat", h.ChatRoom())
-		authRouter.GET("/ts-chat", h.ChatRoomEndpoint())
+		authRouter.GET("/ts", h.ChatRoomEndpoint())
 		authRouter.POST("/user/logout")
 
 		//Admin routes
-		authRouter.GET("/admin",h.AdminPage())
+		authRouter.GET("/admin", h.AdminPage())
 		authRouter.GET("/:src/dashboard/:id/delete", h.AdminDeleteUser())
 
 	}

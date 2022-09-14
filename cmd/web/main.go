@@ -15,6 +15,9 @@ import (
 	"github.com/yusuf/track-space/pkg/driver"
 	"github.com/yusuf/track-space/pkg/model"
 	"github.com/yusuf/track-space/pkg/ws"
+	"github.com/yusuf/track-space/pkg/wsmodel"
+	"github.com/yusuf/track-space/pkg/wsconfig"
+
 )
 
 var app config.AppConfig
@@ -27,16 +30,16 @@ func main() {
 	gob.Register(model.Todo{})
 	gob.Register(model.Email{})
 	gob.Register(model.Data{})
-	gob.Register(model.SocketConnection{})
-	gob.Register(model.SocketPayLoad{})
-	gob.Register(model.SocketResponse{})
+	gob.Register(wsconfig.SocketConnection{})
+	gob.Register(wsmodel.SocketPayLoad{})
+	gob.Register(wsmodel.SocketResponse{})
 
 	mailChannel := make(chan model.Email)
-	
 	app.MailChan = mailChannel
 	app.AppInProduction = false
 	app.UseTempCache = false
 
+	// load environment variables
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("No .env file available")
@@ -55,11 +58,15 @@ func main() {
 	}
 
 	defer close(app.MailChan)
-	
+
 	log.Println("Application starting mail server listening to channel")
+	// Listening to the localhost mail server
 	go ListenToMailChannel()
-	
+
+	//Listening to PayLoad from the websocket
 	go ws.GetDataFromChannel()
+
+	// connecting to the database
 	Client := db.DatabaseConnection(mongodbUri)
 
 	defer func() {
@@ -81,7 +88,6 @@ func main() {
 	}
 
 	appRouter.SetFuncMap(template.FuncMap{})
-
 	appRouter.Static("/static", "./static")
 	appRouter.LoadHTMLGlob("templates/*.html")
 

@@ -2,8 +2,10 @@ package controller
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +21,6 @@ import (
 	"github.com/yusuf/track-space/pkg/ws"
 	"github.com/yusuf/track-space/pkg/wsconfig"
 	"github.com/yusuf/track-space/pkg/wsmodel"
-
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -83,8 +84,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		user.ID = primitive.NewObjectID().Hex()
 		user.Email = c.Request.Form.Get("email")
 		user.Password = key.HashPassword(c.Request.Form.Get("password"))
-		log.Println(user.ID, user.Email, user.Password)
-
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
@@ -112,10 +111,9 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		}
 
 		if count == 1 {
-			c.Redirect(http.StatusSeeOther, "/login")
-
-			// c.HTML(http.StatusOK, "login-page.html", gin.H{
-			// 	"msg": "You have previously sign-up\nlog-in into your account",
+			c.HTML(http.StatusOK, "login-page.html", gin.H{
+				"msg": "You have previously sign-up. log-in into your account",
+			})
 		} else {
 			c.Redirect(http.StatusSeeOther, "/user-info")
 		}
@@ -155,8 +153,8 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		user.PhoneNumber = c.Request.Form.Get("phone")
 		user.Stack = append(user.Stack, c.Request.Form.Get("stack-name"))
 		user.IPAddress = c.Request.RemoteAddr
-		user.CreatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		user.UpdatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		user.CreatedAt = time.Now().Format("2006-01-02")
+		user.UpdatedAt=time.Now().Format("2006-01-02")
 		t1, t2 := "", ""
 
 		// Server side validation of the user input from a form
@@ -211,8 +209,8 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 			return
 		}
-		// c.Redirect(http.StatusSeeOther, "/login")
-		c.HTML(http.StatusOK, "login-page.html", gin.H{})
+		c.Redirect(http.StatusSeeOther, "/login")
+		// c.HTML(http.StatusOK, "login-page.html", gin.H{})
 	}
 }
 
@@ -250,7 +248,6 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		var user model.User
 		user.Email = c.Request.Form.Get("email")
 		user.Password = c.Request.Form.Get("password")
-		// fmt.Println(user.ID, user.Email, user.Password)
 
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&user); err != nil {
@@ -353,7 +350,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 			c.HTML(http.StatusOK, "home-page.html", gin.H{
 				"success":      "logged in successfully! Go to Admin",
-				"authenticate": templateData.IsAuthenticated,
+				"authenticate": 0,
 			})
 		default:
 			c.HTML(http.StatusNotFound, "home-page.html", gin.H{
@@ -384,7 +381,6 @@ func (ts *TrackSpace) Article(count map[string]int, countArticle int) {
 // GetDashBoard - this show the user dashboard with respect to all the database
 // details and queries; full brief or user activities
 func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
-	// a lot of logic will be done here ..... a lot
 	return func(c *gin.Context) {
 		t, ok := c.Get("token")
 		if ok {
@@ -459,6 +455,19 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 					return
 				}
 			}
+			r, err := ts.tsDB.GetUserStatByID(userID)
+			if err != nil {
+				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				return
+			}
+
+			f, err := json.MarshalIndent(r["data"], "", " ")
+			if err != nil {
+				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				return
+			}
+			log.Println(f)
+			_ = ioutil.WriteFile("./data.json", f, 0o644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
@@ -520,9 +529,6 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 			}
 		}
 
-		log.Printf("\nUserID ---> %v", userID)
-		log.Printf("\nProjectID ---> %v", project.ID)
-
 		err := ts.tsDB.StoreProjectData(userID, project)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
@@ -531,7 +537,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 
 		// c.Redirect(http.StatusSeeOther, "/auth/user/workspace")
 		c.HTML(http.StatusOK, "work.html", gin.H{
-			"save": fmt.Sprintf("%v suubmitted successfully", project.ProjectName),
+			"save": fmt.Sprintf("%v submitted successfully", project.ProjectName),
 		})
 	}
 }
@@ -936,7 +942,6 @@ func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 	}
 }
 
-
 func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
@@ -958,9 +963,11 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 
 		TotalUser = len(documents)
 
+		// tsDoc["del"] ="delete"
 		for _, document := range documents {
 			for k, v := range document {
 				tsDoc[k] = v
+				tsDoc["del"] ="delete"
 				if k == "project_details" {
 					switch p := v.(type) {
 					case primitive.A:
@@ -1049,7 +1056,6 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 	}
 }
 
-
 func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "chat.html", gin.H{})
@@ -1075,6 +1081,5 @@ func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
 			return
 		}
 		go ws.SendDataToChannel(&connect)
-
 	}
 }
