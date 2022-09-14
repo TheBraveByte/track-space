@@ -2,17 +2,19 @@ package ws
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-	"github.com/yusuf/track-space/pkg/model"
 	"log"
 	"net/http"
 	"sort"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/yusuf/track-space/pkg/wsconfig"
+	"github.com/yusuf/track-space/pkg/wsmodel"
 )
 
 // initialize the websocket connection and channel
-var WebSkChan = make(chan model.SocketPayLoad)
+var webSkChan = make(chan wsmodel.SocketPayLoad)
+var Client = make(map[wsconfig.SocketConnection]string)
 
 var UpgradeSocketConn = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -25,15 +27,15 @@ var UpgradeSocketConn = websocket.Upgrader{
 
 // GetDataFromChannel - goroutine method that will get payload data via channel
 func GetDataFromChannel() {
-	var resp model.SocketResponse
+	var resp wsmodel.SocketResponse
 	for {
-		getdata := <-WebSkChan
+		getdata := <-webSkChan
 		switch getdata.Condition {
 		case "username":
-			model.Client[getdata.SocketConn] = getdata.UserName
+			Client[getdata.SocketConn] = getdata.UserName
 			users := GetAllUsers()
 			resp.Condition = "username"
-			resp.ConnectedUSer = users
+			resp.ConnectedUser = users
 			BroadCastToAll(resp)
 		case "sendMessage":
 			resp.Message = fmt.Sprintf("<em>%v</em> : %v", getdata.UserName, getdata.Message)
@@ -42,9 +44,9 @@ func GetDataFromChannel() {
 
 		case "serveroffline":
 			resp.Condition = "serveroffline"
-			delete(model.Client, getdata.SocketConn)
+			delete(Client, getdata.SocketConn)
 			users := GetAllUsers()
-			resp.ConnectedUSer = users
+			resp.ConnectedUser = users
 
 		}
 	}
@@ -53,7 +55,7 @@ func GetDataFromChannel() {
 // To get the list of user connected to the web socket
 func GetAllUsers() []string {
 	var userSlices []string
-	for _, user := range model.Client {
+	for _, user := range Client {
 		if user != "" {
 			userSlices = append(userSlices, user)
 		}
@@ -63,12 +65,13 @@ func GetAllUsers() []string {
 }
 
 // BroadCastToAll - this  functions write a responses to all connected users
-func BroadCastToAll(resp model.SocketResponse) {
-	for x := range model.Client {
+func BroadCastToAll(resp wsmodel.SocketResponse) {
+	for x := range Client {
 		err := x.WriteJSON(resp)
 		if err != nil {
 			log.Println("error write a json response")
 			_ = x.Close()
+			delete(Client, x)
 			return
 		}
 	}
@@ -76,24 +79,22 @@ func BroadCastToAll(resp model.SocketResponse) {
 
 // SendDataToChannel - goroutine method that will send back response data
 // back to the channel
-func SendDataToChannel(socketConn *model.SocketConnection, c *gin.Context) {
+func SendDataToChannel(socketConn *wsconfig.SocketConnection) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("Recovery from a failed program")
-			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{})
 			return
 		}
 	}()
 
-	var payload model.SocketPayLoad
+	var payload wsmodel.SocketPayLoad
 
 	for {
 		err := socketConn.ReadJSON(&payload)
 		if err != nil {
-			// _ = c.AbortWithError(http.StatusInternalServerError, gin.Error{})
 		} else {
 			payload.SocketConn = *socketConn
-			model.WebSkChan <- payload
+			webSkChan <- payload
 		}
 
 	}
