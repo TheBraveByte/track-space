@@ -362,13 +362,11 @@ func (tm *TsMongoDBRepo) GetUserStatByID(id string) (primitive.M, error) {
 
 	var result bson.M
 	filter := bson.D{{Key: "_id", Value: id}}
-	err := UserData(tm.TsMongoDB, "stat").FindOne(ctx, filter).Decode(&result)
+	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println(err)
-			panic(err)
 		}
-		return nil, err
 	}
 
 	return result, nil

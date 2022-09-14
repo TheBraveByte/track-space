@@ -1,201 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Track-Space Dashboard</title>
-    <link rel="stylesheet" href="/static/bootstrap.css" />
-    <link rel="stylesheet" href="bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/chat.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
-      integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
+        integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
 
-  <body>
+<body>
     <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8 chat-container">
-        <h2>Track-Space Chatroom</h1>
-        <hr class="mb-2" color="#33465f" />
-        <p class="mb-3">Communicate with other developer all other the world</p>
-        <form action="" method="post">
-          <div class="row">
-            <div class="col-md-8">
-              <!-- <hr /> -->
-              <div class="">
-                <label for="user-name" class="form-label">username</label>
-                <input
-                  type="text"
-                  name="user-name"
-                  id="user-name"
-                  class="form-control"
-                  placeholder=""
-                  aria-describedby="helpId"
-                />
-              </div>
-              <div class="mt-2">
-                <label for="message" class="form-label">message</label>
-                <input
-                  type="text"
-                  name="message"
-                  id="message"
-                  class="form-control"
-                  placeholder=""
-                  aria-describedby="helpId"
-                />
-                <hr />
-                <a
-                  href="javascript:void(0);"
-                  class="btn btn-outline-dark mt-3 btn-md"
-                  id="send"
-                  >send message</a
-                >
-              </div>
-              <input type="hidden" name="condition" id="condition" />
-              <div class="mt-3 float-end" id="indicator"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-8 chat-container">
+            <h2>Track-space Chatroom</h2>
+            <hr class="mb-2" color="#33465f" />
+            <p class="mb-3">Real-time communication with other professionals all other the world</p>
+            <form action="" method="post">
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- <hr /> -->
+                        <div class="">
+                            <label for="username" class="form-label">username</label>
+                            <input type="text" name="username" id="username" class="form-control" placeholder=""
+                                aria-describedby="helpId" />
+                        </div>
+                        <div class="mt-2">
+                            <label for="message" class="form-label">message</label>
+                            <input type="text" name="message" id="message" class="form-control" placeholder=""
+                                aria-describedby="helpId" />
+                            <hr />
+                            <a href="javascript:void(0);"
+                                class="btn btn-success mt-3 w-30 text-light text-decoration-none" id="send">send
+                                message</a>
+                        </div>
+                        <input type="hidden" name="condition" id="condition" />
+                        <div class="mt-3 float-end" id="indicator"></div>
 
-              <div class="message-box mt-5" id="message-box"></div>
-            </div>
-            <div class="col-md-4">
-              <h4 class="">Online user</h4>
-              <hr />
-              <div>
-                <ul id="online_user"></ul>
-              </div>
-            </div>
-            <div class="col mt-4">
-              <button class="btn btn-back" type="submit">
-                <a href="/auth/user/dashboard">Back</a>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-2"></div>
+                        <div class="message-box mt-5" id="message-box"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="">Online user</h4>
+                        <hr class="" />
+                        <div>
+                            <ul id="online_user"></ul>
+                        </div>
+                    </div>
+                    <div class="col mt-4">
+                        <button class="btn btn-danger w-30 text-light text-decoration-none" type="submit">
+                            <a href="/auth/user/dashboard" class="text-light text-decoration-none">Back</a>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
     </div>
-  </body>
-  <script src="/static/js/bootstrap.min.js"></script>
-  <script src="/static/js/jquery-3.5.1.min.js"></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
     integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  ></script>
-  <script src="/static/js/reconnecting-websocket.min.js"></script>
-  <script>
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/static/js/reconnecting-websocket.min.js"></script>
+<script>
     let msgInput = document.getElementById("message");
-    let userNameInput = document.getElementById("user-name");
+    let userNameInput = document.getElementById("username");
     let socket = null;
     let userStatus = document.getElementById("indicator");
     let onlineBadge = `<span class="badge bg-success">online</span>`;
     let offlineBadge = `<span class="badge bg-dark">offline</span>`;
 
-    function OffServer() {
-      let jsonData = {};
-      console.log("Server is turn off");
-      jsonData["condition"] = "serveroffline";
-      socket.send(JSON.stringify(jsonData));
-    }
-
-    window.onbeforeunload = OffServer;
+    window.onbeforeunload = function () {
+        let jsonData = {};
+        console.log("Server is turn off");
+        jsonData["condition"] = "serveroffline";
+        socket.send(JSON.stringify(jsonData));
+    };
 
     document.addEventListener("DOMContentLoaded", function () {
-      //Setting up the server
-      socket = new ReconnectingWebSocket(
-        "ws://localhost:8080/auth/user/ts-chat",
-        null,
-        { debug: true, reconnectInterval: 5000 }
-      );
-      socket.onclose = () => {
-        userStatus.innerHTML = offlineBadge;
-        console.log("web socket successfully close");
-      };
+        //Setting up the server
+        socket = new ReconnectingWebSocket("ws://localhost:8080/auth/ts", null, {
+            debug: true,
+            reconnectInterval: 5000,
+        });
 
-      socket.onopen = () => {
-        userStatus.innerHTML = onlineBadge;
-        console.log("Successfully connected to the web socket");
-        notifyUser("Successfully connected to the web socket");
-      };
-      // response from the server
-      socket.onmessage = (msg) => {
-        let respData = JSON.parse(msg);
-        console.log("server condition : ", respData.condition);
-        switch (respData.condition) {
-          case "username":
-            user_list = document.getElementById("online-user");
+        socket.onopen = () => {
+            userStatus.innerHTML = onlineBadge;
+            console.log("Successfully connected to the web socket");
+            notifyUser("welcome to track space chat room", "success");
+        };
 
-            while (user_list.firstChild) {
-              user_list.removeChild(user_list.firstChild);
+        socket.onclose = () => {
+            userStatus.innerHTML = offlineBadge;
+            console.log("web socket successfully close");
+        };
+        socket.onerror = (error) => {
+            console.log(error);
+        };
+
+        // response from the server
+        socket.onmessage = (msg) => {
+            let respData = JSON.parse(msg.data);
+            console.log(respData)
+            console.log("server condition : ", respData.condition);
+            switch (respData.condition) {
+                case "username":
+                    let user_list = document.getElementById("online_user");
+                    while (user_list.firstChild) {
+                        user_list.removeChild(user_list.firstChild);
+                    }
+
+                    if (respData.connected_user.length > 0) {
+                        respData.connected_user.forEach(function (element) {
+                            let newUser = document.createElement("li");
+                            newUser.appendChild(document.createTextNode(element));
+                            user_list.appendChild(newUser);
+                        })
+                    }
+                    break;
+
+                case "message":
+                    let messageBox = document.getElementById("message-box");
+                    messageBox.innerHTML = messageBox.innerHTML + respData.message + "<br>";
+                    break;
             }
+        };
 
-            if (respData.connected_user.length > 0) {
-              respData.connected_user.array.forEach((element) => {
-                newUser = document.createElement(li);
-                newUser = document.appendChild(
-                  document.createTextNode(element)
-                );
-                user_list.appendChild(newUser);
-              });
+        document.getElementById("send").addEventListener("click", function () {
+            if ((msgInput.value === "") || (userNameInput.value === "")) {
+                notifyUser("input username and message !", "warning");
+                return false;
+            } else {
+                SendMessage();
             }
-            break;
+        });
 
-          case "message":
-            let messageBox = document.getElementById("message-box");
-            messageBox = messageBox.innerHTML + respData.message + "/n";
-            break;
-        }
-      };
-      document.getElementById("send").addEventListener("click", function () {
-        if (msgInput === "" || userNameInput === "") {
-          notifyUser("error : input username and message !");
-          return false;
-        } else {
-          SendMessage();
-        }
-      });
+        msgInput.addEventListener("keydown", function (action) {
+            if (action.code === "Enter") {
+                if (!socket) {
+                    notifyUser("not connected to the socket", "warning");
+                    return false;
+                } else {
+                    action.preventDefault;
+                    action.stopPropagation;
+                    SendMessage();
+                }
+            }
+        });
 
-      msgInput.addEventListener("keydown", function (action) {
-        if (action.code === "Enter") {
-          if (!socket) {
-            notifyUser("error not connected to the socket");
-            return false;
-          } else {
-            action.stopPropagation;
-            action.preventDefault;
-            SendMessage();
-          }
-        }
-      });
+        //send data/payload back to the server through socket
+        userNameInput.addEventListener("change", function () {
+            let jsonData = {};
+            jsonData["condition"] = "username";
+            jsonData["username"] = this.value;
+            socket.send(JSON.stringify(jsonData));
+        })
 
-      //send data/payload back to the server through socket
-      userNameInput.addEventListener("change", function () {
-        let jsonData = {};
-        jsonData["condition"] = "username";
-        jsonData["user_name"] = userNameInput.value;
-        socket.send(JSON.stringify(jsonData));
-      });
+    });
 
-      function SendMessage() {
+    function SendMessage() {
         let jsonData = {};
         jsonData["condition"] = "sendMessage";
-        jsonData["user_name"] = userNameInput.value;
+        jsonData["username"] = userNameInput.value;
         jsonData["message"] = msgInput.value;
         socket.send(JSON.stringify(jsonData));
-        jsonData["message"] = msgInput = "";
-      }
+        jsonData["message"] = msgInput.value = "";
+    }
 
-      function notifyUser(msg) {
+    function notifyUser(msg, type) {
         notie.alert({
-          text: msg,
+            text: msg,
+            type: type,
         });
-      }
-    });
-  </script>
+    }
+</script>
+
 </html>

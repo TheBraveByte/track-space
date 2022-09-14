@@ -10,7 +10,7 @@
     "editor.defaultFormatter": "golang.go",
     "liveServer.settings.port": 5501,
     "[go]": {
-        "editor.defaultFormatter": "golang.go"
+        "editor.defaultFormatter": "golang.go-nightly"
     },
     "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"

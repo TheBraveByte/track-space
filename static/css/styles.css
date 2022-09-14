@@ -16,7 +16,7 @@ header {
 }
 
 .title-link {
-    padding-left: 3.6rem;
+    padding-left: 2rem;
 }
 
 .title {
@@ -86,7 +86,10 @@ header .nav-link {
     color: #1d2021;
     font-weight: initial;
 }
-
+.bt{
+    padding-left: 1rem;
+    padding-right:4rem;
+}
 .log-bt {
     margin-right: 4rem;
     background-color: #33465f;

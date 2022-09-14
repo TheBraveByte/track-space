@@ -1,445 +1,366 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Track Space</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="/static/bootstrap.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
-      integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-      crossorigin="anonymous"
-    ></script>
-    <link href="/static/css/styles.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="container">
-      <header
-        class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
-      >
-        <a
-          href="/"
-          class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none title-link"
-        >
-          <h1 class="title">Track<span>-space</span></h1>
-        </a>
 
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-          <li>
-            <a href="/feature" class="nav-link px-2 link-dark">Features</a>
-          </li>
-          <li>
-            <a href="/contact" class="nav-link px-2 link-dark">Contact</a>
-          </li>
-          {{if eq .authenticate 1}}
-          <li>
-            <a href="/auth/user/dashboard" class="nav-link px-2 link-dark"
-              >Dashboard</a
-            >
-          </li>
-          {{end}} {{if eq .authenicate 1}}
-          <li>
-            <a href="/auth/admin" class="nav-link px-2 link-dark">Admin</a>
-          </li>
-          {{end}}
-        </ul>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Track Space</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
+    integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link href="/static/css/styles.css" rel="stylesheet" />
+</head>
 
-        <div class="col-md-3 text-end">
-          <a
-            href="/login"
-            class="btn btn-outline-primary me-2 text-decoration-none"
-            >Login</a
-          >
-          <a href="sign-up" class="btn btn-primary text-decoration-none"
-            >Sign-up</a
-          >
-        </div>
-      </header>
-    </div>
-    <main>
-      <section class="One">
-        <div class="row mb-3">
-          <div class="first-grid col-sm-6 col-lg-8 themed-grid-col">
-            <p class="p-intro">
-              <span>Welcome to </span>track<span class="space">-space </span>
-            </p>
-            <p class="p-intro">home for all techie</p>
-            <div class="intro">
-              <p>
-                Get your team a well development ecosystem for any type of
-                project for easy management as well as intensive research on
-                newly innovative technology and idea needed to be share or
-                contribute to software development as a whole.
-              </p>
-            </div>
+<body>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none title-link">
+        <h1 class="title">Track<span>-space</span></h1>
+      </a>
 
-            <div class="bt">
-              <button class="log-bt bt1 btn w-50 btn-md" type="button">
-                Get Started
-              </button>
-            </div>
-          </div>
-          <div class="second-grid col-6 col-lg-4 themed-grid-col">
-            <div class="row mb-3 dev">
-              <div class="col-xl-12 col-lg-6 themed-grid-col main-dv-icon">
-                <img
-                  alt="pexels-mikhail-nilov-7820920.jpg"
-                  class="img-fluid mx-auto d-block dv-icon"
-                  src="/static/image/3206155.png"
-                />
-              </div>
-              <div class="user col-xl-12 col-lg-6 themed-grid-col main-p">
-                <p>
-                  workspace for
-                  <em
-                    ><span class="users"
-                      >developer, team, project manager
-                    </span><span class="users">other professional and client</span></em
-                  >
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="second">
-        <div class="container">
-          <p class="main-offer text-center">What we offer our users</p>
-          <div class="row items justify-content-md-start">
-            <div class="col-md-4 align-self-start offer-container">
-              <div class="card">
-                <div class="offer-img">
-                  <img src="/static/image/download (1).png" alt="" srcset="" />
-                </div>
-                <div class="card-body bg-light text-center">
-                  <h5 class="card-title">Project management</h5>
-                  <p class="card-text">
-                    storage space to maintain project worked on for easy access.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur quia nobis quae atque voluptate facere maiores
-                aperiam. Obcaecati quidem recusandae mollitia provident rerum
-                doloribus reprehenderit dolore amet perferendis, veritatis
-                explicabo?
-              </p>
-            </div>
-            <div class="col-md-4"></div>
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+        <li>
+          <a href="/feature" class="nav-link px-2 link-dark">Features</a>
+        </li>
+        <li>
+          <a href="/contact" class="nav-link px-2 link-dark">Contact</a>
+        </li>
+        {{if eq .authenticate 1}}
+        <li>
+          <a href="/auth/user/dashboard" class="nav-link px-2 link-dark">Dashboard</a>
+        </li>
+        {{else}}
+        <li>
+          <a href="/auth/admin" class="nav-link px-2 link-dark">Admin</a>
+        </li>
+        {{end}}
+      </ul>
 
-          </div>
-          <div class="row items justify-content-md-center">
-            <div class="col-md-4"></div>
-           
-            <div class="col-md-4 align-self-center">
-              <div class="card">
-                <div class="offer-img">
-                  <img src="/static/image/download (2).png" alt="" srcset="" />
-                </div>
-                <div class="card-body bg-light text-center">
-                  <h5 class="card-title">Team collaboration</h5>
-                  <p class="card-text">
-                    interactive section with team, developer, professionals and
-                    other individuals.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur quia nobis quae atque voluptate facere maiores
-                aperiam. Obcaecati quidem recusandae mollitia provident rerum
-                doloribus reprehenderit dolore amet perferendis, veritatis
-                explicabo?
-              </p>
-            </div>
-          </div>
-          <div class="row items justify-content-md-end">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur quia nobis quae atque voluptate facere maiores
-                aperiam. Obcaecati quidem recusandae mollitia provident rerum
-                doloribus reprehenderit dolore amet perferendis, veritatis
-                explicabo?
-              </p>
-            </div>
-            <div class="col-md-4 align-self-end">
-              <div class="card">
-                <div class="offer-img">
-                  <img src="/static/image/download (3).png" alt="" srcset="" />
-                </div>
-                <div class="card-body bg-light text-center">
-                  <h5 class="card-title">Good communication</h5>
-                  <p class="card-text">
-                    Effective Real-time communication between professionals and
-                    individual users.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4"></div>
-          </div>
-          <div class="row items justify-content-md-center">
-            <div class="col-md-4"></div>
-            <div class="col-md-4 align-self-end">
-              <div class="card">
-                <div class="offer-img">
-                  <img src="/static/image/download (4).png" alt="" srcset="" />
-                </div>
-                <div class="card-body bg-light text-center">
-                  <h5 class="card-title">Client services</h5>
-                  <p class="card-text">
-                    undoubted services to our client and their easy access tp
-                    assigned team.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur quia nobis quae atque voluptate facere maiores
-                aperiam. Obcaecati quidem recusandae mollitia provident rerum
-                doloribus reprehenderit dolore amet perferendis, veritatis
-                explicabo?
-              </p>
-            </div>
-            
-          </div>
-          <div class="row items justify-content-md-start">
-            <div class="col-md-4 align-self-end">
-              <div class="card">
-                <div class="offer-img">
-                  <img src="/static/image/download (5).png" alt="" srcset="" />
-                </div>
-                <div class="card-body bg-light text-center">
-                  <h5 class="card-title">Proper work integration</h5>
-                  <p class="card-text">
-                    undoubted services to our client and their easy access tp
-                    assigned team.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur quia nobis quae atque voluptate facere maiores
-                aperiam. Obcaecati quidem recusandae mollitia provident rerum
-                doloribus reprehenderit dolore amet perferendis, veritatis
-                explicabo?
-              </p>
-            </div>
-            <div class="col-md-4"></div>
-          </div>
-        </div>
-      </section>
-      <section class="fourth">
-        <div class="com">
-          <p class="com-head">
-            Technology companies that make use of our application for easy
-            develpment and fast working rate
+      <div class="col-md-3 text-end">
+        <a href="/login" class="btn btn-outline-primary me-2 text-decoration-none">Login</a>
+        <a href="/sign-up" class="btn btn-primary text-decoration-none">Sign-up</a>
+      </div>
+    </header>
+  </div>
+  <main>
+    <section class="One">
+      <div class="row mb-3">
+        <div class="first-grid col-sm-6 col-lg-8 themed-grid-col">
+          <p class="p-intro">
+            <span>Welcome to </span>track<span class="space">-space </span>
           </p>
-          <div class="com-icon">
-            <div>
-              <img
-                alt=""
-                class="logo"
-                src="/static/image/github-64x64-675821.png"
-                srcset=""
-              />
-              <p>Github</p>
+          <p class="p-intro">home for all techie</p>
+          <div class="intro">
+            <p>
+              Get your team a well development ecosystem for any type of
+              project for easy management as well as intensive research on
+              newly innovative technology and idea needed to be share or
+              contribute to software development as a whole.
+            </p>
+          </div>
+
+          <div class="bt">
+            <button class="log-bt bt1 btn w-50 btn-md" type="button">
+              Get Started
+            </button>
+          </div>
+        </div>
+        <div class="second-grid col-6 col-lg-4 themed-grid-col">
+          <div class="row mb-3 dev">
+            <div class="col-xl-12 col-lg-6 themed-grid-col main-dv-icon">
+              <img alt="pexels-mikhail-nilov-7820920.jpg" class="img-fluid mx-auto d-block dv-icon"
+                src="/static/image/3206155.png" />
             </div>
-            <div>
-              <img
-                alt=""
-                class="logo"
-                src="/static/image/google-64x64-675827.png"
-                srcset=""
-              />
-              <p>Google</p>
-            </div>
-            <div>
-              <img
-                alt=""
-                class="logo"
-                src="/static/image/amazon-64x64-675861.png"
-                srcset=""
-              />
-              <p>Amazon</p>
-            </div>
-            <div>
-              <img
-                alt=""
-                class="logo"
-                src="/static/image/spotify-64x64-675849.png"
-                srcset=""
-              />
-              <p>Spotify</p>
-            </div>
-            <div>
-              <img
-                alt=""
-                class="logo"
-                src="/static/image/dropbox-64x64-675812.png"
-                srcset=""
-              />
-              <p>Dropbox</p>
+            <div class="user col-xl-12 col-lg-6 themed-grid-col main-p">
+              <p>
+                workspace for
+                <em><span class="users">developer, team, project manager
+                  </span><span class="users">other professional and client</span></em>
+              </p>
             </div>
           </div>
         </div>
-      </section>
-
-      <footer class="main-footer">
-        <div class="container">
-          <div class="footer row">
-            <div class="ft-1 col-md-4 pr-md-5">
-              <a class="ft-space d-block mb-4" href="#"
-                >track<span>-space</span></a
-              >
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
-                maiores expedita excepturi consequuntur quia, dolore voluptatem
-                perspiciatis ea odio obcaecati iusto temporibus adipisci earum
-                velit a commodi! Blanditiis, corporis earum! Lorem ipsum dolor
-                sit amet consectetur adipisicing elit. Eligendi quasi
-                perferendis ratione perspiciatis accusantium.
-              </p>
-            </div>
-            <div class="col-md">
-              <ul class="list-1 list-unstyled nav-links">
-                <li class="ft-li"><a href="#">Home</a></li>
-                <li class="ft-li"><a href="#">About Us</a></li>
-                <li class="ft-li"><a href="#">Portfolio</a></li>
-                <li class="ft-li"><a href="#">Services</a></li>
-                <li class="ft-li"><a href="#">Contact</a></li>
-              </ul>
-            </div>
-            <div class="col-md">
-              <ul class="list-2 list-unstyled nav-links">
-                <li class="ft-li"><a href="#">Clients</a></li>
-                <li class="ft-li"><a href="#">Team</a></li>
-                <li class="ft-li"><a href="#">Career</a></li>
-                <li class="ft-li"><a href="#">Testimonials</a></li>
-                <li class="ft-li"><a href="#">Journal</a></li>
-              </ul>
-            </div>
-            <div class="col-md">
-              <ul class="list-3 list-unstyled nav-links">
-                <li class="ft-li"><a href="#">Privacy Policy</a></li>
-                <li class="ft-li"><a href="#">Terms &amp; Conditions</a></li>
-                <li class="ft-li"><a href="#">Partners</a></li>
-              </ul>
-            </div>
-            <div class="col-md text-md-center">
-              <ul class="social list-unstyled">
-                <li class="ft-li">
-                  <img
-                    alt=""
-                    src="/static/image/twitter-16x16-675864.png"
-                  /><span class="icon-instagram"></span>
-                </li>
-                <li class="ft-li">
-                  <img
-                    alt=""
-                    src="/static/image/instagram-16x16-675870.png"
-                  /><span class="icon-twitter"></span>
-                </li>
-                <li class="ft-li">
-                  <img
-                    alt=""
-                    src="/static/image/facebook-16x16-675868.png"
-                  /><span class="icon-facebook"></span>
-                </li>
-                <li class="ft-li">
-                  <img
-                    src="/static/image/pinterest-16x16-675872.png"
-                    alt=""
-                  /><span class="icon-pinterest"></span>
-                </li>
-                <li class="ft-li">
-                  <img
-                    src="/static/image/tumblr-16x16-675866.png"
-                    alt=""
-                  /><span class="icon-dribble"></span>
-                </li>
-              </ul>
-              <p class="">
-                <a class="btn btn-tertiary" href="#">Contact Us</a>
-              </p>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-12 text-center">
-              <div class="copyright">
-                <p>
-                  <small>
-                    copyright &copy; 2022 track-space by ayaa-codes.</small
-                  >
+      </div>
+    </section>
+    <section class="second">
+      <div class="container">
+        <p class="main-offer text-center">What we offer our users</p>
+        <div class="row items justify-content-md-start">
+          <div class="col-md-4 align-self-start offer-container">
+            <div class="card">
+              <div class="offer-img">
+                <img src="/static/image/download (1).png" alt="" srcset="" />
+              </div>
+              <div class="card-body bg-light text-center">
+                <h5 class="card-title">Project management</h5>
+                <p class="card-text">
+                  storage space to maintain project worked on for easy access.
                 </p>
               </div>
             </div>
           </div>
+          <div class="col-md-4">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur quia nobis quae atque voluptate facere maiores
+              aperiam. Obcaecati quidem recusandae mollitia provident rerum
+              doloribus reprehenderit dolore amet perferendis, veritatis
+              explicabo?
+            </p>
+          </div>
+          <div class="col-md-4"></div>
+
         </div>
-      </footer>
-    </main>
-  </body>
-  <script src="/static/js/bootstrap.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
-    integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  ></script>
-  <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <div class="row items justify-content-md-center">
+          <div class="col-md-4"></div>
 
-  <script>
+          <div class="col-md-4 align-self-center">
+            <div class="card">
+              <div class="offer-img">
+                <img src="/static/image/download (2).png" alt="" srcset="" />
+              </div>
+              <div class="card-body bg-light text-center">
+                <h5 class="card-title">Team collaboration</h5>
+                <p class="card-text">
+                  interactive section with team, developer, professionals and
+                  other individuals.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur quia nobis quae atque voluptate facere maiores
+              aperiam. Obcaecati quidem recusandae mollitia provident rerum
+              doloribus reprehenderit dolore amet perferendis, veritatis
+              explicabo?
+            </p>
+          </div>
+        </div>
+        <div class="row items justify-content-md-end">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur quia nobis quae atque voluptate facere maiores
+              aperiam. Obcaecati quidem recusandae mollitia provident rerum
+              doloribus reprehenderit dolore amet perferendis, veritatis
+              explicabo?
+            </p>
+          </div>
+          <div class="col-md-4 align-self-end">
+            <div class="card">
+              <div class="offer-img">
+                <img src="/static/image/download (3).png" alt="" srcset="" />
+              </div>
+              <div class="card-body bg-light text-center">
+                <h5 class="card-title">Good communication</h5>
+                <p class="card-text">
+                  Effective Real-time communication between professionals and
+                  individual users.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+        <div class="row items justify-content-md-center">
+          <div class="col-md-4"></div>
+          <div class="col-md-4 align-self-end">
+            <div class="card">
+              <div class="offer-img">
+                <img src="/static/image/download (4).png" alt="" srcset="" />
+              </div>
+              <div class="card-body bg-light text-center">
+                <h5 class="card-title">Client services</h5>
+                <p class="card-text">
+                  undoubted services to our client and their easy access tp
+                  assigned team.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur quia nobis quae atque voluptate facere maiores
+              aperiam. Obcaecati quidem recusandae mollitia provident rerum
+              doloribus reprehenderit dolore amet perferendis, veritatis
+              explicabo?
+            </p>
+          </div>
 
-    function notifyMsg(msg, type) {
-        notie.alert({
-            type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-            text: msg,
-        })
-    }
+        </div>
+        <div class="row items justify-content-md-start">
+          <div class="col-md-4 align-self-end">
+            <div class="card">
+              <div class="offer-img">
+                <img src="/static/image/download (5).png" alt="" srcset="" />
+              </div>
+              <div class="card-body bg-light text-center">
+                <h5 class="card-title">Proper work integration</h5>
+                <p class="card-text">
+                  undoubted services to our client and their easy access tp
+                  assigned team.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur quia nobis quae atque voluptate facere maiores
+              aperiam. Obcaecati quidem recusandae mollitia provident rerum
+              doloribus reprehenderit dolore amet perferendis, veritatis
+              explicabo?
+            </p>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      </div>
+    </section>
+    <section class="fourth">
+      <div class="com">
+        <p class="com-head">
+          Technology companies that make use of our application for easy
+          develpment and fast working rate
+        </p>
+        <div class="com-icon">
+          <div>
+            <img alt="" class="logo" src="/static/image/github-64x64-675821.png" srcset="" />
+            <p>Github</p>
+          </div>
+          <div>
+            <img alt="" class="logo" src="/static/image/google-64x64-675827.png" srcset="" />
+            <p>Google</p>
+          </div>
+          <div>
+            <img alt="" class="logo" src="/static/image/amazon-64x64-675861.png" srcset="" />
+            <p>Amazon</p>
+          </div>
+          <div>
+            <img alt="" class="logo" src="/static/image/spotify-64x64-675849.png" srcset="" />
+            <p>Spotify</p>
+          </div>
+          <div>
+            <img alt="" class="logo" src="/static/image/dropbox-64x64-675812.png" srcset="" />
+            <p>Dropbox</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    {{with .success}}
-    notifyMsg("{{.}}", "success")
-    {{end}}
+    <footer class="main-footer">
+      <div class="container">
+        <div class="footer row">
+          <div class="ft-1 col-md-4 pr-md-5">
+            <a class="ft-space d-block mb-4" href="#">track<span>-space</span></a>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
+              maiores expedita excepturi consequuntur quia, dolore voluptatem
+              perspiciatis ea odio obcaecati iusto temporibus adipisci earum
+              velit a commodi! Blanditiis, corporis earum! Lorem ipsum dolor
+              sit amet consectetur adipisicing elit. Eligendi quasi
+              perferendis ratione perspiciatis accusantium.
+            </p>
+          </div>
+          <div class="col-md">
+            <ul class="list-1 list-unstyled nav-links">
+              <li class="ft-li"><a href="#">Home</a></li>
+              <li class="ft-li"><a href="#">About Us</a></li>
+              <li class="ft-li"><a href="#">Portfolio</a></li>
+              <li class="ft-li"><a href="#">Services</a></li>
+              <li class="ft-li"><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="col-md">
+            <ul class="list-2 list-unstyled nav-links">
+              <li class="ft-li"><a href="#">Clients</a></li>
+              <li class="ft-li"><a href="#">Team</a></li>
+              <li class="ft-li"><a href="#">Career</a></li>
+              <li class="ft-li"><a href="#">Testimonials</a></li>
+              <li class="ft-li"><a href="#">Journal</a></li>
+            </ul>
+          </div>
+          <div class="col-md">
+            <ul class="list-3 list-unstyled nav-links">
+              <li class="ft-li"><a href="#">Privacy Policy</a></li>
+              <li class="ft-li"><a href="#">Terms &amp; Conditions</a></li>
+              <li class="ft-li"><a href="#">Partners</a></li>
+            </ul>
+          </div>
+          <div class="col-md text-md-center">
+            <ul class="social list-unstyled">
+              <li class="ft-li">
+                <img alt="" src="/static/image/twitter-16x16-675864.png" /><span class="icon-instagram"></span>
+              </li>
+              <li class="ft-li">
+                <img alt="" src="/static/image/instagram-16x16-675870.png" /><span class="icon-twitter"></span>
+              </li>
+              <li class="ft-li">
+                <img alt="" src="/static/image/facebook-16x16-675868.png" /><span class="icon-facebook"></span>
+              </li>
+              <li class="ft-li">
+                <img src="/static/image/pinterest-16x16-675872.png" alt="" /><span class="icon-pinterest"></span>
+              </li>
+              <li class="ft-li">
+                <img src="/static/image/tumblr-16x16-675866.png" alt="" /><span class="icon-dribble"></span>
+              </li>
+            </ul>
+            <p class="">
+              <a class="btn btn-tertiary" href="#">Contact Us</a>
+            </p>
+          </div>
+        </div>
 
-    {{with .error}}
-    notifyMsg("{{.}}", "error")
-    {{end}}
-  </script>
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="copyright">
+              <p>
+                <small>
+                  copyright &copy; 2022 track-space by ayaa-codes.</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</body>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+  integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+  function notifyMsg(msg, type) {
+    notie.alert({
+      type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+      text: msg,
+    })
+  }
+
+  { { with .success} }
+  notifyMsg("{{.}}", "success")
+  { { end } }
+
+  { { with .error} }
+  notifyMsg("{{.}}", "error")
+  { { end } }
+</script>
+
 </html>

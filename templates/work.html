@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/static/bootstrap.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/work.css" />
-  <script src="https://cdn.tiny.cloud/1/wxxxigs2nnc6k02msdd8p668si3yl9u6ox1bv1hmx0vk5wf0/tinymce/6/tinymce.min.js"
-    referrerpolicy="origin"></script>
-  <script>
-    tinymce.init({
-      selector: "textarea",
-      plugins:
-        "a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker",
-      toolbar:
-        "a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents",
-      toolbar_mode: "floating",
-      tinycomments_mode: "embedded",
-      tinycomments_author: "Author name",
-      height: "700px",
-      toolbar_sticky: true,
-      icons: "thin",
-      autosave_restore_when_empty: true,
-      content_style: `
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/static/css/work.css" />
+    <script
+      src="https://cdn.tiny.cloud/1/wxxxigs2nnc6k02msdd8p668si3yl9u6ox1bv1hmx0vk5wf0/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+    <script>
+      tinymce.init({
+        selector: "textarea",
+        plugins:
+          "a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker",
+        toolbar:
+          "a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents",
+        toolbar_mode: "floating",
+        tinycomments_mode: "embedded",
+        tinycomments_author: "Author name",
+        height: "700px",
+        toolbar_sticky: true,
+        icons: "thin",
+        autosave_restore_when_empty: true,
+        content_style: `
                     body {
                         background: #fff;
                     }
@@ -46,107 +52,135 @@
                         }
                     }
                 `,
-    });
-  </script>
-</head>
-<style>
-  body {
-    margin: 4rem auto;
-    padding: 0 2rem;
-    background-color: #f9f9fb;
-  }
-
-  main {
-    width: 100%;
-  }
-</style>
-
-<body>
-  <main>
-    <div class="workspace-container row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
-        <form action="/auth/user/workspace" method="post" novalidate class="needs-validation">
-          <h2 class="track">Track space Editor</h2>
-          <hr />
-          <div>
-            <p class="work-list">
-              Right here at track space, get Your work done
-            </p>
-            <ul>
-              <li>Write your Code.</li>
-              <li>Proofread your Article</li>
-              <li>Write up your Document</li>
-              <li>Organise your Design and presentation</li>
-              <li>Use simple Text editor</li>
-              <li>Share idea through Comment</li>
-            </ul>
-          </div>
-          <hr />
-          <br />
-          <p class="notice">
-            Type in the project name & the type of file use in the box below
-          </p>
-          <div class="project row">
-            <div class="col">
-              <input class="form-control" type="text" name="project-name" id="project-name"
-                placeholder="Enter the name of the project" required autocomplete="off" />
-            </div>
-            <div class="col">
-              <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
-                placeholder="Add tools used i.e text-editor,source code & comment" required autocomplete="off" />
-            </div>
-          </div>
-          <div class="mt-xxl-5 mt-5 editor">
-            <textarea id="myTextarea" name="myText"></textarea>
-          </div>
-
-          <div class="reset-submit-btn row mt-xxl-5">
-            <div class="col-md-4">
-              <a href= "/auth/user/dashboard" class="w-40 btn btn-dark btn-md">
-                Back
-              </a>
-            </div>
-            <div class="col-md-4 offset-md-4">
-              <button id="submit" type="submit" class="w-40 btn btn-success btn-md">
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-2"></div>
-      <div class="row workspace-foot mt-xxl-5">
-        <p>TinyMCE | Akinleye_dev</p>
-      </div>
-    </div>
-  </main>
-</body>
-<script src="/static/js/bootstrap.min.js"></script>
-<!-- <script src="/static/js/jquery-3.5.1.min.js"></script> -->
-<script src="/static/js/form-validate.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-  integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-  integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
-  integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
-<script>
-  ValidateForm();
-  document.querySelector("#submit").addEventListener("click", function () {
-    var myContent = tinymce.activeEditor.getContent();
-    function notifyMsg(msg, type) {
-      notie.alert({
-        type: type,
-        text: msg,
       });
+    </script>
+  </head>
+  <style>
+    body {
+      margin: 4rem auto;
+      padding: 0 2rem;
+      background-color: #f9f9fb;
     }
 
-    notifyMsg("{{.save}}", "success");
-  });
-  
-</script>
+    main {
+      width: 100%;
+    }
+  </style>
 
+  <body>
+    <main>
+      <div class="workspace-container row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <form
+            action="/auth/user/workspace"
+            method="post"
+            novalidate
+            class="needs-validation"
+          >
+            <h2 class="track">Track space Editor</h2>
+            <hr />
+            <div>
+              <p class="work-list">
+                Right here at track space, get Your work done
+              </p>
+              <ul>
+                <li>Write your Code.</li>
+                <li>Proofread your Article</li>
+                <li>Write up your Document</li>
+                <li>Organise your Design and presentation</li>
+                <li>Use simple Text editor</li>
+                <li>Share idea through Comment</li>
+              </ul>
+            </div>
+            <hr />
+            <br />
+            <p class="notice">
+              Type in the project name & the type of file use in the box below
+            </p>
+            <div class="project row">
+              <div class="col">
+                <input
+                  class="form-control"
+                  type="text"
+                  name="project-name"
+                  id="project-name"
+                  placeholder="Enter the name of the project"
+                  required
+                  autocomplete="off"
+                />
+              </div>
+              <div class="col">
+                <input
+                  class="form-control"
+                  type="text"
+                  name="project-tool-use"
+                  id="project-tool-use"
+                  placeholder="Add tools used i.e text-editor,source code & comment"
+                  required
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+            <div class="mt-xxl-5 mt-5 editor">
+              <textarea id="myTextarea" name="myText"></textarea>
+            </div>
+
+            <div class="reset-submit-btn row mt-xxl-5">
+              <div class="col-md-4">
+                <a href="/auth/user/dashboard" class="w-40 btn btn-dark btn-md">
+                  Back
+                </a>
+              </div>
+              <div class="col-md-4 offset-md-4">
+                <button
+                  id="submit"
+                  type="submit"
+                  class="w-40 btn btn-success btn-md"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="row workspace-foot mt-xxl-5">
+          <p>TinyMCE | Akinleye_dev</p>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script src="/static/js/form-validate.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+    integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <script>
+    ValidateForm();
+    document.querySelector("#submit").addEventListener("click", function () {
+      var myContent = tinymce.activeEditor.getContent();
+      function notifyMsg(msg, type) {
+        notie.alert({
+          type: type,
+          text: msg,
+        });
+      }
+
+      notifyMsg("{{.save}}", "success");
+    });
+  </script>
 </html>

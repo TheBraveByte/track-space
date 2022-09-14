@@ -1,93 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Track Space Daily Task</title>
-    <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
-        rel="stylesheet" />
-    <link href="/static/bootstrap.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="/static/css/todo.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <main>
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6 set-task-container">
-                <form action="/auth/user/todo" method="post" novalidate class="needs-validation">
-                    <h1>Track Space ToDo</h1>
-                    <hr />
-                    <p class="todo">
-                        Schedule Your Daily Task Ahead for Easily Work Flow
-                    </p>
-                    <div class="row mt-3">
-                        <label for="task" class="form-label">Task or Event</label>
-                        <input type="text" name="task" id="" class="form-control" required autocomplete="off" />
+      <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 set-task-container">
+          <form
+            action="/auth/user/todo"
+            method="post"
+            novalidate
+            class="needs-validation"
+          >
+            <h1>Track Space Todo</h1>
+            <hr />
+            <p class="todo">
+              Schedule Your Daily Task Ahead for Easily Work Flow
+            </p>
+            <div class="row mt-3">
+              <label for="task" class="form-label">Task or Event</label>
+              <input
+                type="text"
+                name="task"
+                id=""
+                class="form-control"
+                required
+                autocomplete="off"
+              />
 
-                        <label class="form-label" for="schedule-date">Set Date</label>
-                        <input type="date" name="date_schedule" id="" class="form-control" required autocomplete="off" />
-                    </div>
-
-                    <div class="row mt-5">
-                        <div class="col-md-6">
-                            <label for="start-time" class="form-label">Set Start Time</label>
-                            <input type="time" name="start-time" id="" class="form-control" required autocomplete="off"/>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="end-time" class="form-label">Set End Time</label>
-                            <input type="time" name="end-time" id="" class="form-control" required autocomplete="off" />
-                        </div>
-                       
-                    </div>
-                    <div class="row reset-submit-btn mt-xxl-5">
-                        <div class="col-md-4 mt-5">
-                            <button class="w-30 btn btn-md btn-back btn-dark">
-                                <a href="/auth/user/dashboard"> Back </a>
-                            </button>
-                        </div>
-                        <div class="col-md-4 offset-md-4 mt-5">
-                            <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div class="workspace-foot">
-                    <p>@akinleye_dev 2022</p>
-                </div>
+              <label class="form-label" for="schedule-date">Set Date</label>
+              <input
+                type="date"
+                name="schedule-date"
+                id="schedule-date"
+                class="form-control"
+                required
+                autocomplete="off"
+              />
             </div>
-            <div class="col-md-3"></div>
+
+            <div class="row mt-5">
+              <div class="col-md-6">
+                <label for="start-time" class="form-label"
+                  >Set Start Time</label
+                >
+                <input
+                  type="time"
+                  name="start-time"
+                  id=""
+                  class="form-control"
+                  required
+                  autocomplete="off"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="end-time" class="form-label">Set End Time</label>
+                <input
+                  type="time"
+                  name="end-time"
+                  id=""
+                  class="form-control"
+                  required
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+            <div class="row reset-submit-btn mt-xxl-5">
+              <div class="col-md-4 mt-5">
+                <button class="w-30 btn btn-md btn-back btn-dark">
+                  <a href="/auth/user/dashboard"> Back </a>
+                </button>
+              </div>
+              <div class="col-md-4 offset-md-4 mt-5">
+                <button
+                  type="submit"
+                  class="w-30 btn btn-md btn-submit"
+                  id="submit-btn"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+          <div class="workspace-foot">
+            <p>@akinleye_dev 2022</p>
+          </div>
         </div>
+        <div class="col-md-3"></div>
+      </div>
     </main>
-</body>
-<script src="/static/js/bootstrap.js"></script>
-<script src="/static/js/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
-<script src="/static/js/form-validate.js"></script>
-<script>
+  </body>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
+  <script src="/static/js/form-validate.js"></script>
+  <script>
     ValidateForm();
 
     //using vanilla date picker
     const elem = document.getElementById("reservation-dates");
     const rangepicker = new DateRangePicker(elem, {
-        format: "yyyy-mm-dd",
-        minDate: new Date(),
+      format: "yyyy-mm-dd",
+      minDate: new Date(),
     });
     document
-        .getElementById("submit-btn")
-        .addEventListener("click", function () {
-            function notifyMsg(msg, type) {
-                notie.alert({
-                    type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-                    text: msg,
-                });
-            }
+      .getElementById("submit-btn")
+      .addEventListener("click", function () {
+        function notifyMsg(msg, type) {
+          notie.alert({
+            type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+            text: msg,
+          });
+        }
 
-            notifyMsg("{{.taskSaved}}", "success");
-        });
-</script>
-
+        notifyMsg("{{.taskSaved}}", "success");
+      });
+  </script>
 </html>
