@@ -350,7 +350,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 			c.HTML(http.StatusOK, "home-page.html", gin.H{
 				"success":      "logged in successfully! Go to Admin",
-				"authenticate": 0,
+				"authAdmin": templateData.IsAuthenticated,
 			})
 		default:
 			c.HTML(http.StatusNotFound, "home-page.html", gin.H{
