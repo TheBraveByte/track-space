@@ -1,163 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />
     <title>Track-Space Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="/static/css/dash.css" />
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
 
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
+      }
     </style>
-    
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="navbar sticky-top flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Track-space</a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"
+        >Track-space</a
+      >
+      <button
+        class="navbar-toggler position-absolute d-md-none collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </header>
 
     <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/user/workspace">
-                                <span data-feather="workspace"></span>
-                                Add Project
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/user/todo">
-                                <span data-feather="calendar"></span>
-                                Set Todo 
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/user/project-table">
-                                <span data-feather="folder"></span>
-                                Projects
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/user/todo-table">
-                                <span data-feather="table"></span>
-                                Schedule Plans
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/auth/user/chat">
-                                <span data-feather="message-circle"></span>
-                                Chatroom
-                            </a>
-                        </li>
-                        <li class="nav-item mt-xxl-5">
-                            <a class="nav-link" href="/auth/user/logout">
-                                <span data-feather="log-out"></span>
-                                Log out
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+      <div class="row">
+        <nav
+          id="sidebarMenu"
+          class="col-md-3 col-lg-2 d-md-block sidebar collapse"
+        >
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/user/workspace">
+                  <span data-feather="workspace"></span>
+                  Add Project
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/user/todo">
+                  <span data-feather="calendar"></span>
+                  Set Todo
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/user/project-table">
+                  <span data-feather="folder"></span>
+                  Projects
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/user/todo-table">
+                  <span data-feather="table"></span>
+                  Schedule Plans
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/user/chat">
+                  <span data-feather="message-circle"></span>
+                  Chatroom
+                </a>
+              </li>
+              <li class="nav-item mt-xxl-5">
+                <a class="nav-link" href="/auth/user/logout">
+                  <span data-feather="log-out"></span>
+                  Log out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h3 class="">Dashboard</h3>
-                </div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h3 class="">Dashboard</h3>
+          </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-            </main>
-        </div>
+          <canvas
+            class="my-4 w-100"
+            id="myChart"
+            width="900"
+            height="380"
+          ></canvas>
+        </main>
+      </div>
     </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
-    crossorigin="anonymous"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
-        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+      integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+      integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script>
-        /* globals Chart:false, feather:false */
+      /* globals Chart:false, feather:false */
 
-        (function () {
-            "use strict";
+      (function () {
+        "use strict";
 
-            feather.replace({ "aria-hidden": "true" });
+        feather.replace({ "aria-hidden": "true" });
 
-            // Graphs
-            var ctx = document.getElementById("myChart");
-            // eslint-disable-next-line no-unused-vars
-            var myChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: [
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                    ],
-                    datasets: [
-                        {
-                            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-                            lineTension: 0,
-                            backgroundColor: "transparent",
-                            borderColor: "#007bff",
-                            borderWidth: 4,
-                            pointBackgroundColor: "#007bff",
-                        },
-                    ],
+        // Graphs
+        var ctx = document.getElementById("myChart");
+        // eslint-disable-next-line no-unused-vars
+        var myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ],
+            datasets: [
+              {
+                data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+                lineTension: 0,
+                backgroundColor: "transparent",
+                borderColor: "#007bff",
+                borderWidth: 4,
+                pointBackgroundColor: "#007bff",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: false,
+                  },
                 },
-                options: {
-                    scales: {
-                        yAxes: [
-                            {
-                                ticks: {
-                                    beginAtZero: false,
-                                },
-                            },
-                        ],
-                    },
-                    legend: {
-                        display: false,
-                    },
-                },
-            });
-        })();
+              ],
+            },
+            legend: {
+              display: false,
+            },
+          },
+        });
+      })();
     </script>
-</body>
-
+  </body>
 </html>
