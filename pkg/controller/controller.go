@@ -138,6 +138,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 
 		tsData := sessions.Default(c)
 		userID := fmt.Sprint(tsData.Get("userID"))
+		user.Email = fmt.Sprint(tsData.Get("email"))
 
 		if err := c.Request.ParseForm(); err != nil {
 			c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -154,8 +155,9 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		user.Stack = append(user.Stack, c.Request.Form.Get("stack-name"))
 		user.IPAddress = c.Request.RemoteAddr
 		user.CreatedAt = time.Now().Format("2006-01-02")
-		user.UpdatedAt=time.Now().Format("2006-01-02")
+		user.UpdatedAt = time.Now().Format("2006-01-02")
 		t1, t2 := "", ""
+		tsData.Set("first-name", user.FirstName)
 
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(user); err != nil {
@@ -182,7 +184,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 			Subject:  "Confirmation for Account Created",
 			Content:  message,
 			Sender:   "trackspace@admin.com",
-			Receiver: user.Email,
+			Receiver: fmt.Sprint(tsData.Get("email")),
 			Template: "email.html",
 		}
 
@@ -210,7 +212,6 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 			return
 		}
 		c.Redirect(http.StatusSeeOther, "/login")
-		// c.HTML(http.StatusOK, "login-page.html", gin.H{})
 	}
 }
 
@@ -349,7 +350,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			log.Println("Successfully login")
 
 			c.HTML(http.StatusOK, "home-page.html", gin.H{
-				"success":      "logged in successfully! Go to Admin",
+				"success":   "logged in successfully! Go to Admin",
 				"authAdmin": templateData.IsAuthenticated,
 			})
 		default:
@@ -360,16 +361,32 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
-func(ts *TrackSpace) ResetPassword()gin.HandlerFunc{
-	return func(c *gin.Context){
+func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tsData := sessions.Default(c)
+		UserMessage := fmt.Sprintf(`
+			<strong>Reset Password Notification</strong><br>
+			Hi, %s:<br>
+			<p>You made a request to reset your password for your account.
+			if this request is not from you  kindly notify our help desk.
+			</p>
+			`,fmt.Sprint(tsData.Get("first-name")))
+		TeamMailMsg := model.Email{
+			Subject:  "Confirmation for Account Created",
+			Content:  UserMessage,
+			Sender:   "trackspace@admin.com",
+			Receiver: "trackspace@admin.com",
+			Template: "email.html",
+		}
+		ts.AppConfig.MailChan <- TeamMailMsg
+
 		c.HTML(http.StatusOK, "reset-password.html", gin.H{})
 	}
-
 }
 
-
-func(ts *TrackSpace)UpdatePassword()gin.HandlerFunc{
+func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		
 		var user model.User
 
 		if err := Validate.Struct(&user); err != nil {
@@ -378,7 +395,7 @@ func(ts *TrackSpace)UpdatePassword()gin.HandlerFunc{
 			}
 		}
 
-		if err := c.Request.ParseForm(); err != nil{
+		if err := c.Request.ParseForm(); err != nil {
 			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 		user.Email = c.Request.Form.Get("user-email")
@@ -389,11 +406,31 @@ func(ts *TrackSpace)UpdatePassword()gin.HandlerFunc{
 			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
+		tsData := sessions.Default(c)
+		TeamMessage := fmt.Sprintf(`
+			<strong>User Reset Account Password</strong><br>
+			Hi, %s:<br>
+			<p>
+			This is notify the team that user with an 
+			<strong> ID : </strong> %s reset account password.
+			</p>
+			`, "Track-space Team", tsData.Get("userID"))
+		TeamMailMsg := model.Email{
+			Subject:  "Confirmation for Account Created",
+			Content:  TeamMessage,
+			Sender:   "trackspace@admin.com",
+			Receiver: "trackspace@admin.com",
+			Template: "email.html",
+		}
+
+		ts.AppConfig.MailChan <- TeamMailMsg
+		
 		c.HTML(http.StatusOK, "login-page.html", gin.H{
-			"resetmsg":"password successfully reset",
+			"resetmsg": "password successfully reset",
 		})
 	}
 }
+
 // Todo Each of the  functions are use to organize the user data in the database
 // Todo
 func (ts *TrackSpace) Todo(count map[string]int, countTodo int) {
@@ -1001,7 +1038,7 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 		for _, document := range documents {
 			for k, v := range document {
 				tsDoc[k] = v
-				tsDoc["del"] ="delete"
+				tsDoc["del"] = "delete"
 				if k == "project_details" {
 					switch p := v.(type) {
 					case primitive.A:
