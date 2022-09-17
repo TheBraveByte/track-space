@@ -360,6 +360,40 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
+func(ts *TrackSpace) ResetPassword()gin.HandlerFunc{
+	return func(c *gin.Context){
+		c.HTML(http.StatusOK, "reset-password.html", gin.H{})
+	}
+
+}
+
+
+func(ts *TrackSpace)UpdatePassword()gin.HandlerFunc{
+	return func(c *gin.Context) {
+		var user model.User
+
+		if err := Validate.Struct(&user); err != nil {
+			if _, ok := err.(*validator.InvalidValidationError); !ok {
+				c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+			}
+		}
+
+		if err := c.Request.ParseForm(); err != nil{
+			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+		}
+		user.Email = c.Request.Form.Get("user-email")
+		user.Password = key.HashPassword(c.Request.Form.Get("new-password"))
+
+		err := ts.tsDB.ResetUserPassword(user.Email, user.Password)
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			return
+		}
+		c.HTML(http.StatusOK, "login-page.html", gin.H{
+			"resetmsg":"password successfully reset",
+		})
+	}
+}
 // Todo Each of the  functions are use to organize the user data in the database
 // Todo
 func (ts *TrackSpace) Todo(count map[string]int, countTodo int) {

@@ -76,7 +76,7 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id, t1, t2 string) erro
 		if err == mongo.ErrNoDocuments {
 			log.Fatalf("Error 0 from UpdateUserInfo: %v", err)
 		}
-		log.Fatalf("Error 1 from UpdateUserInfo: %v", err)
+		log.Printf("Error 1 from UpdateUserInfo: %v", err)
 	}
 	return nil
 }
@@ -95,6 +95,27 @@ func (tm *TsMongoDBRepo) UpdateUserField(id, t1, t2 string) error {
 	if err != nil {
 		log.Printf("Error  from UpdateUserField: %v", err)
 		return err
+	}
+	return nil
+}
+
+/*
+ResetUserPassword : this method will help to reset password of existing user
+*/
+func (tm *TsMongoDBRepo) ResetUserPassword(email, newpassword string) error {
+	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancelCtx()
+	filter := bson.D{{Key: "email", Value: email}}
+	update := bson.D{{Key : "$set", Value:bson.D{{Key:"email", Value:email}}}}
+
+	var result bson.M
+	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&result)
+	if err != nil{
+		if err == mongo.ErrNoDocuments {
+			log.Println("user do not exist : redirect to sign up on track space")
+			return err
+		}
+		log.Println(err)
 	}
 	return nil
 }
@@ -136,7 +157,7 @@ func (tm *TsMongoDBRepo) SendUserDetails(id string) (primitive.M, error) {
 		if err == mongo.ErrNoDocuments {
 			return nil, err
 		}
-		log.Fatalf("Error from SendUserDetails : %v", err)
+		log.Printf("Error from SendUserDetails : %v", err)
 
 	}
 	return user, nil
@@ -186,7 +207,7 @@ func (tm *TsMongoDBRepo) GetProjectData(project_id string) (primitive.M, error) 
 	var data bson.M
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter, opt).Decode(&data)
 	if err != nil {
-		log.Fatalf("Error from GetProjectData: %v", err)
+		log.Printf("Error from GetProjectData: %v", err)
 	}
 	return data, nil
 }
@@ -213,7 +234,7 @@ func (tm *TsMongoDBRepo) ModifyProjectData(user_id, id string, project model.Pro
 
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
-		log.Fatalf("Error from ModifyProjectData: %v", err)
+		log.Printf("Error from ModifyProjectData: %v", err)
 	}
 	return nil
 }

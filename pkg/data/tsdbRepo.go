@@ -12,6 +12,7 @@ type TrackSpaceDBRepo interface {
 	UpdateUserInfo(user model.User, id string, t1, t2 string) error
 	UpdateUserField(id, t1, t2 string) error
 	VerifyLogin(id, hashedPassword, postPassword string) (bool, string)
+	ResetUserPassword(email, newpassword string) error
 	SendUserDetails(id string) (primitive.M, error)
 
 	// Queries for User Project

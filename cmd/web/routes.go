@@ -21,8 +21,8 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 
 	router.GET("/login", h.GetLoginPage())
 	router.POST("/login", h.PostLoginPage())
-	// router.GET("/chat", h.ChatRoom())
-	// router.GET("/ts", h.ChatRoomEndpoint())
+	router.GET("/reset-password", h.ResetPassword())
+	router.POST("/reset-password", h.UpdatePassword())
 
 	authRouter := routes.Group("/auth")
 

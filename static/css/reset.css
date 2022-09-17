@@ -1,0 +1,14 @@
+body{
+    background-image: linear-gradient(to right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+}
+
+.form-container{
+    padding: 3rem 3rem;
+    background-color: #ffffff;
+    margin-top: 3rem;
+    border-radius: 0.725rem;
+}
+
+h2{
+    color: #33465f;
+}

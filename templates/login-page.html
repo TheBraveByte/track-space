@@ -40,7 +40,7 @@
           <button class="sign-in w-30 btn btn-md" type="submit">Login</button>
         </div>
         <div class="row fp">
-          <a href="#">forget password</a>
+          <a href="/reset-password">forget password</a>
         </div>
       </form>
     </div>
@@ -63,6 +63,9 @@
   {{ with .msg}}
   notifyMsg("{{.msg}}", "info")
   {{ end }}
+  {{with .resetmsg}}
+  notifyMsg("{{.resetmsg}}", "info")
+  {{end}}
 </script>
 
 </html>
