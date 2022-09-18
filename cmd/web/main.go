@@ -15,9 +15,8 @@ import (
 	"github.com/yusuf/track-space/pkg/driver"
 	"github.com/yusuf/track-space/pkg/model"
 	"github.com/yusuf/track-space/pkg/ws"
-	"github.com/yusuf/track-space/pkg/wsmodel"
 	"github.com/yusuf/track-space/pkg/wsconfig"
-
+	"github.com/yusuf/track-space/pkg/wsmodel"
 )
 
 var app config.AppConfig

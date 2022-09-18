@@ -1,12 +1,13 @@
 package wsmodel
 
 import "github.com/yusuf/track-space/pkg/wsconfig"
+
 /*Working with Web Socket*/
 
 type SocketPayLoad struct {
-	Condition  string           `json:"condition"`
-	Message    string           `json:"message"`
-	UserName   string           `json:"username"`
+	Condition  string                    `json:"condition"`
+	Message    string                    `json:"message"`
+	UserName   string                    `json:"username"`
 	SocketConn wsconfig.SocketConnection `json:"-"`
 }
 

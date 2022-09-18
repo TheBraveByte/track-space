@@ -16,11 +16,15 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	router.GET("/sign-up", h.SignUpPage())
 	router.POST("/sign-up", h.PostSignUpPage())
 
+	router.GET("/contact", h.Contact())
+	router.POST("/contact", h.PostContact())
+
 	router.GET("/user-info", h.GetUserInfo())
 	router.POST("/user-info", h.PostUserInfo())
 
 	router.GET("/login", h.GetLoginPage())
 	router.POST("/login", h.PostLoginPage())
+
 	router.GET("/reset-password", h.ResetPassword())
 	router.POST("/reset-password", h.UpdatePassword())
 

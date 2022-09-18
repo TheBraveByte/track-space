@@ -106,11 +106,11 @@ func (tm *TsMongoDBRepo) ResetUserPassword(email, newpassword string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "email", Value: email}}
-	update := bson.D{{Key : "$set", Value:bson.D{{Key:"email", Value:email}}}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "email", Value: email}}}}
 
 	var result bson.M
 	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&result)
-	if err != nil{
+	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println("user do not exist : redirect to sign up on track space")
 			return err

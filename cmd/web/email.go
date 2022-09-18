@@ -19,7 +19,7 @@ func SendMailToUser(m model.Email) {
 	mailServer.ConnectTimeout = 100 * time.Second
 	mailServer.SendTimeout = 100 * time.Second
 
-	//connecting to mailhog server
+	//connecting to mail-hog server
 	mailClient, err := mailServer.Connect()
 	if err != nil {
 		log.Panicln(err)
