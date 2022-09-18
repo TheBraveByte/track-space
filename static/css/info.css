@@ -27,7 +27,13 @@ h1 {
     color: #33465f;
     font-size: 2.0rem;
 }
+label{
+    color: #33465f;
+}
 
+p{
+    color: #33465f;
+}
 .user-info {
     font-weight: normal;
     font-size: 1rem;
@@ -44,13 +50,18 @@ h1 {
 }
 
 .btn-back {
-  border: 4px solid #1D2021;
-
+  border: 2px solid #1D2021;
+}
+.btn-back:hover{
+    background-color: #33465f;
 }
 
 .btn-back a {
     color: #1D2021;
     text-decoration: none;
+}
+.btn-back a:hover{
+    color: #ffffff;
 }
 
 .btn-reset {

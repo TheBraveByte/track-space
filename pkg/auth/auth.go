@@ -1,13 +1,11 @@
 package auth
 
 import (
-	// "fmt"
+	"github.com/golang-jwt/jwt/v4"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
 // TrackClaims type struct which is used to create / generate jwt token

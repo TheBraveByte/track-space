@@ -61,6 +61,57 @@ func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	}
 }
 
+func (ts *TrackSpace) Contact() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.HTML(http.StatusOK, "contact.html", gin.H{})
+	}
+}
+
+func (ts *TrackSpace) PostContact() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if err := c.Request.ParseForm(); err != nil {
+			log.Panic("form not parsed")
+			return
+		}
+		name := c.Request.Form.Get("full-name")
+		email := c.Request.Form.Get("email")
+		msg := c.Request.Form.Get("message")
+
+		TeamMessage := fmt.Sprintf(`
+			<strong>Help Desk Message</strong><br>
+			Hi, %s:<br>
+			<p>%s</p>
+			`, "track-space Team", msg)
+		TeamMailMsg := model.Email{
+			Subject:  "Confirmation for Account Created",
+			Content:  TeamMessage,
+			Sender:   email,
+			Receiver: "trackspace@admin.com",
+			Template: "email.html",
+		}
+		ts.AppConfig.MailChan <- TeamMailMsg
+
+		message := fmt.Sprintf(`
+			<strong>Message Confirmation</strong><br>
+			Hi, %s:<br>
+			<p>This is to confirm that your message have received by track-space.
+			Feel free to explore our core service and other
+			</p>
+			`, name)
+		mailMsg := model.Email{
+			Subject:  "Message Confirmation",
+			Content:  message,
+			Sender:   "trackspace@admin.com",
+			Receiver: email,
+			Template: "email.html",
+		}
+
+		ts.AppConfig.MailChan <- mailMsg
+
+		c.HTML(http.StatusOK, "contact.html", gin.H{})
+	}
+}
+
 // SignUpPage - Handler to get the sign-up page for user
 func (ts *TrackSpace) SignUpPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -141,7 +192,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		user.Email = fmt.Sprint(tsData.Get("email"))
 
 		if err := c.Request.ParseForm(); err != nil {
-			c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
 
@@ -162,7 +213,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
-				c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				return
 			}
 		}
@@ -235,7 +286,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		templateData.IsAuthenticated = 1
 
 		if err := c.Request.ParseForm(); err != nil {
-			c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
 
@@ -253,7 +304,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
-				c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
 				return
 			}
@@ -268,7 +319,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				token, newToken, err := auth.GenerateJWTToken(user.Email, userID, IPAddress)
 				if err != nil {
 					log.Println("cannot generate json web token")
-					c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
 				// fmt.Println(token, newToken)
@@ -280,7 +331,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 				err = ts.tsDB.UpdateUserField(userID, tokenGen, newTokenGen)
 				if err != nil {
-					c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
 				c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
@@ -318,7 +369,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				}
 			}
 			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 			// check to verify for the stored hashed password in database
@@ -332,7 +383,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			token, newToken, err := auth.GenerateJWTToken(adminEmail, adminID, adminIPAddress)
 			if err != nil {
 				log.Println("cannot generate json web token")
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 
@@ -343,7 +394,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 			err = ts.tsDB.UpdateUserField(userID, tokenGen, newTokenGen)
 			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 			c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
@@ -370,7 +421,7 @@ func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 			<p>You made a request to reset your password for your account.
 			if this request is not from you  kindly notify our help desk.
 			</p>
-			`,fmt.Sprint(tsData.Get("first-name")))
+			`, fmt.Sprint(tsData.Get("first-name")))
 		TeamMailMsg := model.Email{
 			Subject:  "Confirmation for Account Created",
 			Content:  UserMessage,
@@ -386,24 +437,24 @@ func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 
 func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+
 		var user model.User
 
 		if err := Validate.Struct(&user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
-				c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			}
 		}
 
 		if err := c.Request.ParseForm(); err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 		user.Email = c.Request.Form.Get("user-email")
 		user.Password = key.HashPassword(c.Request.Form.Get("new-password"))
 
 		err := ts.tsDB.ResetUserPassword(user.Email, user.Password)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 		tsData := sessions.Default(c)
@@ -424,7 +475,7 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		}
 
 		ts.AppConfig.MailChan <- TeamMailMsg
-		
+
 		c.HTML(http.StatusOK, "login-page.html", gin.H{
 			"resetmsg": "password successfully reset",
 		})
@@ -460,7 +511,7 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 
 			user, err := ts.tsDB.SendUserDetails(userID)
 			if err != nil {
-				c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 				return
 			}
 			// Count different projects type
@@ -511,38 +562,37 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			todo := count["todoNo"]
 			totalProjects := count["article"] + count["text"] + count["code"]
 
-			var data model.Data
-			data.Article = article
-			data.Code = code
-			data.Date = currentDate
-			data.Text = text
-			data.Todo = todo
-			data.Total = totalProjects
+			var tsStat model.Data
+			tsStat.Article = article
+			tsStat.Code = code
+			tsStat.Date = currentDate
+			tsStat.Text = text
+			tsStat.Todo = todo
+			tsStat.Total = totalProjects
 
 			if currentDate == storedDate {
-				err = ts.tsDB.UpdateUserStat(data, userID)
+				err = ts.tsDB.UpdateUserStat(tsStat, userID)
 				if err != nil {
-					c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
 			}
 			r, err := ts.tsDB.GetUserStatByID(userID)
 			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-
-			f, err := json.MarshalIndent(r["data"], "", " ")
+			statFile, err := json.MarshalIndent(r["tsStat"], "", " ")
 			if err != nil {
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-			log.Println(f)
-			_ = ioutil.WriteFile("./data.json", f, 0o644)
+			log.Println(statFile)
+			_ = ioutil.WriteFile("./data.json", statFile, 0o644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
-				c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 			c.HTML(http.StatusOK, "dash.html", gin.H{
@@ -554,20 +604,15 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	}
 }
 
-/*
-WorkSpace -  this show the user workspace worksheet to execute
-projects and also to make use of other tools
-*/
+// ProjectWorkspace :  this show the user workspace worksheet to execute
+// projects and also to make use of other tools
 func (ts *TrackSpace) ProjectWorkspace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "work.html", gin.H{})
 	}
 }
 
-/*
-PostWorkSpace - this will validate the project model and help to insert
-the projects details in the database
-*/
+// PostWorkSpaceProject /*
 func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
@@ -575,7 +620,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		userID := fmt.Sprint(tsData.Get("userID"))
 
 		if err := tsData.Save(); err != nil {
-			c.AbortWithError(http.StatusNoContent, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusNoContent, gin.Error{Err: err})
 			return
 		}
 		// Getting the project data
@@ -594,7 +639,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&project); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
-				c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
 				return
 			}
@@ -602,7 +647,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 
 		err := ts.tsDB.StoreProjectData(userID, project)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 
@@ -631,7 +676,7 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 		user, err := ts.tsDB.SendUserDetails(userID)
 		if err != nil {
 			log.Println("cannot get user project data from the database")
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 		switch p := user["project_details"].(type) {
@@ -674,7 +719,7 @@ func (ts *TrackSpace) ShowUserProject() gin.HandlerFunc {
 		projectData, err := ts.tsDB.GetProjectData(project.ID)
 		if err != nil {
 			log.Println("cannot get user project data from the database")
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 
@@ -726,7 +771,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		projectID := c.Param("id")
 		ok := primitive.IsValidObjectID(projectID)
 		if sourceLink != "show-project" && !ok {
-			c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
 		}
 		project.ID = projectID
 		project.ProjectName = strings.ToLower(c.PostForm("project-name"))
@@ -743,7 +788,7 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 
 		err := ts.tsDB.ModifyProjectData(userID, projectID, project)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 		c.HTML(http.StatusOK, "dash.html", gin.H{})
 	}
@@ -758,7 +803,7 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
 		if sourceLink != "project-table" && !ok {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
 
@@ -766,11 +811,11 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 		ok = primitive.IsValidObjectID(project.ID)
 		if !ok {
 			log.Println("invalid ID cannot convert the Object ID")
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
 		}
 		err := ts.tsDB.DeleteUserProject(project.ID)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 
 		c.Redirect(http.StatusSeeOther, "/auth/user/dashboard")
@@ -778,7 +823,7 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 }
 
 /*
-DailyTaskTodo - this will help the user to get the todo-page
+GetTodo - this will help the user to get the todo-page
 to set up a schedule
 */
 func (ts *TrackSpace) GetTodo() gin.HandlerFunc {
@@ -788,7 +833,7 @@ func (ts *TrackSpace) GetTodo() gin.HandlerFunc {
 }
 
 /*
-PostDailyTaskTodo - this get the user schedule details from the form and store in the
+PostTodoData : this get the user schedule details from the form and store in the
 database
 */
 func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
@@ -836,10 +881,8 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 	}
 }
 
-/*
-ShowUserTodo : this  handler direct the user to a page to make changes and modify their
-existing todo store in the database
-*/
+// ShowTodoTable : this  handler direct the user to a page to make changes and modify their
+// existing todo store in the database
 func (ts *TrackSpace) ShowTodoTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		todo := make(map[string]interface{})
@@ -944,7 +987,7 @@ func (ts *TrackSpace) ModifyUserTodo() gin.HandlerFunc {
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
 		if sourceLink != "show-todo" && !ok {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
 
@@ -952,7 +995,7 @@ func (ts *TrackSpace) ModifyUserTodo() gin.HandlerFunc {
 		ok = primitive.IsValidObjectID(todo.ID)
 		if !ok {
 			log.Println("invalid ID cannot convert the Object ID")
-			c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
 		}
 		todo.ToDoTask = c.Request.Form.Get("task")
 		todo.DateSchedule = c.Request.Form.Get("date_schedule")
@@ -978,7 +1021,7 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
 		if sourceLink != "todo" && !ok {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
 
@@ -986,15 +1029,15 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 		ok = primitive.IsValidObjectID(todo.ID)
 		if !ok {
 			log.Println("invalid ID cannot convert the Object ID")
-			c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("project id is invalid")})
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("project id is invalid")})
 		}
 		err := ts.tsDB.DeleteUserTodo(todo.ID)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 		c.HTML(http.StatusOK, "dash.html", gin.H{
-			"deletedTodo": "successfully deleted todotask",
+			"deletedTodo": "successfully deleted schedule task",
 		})
 	}
 }
@@ -1023,12 +1066,12 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 
 		tsDoc := make(map[string]interface{})
 		var tsUser []map[string]interface{}
-		countryList := []string{}
+		var countryList []string
 
 		documents, err := ts.tsDB.GetAllUserData()
 		if err != nil {
 			log.Println("cannot get user project data from the database")
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
 
@@ -1094,17 +1137,17 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 
 func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user_id := c.Param("id")
+		userId := c.Param("id")
 		src := c.Param("src")
-		ok := primitive.IsValidObjectID(user_id)
+		ok := primitive.IsValidObjectID(userId)
 		if src != "admin" && !ok {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
 
-		err := ts.tsDB.AdminDeleteUserData(user_id)
+		err := ts.tsDB.AdminDeleteUserData(userId)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 		message := fmt.Sprintf(`
 			<strong>Confirmation for Account </strong><br>
@@ -1112,7 +1155,7 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 			<p>This is to confirm that you have delete user with an ID: %s from track-space.
 			We hope you your info that this action with clear all the user database store on track space
 			</p>
-			`, "admin", user_id)
+			`, "admin", userId)
 		mailMsg := model.Email{
 			Subject:  "Confirmation for Deleted Account",
 			Content:  message,
