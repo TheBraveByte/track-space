@@ -3,15 +3,17 @@
 /*#c6c9ce*/
 /*#1D2021*/
 /*#566277 *!*/
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 body{
+    font-family: Lato,sans-serif;
+
     background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
 
 }
 
 .form-container{
     background-color: #ffffff;
-    /* background-color: #33465f; */
     border-radius: 5px;
     margin-bottom: 3rem;
 }
@@ -20,7 +22,6 @@ h1{
     color: #33465f;
     font-size: 2.0rem;
     font-weight: normal;
-    /* font- */
 }
 #login-form{
     margin-top: 2rem;
@@ -37,7 +38,6 @@ h1{
     margin-bottom: 1rem;
 }
 .signUp-header p {
-    /* text-align: left; */
     color: #33465f;
     font-weight: normal;
     font-size: 1.5rem;
@@ -58,7 +58,6 @@ h1{
     padding-right: 4rem;
 }
 .terms {
-    /* color: #ffffff; */
     text-align: left;
 
 }
@@ -81,7 +80,6 @@ h1{
 .sign-up {
 
     background-image: linear-gradient(180deg, rgba(86, 98, 119, 1), rgba(86, 98, 119, 1));
-
     margin-bottom: 15px;
     color: #ffffff;
     font-weight: normal;
@@ -103,7 +101,6 @@ h1{
 
 .bt {
     background-color: #ffffff;
-    /* background-image: linear-gradient(0, rgba(198, 201, 206, 1)  rgba(86, 98, 119, 1)); */
     margin-bottom: 10px;
     border-radius: 30px;
     font-weight: normal;

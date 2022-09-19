@@ -1,4 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 body {
+    font-family: Lato,sans-serif;
+
     background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
 }
 
@@ -12,7 +16,6 @@ body {
 }
 
 h1 {
-    font-family: Ubuntu Mono;
     color: #33465f;
     margin-top: 1.5rem;
 }
@@ -23,11 +26,9 @@ hr:not([size]) {
 
 hr {
     color: #33465f;
-    /* margin-bottom: 50px */
 }
 
 .todo {
-    font-family: Ubuntu Mono;
     font-size: 1.5rem;
     font-weight: normal;
     text-align: left;

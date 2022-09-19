@@ -39,8 +39,12 @@
         <div class="row mt-3 login-bt">
           <button class="sign-in w-30 btn btn-md" type="submit">Login</button>
         </div>
-        <div class="row fp">
-          <a href="/reset-password">forget password</a>
+        <div class="row fp mt-4">
+          <div class="col-md-4">
+            <a href="/reset-password" class="text-decoration-none btn btn-info text-light">forget password</a>
+          </div>
+          <div class="col-md-4"></div>
+          <div class="col-md-4"></div>
         </div>
       </form>
     </div>
@@ -56,15 +60,15 @@
 
   function notifyMsg(msg, type) {
     notie.alert({
-      type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+      type: type,
       text: msg,
     })
   }
   {{ with .msg}}
   notifyMsg("{{.msg}}", "info")
   {{ end }}
-  {{with .resetmsg}}
-  notifyMsg("{{.resetmsg}}", "info")
+  {{with .resetMsg}}
+  notifyMsg("{{.resetMsg}}", "info")
   {{end}}
 </script>
 

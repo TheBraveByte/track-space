@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 body{
+    font-family: Lato,sans-serif;
     background-color: #77889e;
-    /* background-image: linear-gradient(45deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1)); */
 
 }
 
@@ -42,7 +44,6 @@ h1{
 
 .sign-in {
     background-color: #ffffff;
-    /* background-image: linear-gradient(180deg, rgba(86, 98, 119, 1), rgba(198, 201, 206, 1)); */
     margin-bottom: 10px;
     border-radius: 25px;
     font-weight: normal;

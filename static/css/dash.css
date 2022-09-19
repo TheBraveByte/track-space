@@ -1,5 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+
 body {
     font-size: .875rem;
+    font-family: Lato,sans-serif;
+
   }
   
   .feather {
@@ -7,10 +12,6 @@ body {
     height: 16px;
     vertical-align: text-bottom;
   }
-  
-  /*
-   * Sidebar
-   */
   
   .sidebar {
     position: fixed;
