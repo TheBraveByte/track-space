@@ -13,6 +13,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 
 	storeData := cookie.NewStore([]byte("trackSpace"))
 	router.Use(sessions.Sessions("session", storeData))
+
 	router.GET("/sign-up", h.SignUpPage())
 	router.POST("/sign-up", h.PostSignUpPage())
 
@@ -27,6 +28,8 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 
 	router.GET("/reset-password", h.ResetPassword())
 	router.POST("/reset-password", h.UpdatePassword())
+
+	router.GET("/user/log-out", h.ExecuteLogOut())
 
 	authRouter := routes.Group("/auth")
 
