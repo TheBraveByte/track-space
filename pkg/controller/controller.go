@@ -83,7 +83,7 @@ func (ts *TrackSpace) PostContact() gin.HandlerFunc {
 			<p>%s</p>
 			`, "track-space Team", msg)
 		TeamMailMsg := model.Email{
-			Subject:  "Confirmation for Account Created",
+			Subject:  "Help Desk Message",
 			Content:  TeamMessage,
 			Sender:   email,
 			Receiver: "trackspace@admin.com",
@@ -92,14 +92,15 @@ func (ts *TrackSpace) PostContact() gin.HandlerFunc {
 		ts.AppConfig.MailChan <- TeamMailMsg
 
 		message := fmt.Sprintf(`
-			<strong>Message Confirmation</strong><br>
-			Hi, %s:<br>
-			<p>This is to confirm that your message have received by track-space.
-			Feel free to explore our core service and other
+			<strong>Confirmation Message</strong><br>
+			Hi, %s <br>
+			<p>This is to confirm that your message have been received 
+            by track-space team. You will hear from us in few days time.
+			Feel free to explore our core service and other features
 			</p>
 			`, name)
 		mailMsg := model.Email{
-			Subject:  "Message Confirmation",
+			Subject:  "Confirmation Message",
 			Content:  message,
 			Sender:   "trackspace@admin.com",
 			Receiver: email,
@@ -244,8 +245,9 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		TeamMessage := fmt.Sprintf(`
 			<strong>New User Account Notification</strong><br>
 			Hi, %s:<br>
-			<p>This is notify you guys that new user with an <strong> ID:</strong> %s 
-			and <strong>IPAddress : </strong> of %s sign up for track-space.
+			<p>This is notify you guys that new user with an 
+            <strong> ID:</strong> %s and <strong>IPAddress :</strong> of %s
+            sign up for track-space.
 			</p>
 			`, "track-space Team", userID, user.IPAddress)
 		TeamMailMsg := model.Email{
@@ -322,12 +324,19 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
-				// fmt.Println(token, newToken)
 
 				authData := make(map[string][]string)
 				authData["auth"] = []string{token, newToken}
 				tokenGen := authData["auth"][0]
 				newTokenGen := authData["auth"][1]
+
+				//saving the refresh token
+				tsData.Set("refreshToken", newTokenGen)
+				if err := tsData.Save(); err != nil {
+					log.Println("error from the session storage")
+					_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
+					return
+				}
 
 				err = ts.tsDB.UpdateUserField(userID, tokenGen, newTokenGen)
 				if err != nil {
@@ -418,8 +427,9 @@ func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 		UserMessage := fmt.Sprintf(`
 			<strong>Reset Password Notification</strong><br>
 			Hi, %s:<br>
-			<p>You made a request to reset your password for your account.
-			if this request is not from you  kindly notify our help desk.
+			<p>You made a request to reset your password 
+            for your account. if this request is not from 
+            you  kindly notify our help desk.
 			</p>
 			`, fmt.Sprint(tsData.Get("first-name")))
 		TeamMailMsg := model.Email{
@@ -459,15 +469,14 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		}
 		tsData := sessions.Default(c)
 		TeamMessage := fmt.Sprintf(`
-			<strong>User Reset Account Password</strong><br>
+			<strong>Reset User Password</strong><br>
 			Hi, %s:<br>
-			<p>
-			This is notify the team that user with an 
+            <p>This is notify the team that user with an 
 			<strong> ID : </strong> %s reset account password.
 			</p>
 			`, "Track-space Team", tsData.Get("userID"))
 		TeamMailMsg := model.Email{
-			Subject:  "Confirmation for Account Created",
+			Subject:  "Password Reset",
 			Content:  TeamMessage,
 			Sender:   "trackspace@admin.com",
 			Receiver: "trackspace@admin.com",
@@ -477,7 +486,7 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		ts.AppConfig.MailChan <- TeamMailMsg
 
 		c.HTML(http.StatusOK, "login-page.html", gin.H{
-			"resetmsg": "password successfully reset",
+			"resetMsg": "password successfully reset",
 		})
 	}
 }
@@ -850,11 +859,10 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 		userID := fmt.Sprintf("%s", tsData.Get("userID"))
 		todo.ID = primitive.NewObjectID().Hex()
 		todo.ToDoTask = c.Request.Form.Get("task")
-		todo.DateSchedule = c.Request.Form.Get("date_schedule")
+		todo.DateSchedule =c.Request.Form.Get("schedule-date")
 		todo.StartTime = c.Request.Form.Get("start-time")
 		todo.EndTime = c.Request.Form.Get("end-time")
 		todo.Status = "Done"
-
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&todo); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
@@ -876,7 +884,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 		}
 
 		c.HTML(http.StatusOK, "todo.html", gin.H{
-			"SaveTodo": "Schedule task added",
+			"save": "new schedule plans added",
 		})
 	}
 }
@@ -1046,13 +1054,12 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
+		newToken := tsData.Get("refreshToken")
+		tsData.Set("newToken", newToken)
 		tsData.Clear()
 		tsData.Options(sessions.Options{MaxAge: -1})
-		err := tsData.Save()
-		if err != nil {
-			return
-		}
-		c.Redirect(http.StatusSeeOther, "/")
+		_ = tsData.Save()
+		c.Redirect(http.StatusTemporaryRedirect, "/")
 	}
 }
 
@@ -1150,12 +1157,15 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 		message := fmt.Sprintf(`
-			<strong>Confirmation for Account </strong><br>
+			<strong>Confirmation for Deleted Account </strong><br>
 			Hi, %s:<br>
-			<p>This is to confirm that you have delete user with an ID: %s from track-space.
-			We hope you your info that this action with clear all the user database store on track space
+			<p>
+               This is to confirm that you have delete user 
+               with an ID: %s from track-space.We hope you 
+               are well informed that this action with clear 
+               all the user data store on track space
 			</p>
-			`, "admin", userId)
+			`, "Admin", userId)
 		mailMsg := model.Email{
 			Subject:  "Confirmation for Deleted Account",
 			Content:  message,
