@@ -10,7 +10,7 @@ import (
 
 // TrackClaims type struct which is used to create / generate jwt token
 type TrackClaims struct {
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 	Email     string
 	ID        string
 	IPAddress string
@@ -21,18 +21,18 @@ type TrackClaims struct {
 // to generate a token
 func GenerateJWTToken(email, id, ipaddress string) (string, string, error) {
 	trackToken := TrackClaims{
-		jwt.StandardClaims{
-			IssuedAt:  time.Now().Unix(),
-			ExpiresAt: time.Now().Local().Add(time.Duration(12045) * time.Hour).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			IssuedAt:  &jwt.NumericDate{Time: time.Now()},
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(48 * time.Hour)),
 			Issuer:    "trackSpace",
 		},
-		email,
-		id,
-		ipaddress,
+		Email:     email,
+		ID:        id,
+		IPAddress: ipaddress,
 	}
-	refreshToken := jwt.StandardClaims{
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Local().Add(time.Duration(485994) * time.Hour).Unix(),
+	refreshToken := jwt.RegisteredClaims{
+		IssuedAt:  &jwt.NumericDate{Time: time.Now()},
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(48 * time.Hour)),
 		Issuer:    "trackSpace",
 	}
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, trackToken).SignedString([]byte(os.Getenv("TOKEN")))
