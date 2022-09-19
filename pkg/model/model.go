@@ -58,7 +58,7 @@ type Email struct {
 type Todo struct {
 	ID           string `json:"_id" bson:"_id"`
 	ToDoTask     string `json:"to_do_task"`
-	DateSchedule string `json:"date_schedule"`
+	DateSchedule string `json:"schedule_date"`
 	StartTime    string `json:"start_time"`
 	EndTime      string `json:"end_time"`
 	Status       string `json:"status"`

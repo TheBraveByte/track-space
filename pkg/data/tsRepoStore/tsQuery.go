@@ -17,20 +17,20 @@ import (
 InsertUserInfo : this will help create a document for every user that sign up
 on track space
 */
-func (tm *TsMongoDBRepo) InsertUserInfo(user_id, email, password string) (int64, error) {
+func (tm *TsMongoDBRepo) InsertUserInfo(userId, email, password string) (int64, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
 	var userInfo bson.M
 	filter := bson.D{
-		{Key: "_id", Value: user_id},
+		{Key: "_id", Value: userId},
 	}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&userInfo)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			// This error means your query did not match any documents.
 			documents := bson.D{
-				{Key: "_id", Value: user_id},
+				{Key: "_id", Value: userId},
 				{Key: "email", Value: email},
 				{Key: "password", Value: password},
 			}
@@ -102,11 +102,11 @@ func (tm *TsMongoDBRepo) UpdateUserField(id, t1, t2 string) error {
 /*
 ResetUserPassword : this method will help to reset password of existing user
 */
-func (tm *TsMongoDBRepo) ResetUserPassword(email, newpassword string) error {
+func (tm *TsMongoDBRepo) ResetUserPassword(email, newPassword string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "email", Value: email}}
-	update := bson.D{{Key: "$set", Value: bson.D{{Key: "email", Value: email}}}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "password", Value: newPassword}}}}
 
 	var result bson.M
 	err := UserData(tm.TsMongoDB, "user").FindOneAndUpdate(ctx, filter, update).Decode(&result)
@@ -121,8 +121,8 @@ func (tm *TsMongoDBRepo) ResetUserPassword(email, newpassword string) error {
 }
 
 /*
-VerifyLogin: this method will help to verify the user login input details with respect to
-the store details in the database for authenication
+VerifyLogin : this method will help to verify the user login input details with respect to
+the store details in the database for authentication
 */
 func (tm *TsMongoDBRepo) VerifyLogin(id, hashedPassword, postPassword string) (bool, string) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
@@ -142,8 +142,8 @@ func (tm *TsMongoDBRepo) VerifyLogin(id, hashedPassword, postPassword string) (b
 }
 
 /*
-SendUserDetails : this method will help in getting a the user store information and
-activities on trackspace when the user details is needed
+SendUserDetails : this method will help in getting user stored information and
+activities on track-space when the user details is needed
 */
 func (tm *TsMongoDBRepo) SendUserDetails(id string) (primitive.M, error) {
 	// this was called  multiple time  in the controllers package
@@ -164,7 +164,7 @@ func (tm *TsMongoDBRepo) SendUserDetails(id string) (primitive.M, error) {
 }
 
 /*
-StoreProjectData : this method help the user to store the create project and all it
+StoreProjectData : this method help the user to store the created project and all it
 content on the workspace to the database
 */
 func (tm *TsMongoDBRepo) StoreProjectData(id string, project model.Project) error {
@@ -194,14 +194,14 @@ func (tm *TsMongoDBRepo) StoreProjectData(id string, project model.Project) erro
 GetProjectData : this method fetch one particular created projects stored by a
 particular user in the database to check or make some modification to the projects
 */
-func (tm *TsMongoDBRepo) GetProjectData(project_id string) (primitive.M, error) {
+func (tm *TsMongoDBRepo) GetProjectData(projectId string) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
-	filter := bson.D{{Key: "project_details._id", Value: project_id}}
+	filter := bson.D{{Key: "project_details._id", Value: projectId}}
 	opt := options.FindOne().SetProjection(bson.D{
-		{Key: "_id", Value: project_id},
-		{Key: "project_details", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: project_id}}}}},
+		{Key: "_id", Value: projectId},
+		{Key: "project_details", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: projectId}}}}},
 	})
 
 	var data bson.M
@@ -216,11 +216,11 @@ func (tm *TsMongoDBRepo) GetProjectData(project_id string) (primitive.M, error) 
 ModifyProjectData : this method is to keep track of the changes made by the
 user on a particular project by updating it in the database
 */
-func (tm *TsMongoDBRepo) ModifyProjectData(user_id, id string, project model.Project) error {
+func (tm *TsMongoDBRepo) ModifyProjectData(userId, id string, project model.Project) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{
-		{Key: "_id", Value: user_id},
+		{Key: "_id", Value: userId},
 		{Key: "project_details._id", Value: id},
 	}
 	update := bson.D{{Key: "$set", Value: bson.D{
@@ -242,13 +242,13 @@ func (tm *TsMongoDBRepo) ModifyProjectData(user_id, id string, project model.Pro
 /*
 DeleteUserProject : this method will delete a select project by the user
 */
-func (tm *TsMongoDBRepo) DeleteUserProject(project_id string) error {
+func (tm *TsMongoDBRepo) DeleteUserProject(projectId string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
-	filter := bson.D{{Key: "project_details._id", Value: project_id}}
+	filter := bson.D{{Key: "project_details._id", Value: projectId}}
 	update := bson.D{{Key: "$pull", Value: bson.D{
-		{Key: "project_details", Value: bson.D{{Key: "_id", Value: project_id}}},
+		{Key: "project_details", Value: bson.D{{Key: "_id", Value: projectId}}},
 	}}}
 	opt := options.Update().SetUpsert(false)
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update, opt)
@@ -270,9 +270,10 @@ func (tm *TsMongoDBRepo) StoreTodoData(todo model.Todo, id string) error {
 		{Key: "todo", Value: bson.D{
 			{Key: "_id", Value: todo.ID},
 			{Key: "to_do_task", Value: todo.ToDoTask},
-			{Key: "date_schedule", Value: todo.DateSchedule},
+			{Key: "schedule_date", Value: todo.DateSchedule},
 			{Key: "start_time", Value: todo.StartTime},
 			{Key: "end_time", Value: todo.EndTime},
+			{Key: "status", Value: todo.Status},
 		}},
 	}}}
 
@@ -289,13 +290,13 @@ GetTodoData : this method fetch one particular created schedule stored by a
 particular user in the database to check or make some modification to the
 date/time of the schedule
 */
-func (tm *TsMongoDBRepo) GetTodoData(todo_id string) (primitive.M, error) {
+func (tm *TsMongoDBRepo) GetTodoData(todoId string) (primitive.M, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
-	filter := bson.D{{Key: "todo._id", Value: todo_id}}
+	filter := bson.D{{Key: "todo._id", Value: todoId}}
 	opt := options.FindOne().SetProjection(bson.D{
-		{Key: "_id", Value: todo_id},
-		{Key: "todo", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: todo_id}}}}},
+		{Key: "_id", Value: todoId},
+		{Key: "todo", Value: bson.D{{Key: "$elemMatch", Value: bson.D{{Key: "_id", Value: todoId}}}}},
 	})
 
 	var data bson.M
@@ -320,6 +321,7 @@ func (tm *TsMongoDBRepo) ModifyTodoData(id string, todo model.Todo) error {
 		{Key: "todo.$.date_schedule", Value: todo.DateSchedule},
 		{Key: "todo.$.start_time", Value: todo.StartTime},
 		{Key: "todo.$.end_time", Value: todo.EndTime},
+		{Key: "todo.$.status", Value: todo.Status},
 	}}}
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
@@ -329,15 +331,15 @@ func (tm *TsMongoDBRepo) ModifyTodoData(id string, todo model.Todo) error {
 }
 
 /*
-DeleteUserProject : this method will delete a select todo schedule by the user
+DeleteUserTodo : this method will delete a select todo schedule by the user
 */
-func (tm *TsMongoDBRepo) DeleteUserTodo(todo_id string) error {
+func (tm *TsMongoDBRepo) DeleteUserTodo(todoId string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
-	filter := bson.D{{Key: "todo._id", Value: todo_id}}
+	filter := bson.D{{Key: "todo._id", Value: todoId}}
 	update := bson.D{{Key: "$pull", Value: bson.D{
-		{Key: "todo", Value: bson.D{{Key: "_id", Value: todo_id}}},
+		{Key: "todo", Value: bson.D{{Key: "_id", Value: todoId}}},
 	}}}
 	opt := options.Update().SetUpsert(false)
 
@@ -349,7 +351,7 @@ func (tm *TsMongoDBRepo) DeleteUserTodo(todo_id string) error {
 }
 
 /*
-UpdateOne : this method is to store the statistic updates of the user activities
+UpdateUserStat : this method is to store the statistic updates of the user activities
 on track space
 */
 func (tm *TsMongoDBRepo) UpdateUserStat(data model.Data, id string) error {
