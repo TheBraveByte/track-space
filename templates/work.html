@@ -68,19 +68,19 @@
       <div class="col-md-2"></div>
       <div class="col-md-8">
         <form action="/auth/user/workspace" method="post" novalidate class="needs-validation">
-          <h2 class="track">Track space Editor</h2>
+          <h2 class="track">Track-space Workspace</h2>
           <hr />
           <div>
             <p class="work-list">
-              Right here at track space, get Your work done
+              Right here at track space, get your work done
             </p>
             <ul>
-              <li>Write your Code.</li>
-              <li>Proofread your Article</li>
-              <li>Write up your Document</li>
-              <li>Organise your Design and presentation</li>
-              <li>Use simple Text editor</li>
-              <li>Share idea through Comment</li>
+              <li>Write your modular code.</li>
+              <li>Proofread your article</li>
+              <li>Write up your document</li>
+              <li>Organise your design and presentation</li>
+              <li>Use simple text editor with different tools</li>
+              <li>Structure your ideas for easy understanding</li>
             </ul>
           </div>
           <hr />
@@ -95,7 +95,7 @@
             </div>
             <div class="col">
               <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
-                placeholder="Add tools used i.e text-editor,source code & comment" required autocomplete="off" />
+                placeholder="Enter project type i.e text, code or article" required autocomplete="off" />
             </div>
           </div>
           <div class="mt-xxl-5 mt-5 editor">
@@ -135,6 +135,7 @@
   integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script>
   ValidateForm();
+  document.getElementById("submit").addEventListener("click", function () {
     var myContent = tinymce.activeEditor.getContent();
     function notifyMsg(msg, type) {
       notie.alert({
@@ -142,10 +143,10 @@
         text: msg,
       });
     }
-    {{with .save}}
-    notifyMsg("{{.save}}", "success");
-    {{end}}
-  
+    { { with .save} }
+    notifyMsg("{{.}}", "success");
+    { { end } }
+  })
 </script>
 
 </html>
