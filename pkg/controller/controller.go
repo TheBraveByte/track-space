@@ -133,7 +133,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 			log.Panic("form not parsed")
 			return
 		}
-		user.ID = primitive.NewObjectID().Hex()
 		user.Email = c.Request.Form.Get("email")
 		user.Password = key.HashPassword(c.Request.Form.Get("password"))
 		// Server side validation of the user input from a form
@@ -148,17 +147,19 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		tsData := sessions.Default(c)
 		tsData.Set("email", user.Email)
 		tsData.Set("password", user.Password)
-		tsData.Set("userID", user.ID)
+		
 
-		if err := tsData.Save(); err != nil {
-			log.Println("error from the session storage")
-			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
-			return
-		}
-		count, err := ts.tsDB.InsertUserInfo(user.ID, user.Email, user.Password)
+		count, userID, err := ts.tsDB.InsertUserInfo(user.Email, user.Password)
+		tsData.Set("userID", userID)
+	
 		if err != nil {
 			log.Println(err)
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
+			return
+		}
+		if err := tsData.Save(); err != nil {
+			log.Println("error from the session storage")
+			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 			return
 		}
 
@@ -862,7 +863,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 		todo.DateSchedule =c.Request.Form.Get("schedule-date")
 		todo.StartTime = c.Request.Form.Get("start-time")
 		todo.EndTime = c.Request.Form.Get("end-time")
-		todo.Status = "Done"
+		todo.Status = "Not done"
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(&todo); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
@@ -980,7 +981,7 @@ func (ts *TrackSpace) ShowTodoSchedule() gin.HandlerFunc {
 			"DateSchedule": todo.DateSchedule,
 			"StartTime":    todo.StartTime,
 			"EndTime":      todo.EndTime,
-			"Status":       todo.Status,
+			"Status":       "Done",
 		})
 	}
 }
@@ -1006,7 +1007,7 @@ func (ts *TrackSpace) ModifyUserTodo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: errors.New("invalid ID cannot convert the Object ID")})
 		}
 		todo.ToDoTask = c.Request.Form.Get("task")
-		todo.DateSchedule = c.Request.Form.Get("date_schedule")
+		todo.DateSchedule = c.Request.Form.Get("schedule-date")
 		todo.StartTime = c.Request.Form.Get("start-time")
 		todo.EndTime = c.Request.Form.Get("end-time")
 		todo.Status = "Done"

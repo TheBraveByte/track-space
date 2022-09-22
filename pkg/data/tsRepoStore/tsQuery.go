@@ -17,18 +17,19 @@ import (
 InsertUserInfo : this will help create a document for every user that sign up
 on track space
 */
-func (tm *TsMongoDBRepo) InsertUserInfo(userId, email, password string) (int64, error) {
+func (tm *TsMongoDBRepo) InsertUserInfo(email, password string) (int64, string, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 
 	var userInfo bson.M
 	filter := bson.D{
-		{Key: "_id", Value: userId},
+		{Key: "email", Value: email},
 	}
 	err := UserData(tm.TsMongoDB, "user").FindOne(ctx, filter).Decode(&userInfo)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			// This error means your query did not match any documents.
+			userId := primitive.NewObjectID().Hex()
 			documents := bson.D{
 				{Key: "_id", Value: userId},
 				{Key: "email", Value: email},
@@ -38,11 +39,20 @@ func (tm *TsMongoDBRepo) InsertUserInfo(userId, email, password string) (int64, 
 			if err != nil {
 				log.Panicf("Error 0 from InsertUserInfo: %v", err)
 			}
-			return 0, nil
+			return 0, userId, nil
 		}
 		log.Printf("Error 1 from InsertUserInfo: %v", err)
 	}
-	return 1, nil
+	var userId string
+	for k, v := range userInfo {
+		if k == "_id" {
+			switch id := v.(type) {
+			case string:
+				userId = id
+			}
+		}
+	}
+	return 1, userId, nil
 }
 
 /*

@@ -7,10 +7,9 @@ import (
 
 // TrackSpaceDBRepo : interface for all the database queries
 type TrackSpaceDBRepo interface {
-
 	// Queries for user to interact with the database
 
-	InsertUserInfo(id, email, password string) (int64, error)
+	InsertUserInfo(email, password string) (int64, string, error)
 	UpdateUserInfo(user model.User, id string, t1, t2 string) error
 	UpdateUserField(id, t1, t2 string) error
 	VerifyLogin(id, hashedPassword, postPassword string) (bool, string)
