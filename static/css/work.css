@@ -13,6 +13,7 @@ body {
 
 
 .track {
+    padding-left: 3.5rem;
     margin-top: 2.0rem;
     color: #33465f;
     font-weight: normal;
@@ -28,7 +29,7 @@ hr {
 }
 
 .work-list {
-    font-size: larger;
+    font-size: x-large;
     font-weight: light;
     text-align: left;
 
@@ -41,12 +42,12 @@ ul li {
 
 .notice {
     font-size: 1rem;
-
 }
 
 .workspace-container {
+    border-radius: 0.75rem;
     background-color: #ffffff;
-    margin-top: 3rem;
+    margin-top: 1.5rem;
     margin-bottom: 3rem;
     margin-left: 3rem;
     margin-right: 3rem;
@@ -54,12 +55,12 @@ ul li {
 }
 
 .form-control {
-    border-radius: 2px;
+    border-radius: 0.3rem;
     border: 2px solid #33465f;
 }
 
 .tox-tinymce {
-    border: 3px solid #1D2021;
+    border: 0.75rem solid #1D2021;
 }
 
 .reset-submit-btn {
