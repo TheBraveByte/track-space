@@ -135,6 +135,7 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		}
 		user.Email = c.Request.Form.Get("email")
 		user.Password = key.HashPassword(c.Request.Form.Get("password"))
+
 		// Server side validation of the user input from a form
 		if err := Validate.Struct(user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
@@ -147,11 +148,10 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		tsData := sessions.Default(c)
 		tsData.Set("email", user.Email)
 		tsData.Set("password", user.Password)
-		
 
 		count, userID, err := ts.tsDB.InsertUserInfo(user.Email, user.Password)
 		tsData.Set("userID", userID)
-	
+
 		if err != nil {
 			log.Println(err)
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -165,7 +165,7 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 
 		if count == 1 {
 			c.HTML(http.StatusOK, "login-page.html", gin.H{
-				"msg": "You have previously sign-up. log-in into your account",
+				"msg": "Email already registered on track-space. Log-in into your account",
 			})
 		} else {
 			c.Redirect(http.StatusSeeOther, "/user-info")
@@ -348,7 +348,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				log.Println("Successfully login")
 
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
-					"success":      "successfully login! Go to dashboard",
+					"success":      "You have successfully logged-in on track-space. Go to dashboard",
 					"authenticate": templateData.IsAuthenticated,
 				})
 
@@ -487,7 +487,7 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		ts.AppConfig.MailChan <- TeamMailMsg
 
 		c.HTML(http.StatusOK, "login-page.html", gin.H{
-			"resetMsg": "password successfully reset",
+			"resetMsg": "password successfully reset. Log-in into your account",
 		})
 	}
 }
@@ -592,12 +592,12 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-			statFile, err := json.MarshalIndent(r["tsStat"], "", " ")
+			statFile, err := json.MarshalIndent(r["data"], "", " ")
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-			log.Println(statFile)
+
 			_ = ioutil.WriteFile("./data.json", statFile, 0o644)
 
 			// this controller with still be updated as I progress
@@ -663,7 +663,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 
 		// c.Redirect(http.StatusSeeOther, "/auth/user/workspace")
 		c.HTML(http.StatusOK, "work.html", gin.H{
-			"save": fmt.Sprintf("%v submitted successfully", project.ProjectName),
+			"save": fmt.Sprintf("%v successfully added to your project list", project.ProjectName),
 		})
 	}
 }
@@ -800,7 +800,9 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		if err != nil {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
-		c.HTML(http.StatusOK, "dash.html", gin.H{})
+		c.HTML(http.StatusOK, "project-table.html", gin.H{
+			"updateProject": fmt.Sprintf("%s successfully updated", project.ProjectName),
+		})
 	}
 }
 
@@ -828,7 +830,10 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 
-		c.Redirect(http.StatusSeeOther, "/auth/user/dashboard")
+		// c.Redirect(http.StatusSeeOther, "/auth/user/dashboard")
+		c.HTML(http.StatusSeeOther, "project-table.html", gin.H{
+			"deleteProject": fmt.Sprintf("project with an id : %s successfully deleted", project.ID),
+		})
 	}
 }
 
@@ -860,7 +865,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 		userID := fmt.Sprintf("%s", tsData.Get("userID"))
 		todo.ID = primitive.NewObjectID().Hex()
 		todo.ToDoTask = c.Request.Form.Get("task")
-		todo.DateSchedule =c.Request.Form.Get("schedule-date")
+		todo.DateSchedule = c.Request.Form.Get("schedule-date")
 		todo.StartTime = c.Request.Form.Get("start-time")
 		todo.EndTime = c.Request.Form.Get("end-time")
 		todo.Status = "Not done"
@@ -884,9 +889,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 			log.Println("error from the session storage")
 		}
 
-		c.HTML(http.StatusOK, "todo.html", gin.H{
-			"save": "new schedule plans added",
-		})
+		c.HTML(http.StatusOK, "todo.html", gin.H{})
 	}
 }
 
@@ -1017,7 +1020,9 @@ func (ts *TrackSpace) ModifyUserTodo() gin.HandlerFunc {
 			log.Println("Error while storing using user project data")
 			return
 		}
-		c.HTML(http.StatusOK, "show-todo.html", gin.H{})
+		c.HTML(http.StatusOK, "todo-table.html", gin.H{
+			"updateTodo": fmt.Sprintf("%s planned schedule changed", todo.ToDoTask),
+		})
 	}
 }
 
@@ -1045,8 +1050,8 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
-		c.HTML(http.StatusOK, "dash.html", gin.H{
-			"deletedTodo": "successfully deleted schedule task",
+		c.HTML(http.StatusOK, "todo-table.html", gin.H{
+			"deleteTodo": fmt.Sprintf("schedule plan with an id : %s successfully deleted", todo.ID),
 		})
 	}
 }

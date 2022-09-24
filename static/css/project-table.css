@@ -3,13 +3,13 @@
 
 body{
     font-family: Lato,sans-serif;
-    background-color: rgba(198, 201, 206, 1);
+    background-image: linear-gradient(to right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
 
 }
 
 h1{
     color: white;
-    font-size: 1.5rem;
+    font-size: xx-large;
     font-weight: normal;
 }
 .acc{
@@ -37,20 +37,23 @@ hr {
 }
 
 .project-container{
+    background-color: #ffffff;
     padding-left: 4rem;
     padding-right: 2rem;
     padding-bottom: 5rem;
+    margin: 3rem 3rem;
 }
 
 table{
-   color: #566277;
+   color: #33465f;
 }
 table tfoot tr th{
-    color: #33465f;
+    color: #1d2021;
 }
 
 thead>tr>th{
-    color: ghostwhite;
+    /* color: ghostwhite; */
+    color: #1d2021;
 }
 table.dataTable{
     border-collapse: separate;

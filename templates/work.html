@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
+    integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/static/css/work.css" />
   <script src="https://cdn.tiny.cloud/1/wxxxigs2nnc6k02msdd8p668si3yl9u6ox1bv1hmx0vk5wf0/tinymce/6/tinymce.min.js"
     referrerpolicy="origin"></script>
@@ -52,8 +55,7 @@
 </head>
 <style>
   body {
-    margin: 4rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     background-color: #f9f9fb;
   }
 
@@ -63,65 +65,66 @@
 </style>
 
 <body>
-  <main>
-    <div class="workspace-container row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
-        <form action="/auth/user/workspace" method="post" novalidate class="needs-validation">
-          <h2 class="track">Track-space Workspace</h2>
-          <hr />
-          <div>
-            <p class="work-list">
-              Right here at track space, get your work done
-            </p>
-            <ul>
-              <li>Write your modular code.</li>
-              <li>Proofread your article</li>
-              <li>Write up your document</li>
-              <li>Organise your design and presentation</li>
-              <li>Use simple text editor with different tools</li>
-              <li>Structure your ideas for easy understanding</li>
-            </ul>
-          </div>
-          <hr />
-          <br />
-          <p class="notice">
-            Type in the project name & the type of file use in the box below
-          </p>
-          <div class="project row">
-            <div class="col">
-              <input class="form-control" type="text" name="project-name" id="project-name"
-                placeholder="Enter the name of the project" required autocomplete="off" />
-            </div>
-            <div class="col">
-              <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
-                placeholder="Enter project type i.e text, code or article" required autocomplete="off" />
-            </div>
-          </div>
-          <div class="mt-xxl-5 mt-5 editor">
-            <textarea id="myTextarea" name="myText"></textarea>
-          </div>
+  <div class="text-center row">
+    <h2 class="track">Track space Workspace</h2>
+  </div>
 
-          <div class="reset-submit-btn row mt-xxl-5">
-            <div class="col-md-4">
-              <a href="/auth/user/dashboard" class="w-40 btn btn-dark btn-md">
-                Back
-              </a>
-            </div>
-            <div class="col-md-4 offset-md-4">
-              <button id="submit" type="submit" class="w-40 btn btn-success btn-md">
-                Submit
-              </button>
-            </div>
+  <div class="workspace-container row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 mt-xl-5">
+      <form action="/auth/user/workspace" method="post" novalidate class="needs-validation">
+        <div>
+          <p class="work-list">
+            Right here at track space, get your work done
+          </p>
+          <ul>
+            <li>Write your modular code.</li>
+            <li>Proofread your article</li>
+            <li>Write up your document</li>
+            <li>Organise your design and presentation</li>
+            <li>Use simple text editor with different tools</li>
+            <li>Structure your ideas for easy understanding</li>
+          </ul>
+        </div>
+        <hr />
+        <br />
+        <p class="notice">
+          Type in the project name & the type of file use in the box below
+        </p>
+        <div class="project row">
+          <div class="col">
+            <input class="form-control" type="text" name="project-name" id="project-name"
+              placeholder="Enter the name of the project" required autocomplete="off" />
           </div>
-        </form>
-      </div>
-      <div class="col-md-2"></div>
-      <div class="row workspace-foot mt-xxl-5">
-        <p>TinyMCE | Akinleye_dev</p>
-      </div>
+          <div class="col">
+            <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
+              placeholder="Enter project type i.e text, code or article" required autocomplete="off" />
+          </div>
+        </div>
+        <div class="mt-xxl-5 mt-5 editor">
+          <textarea id="myTextarea" name="myText"></textarea>
+        </div>
+
+        <div class="reset-submit-btn row mt-xxl-5">
+          <div class="col-md-4">
+            <a href="/auth/user/dashboard" class="w-40 btn btn-dark btn-md">
+              Back
+            </a>
+          </div>
+          <div class="col-md-4 offset-md-4">
+            <button id="submit" type="submit" class="w-40 btn btn-success btn-md">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-  </main>
+    <div class="col-md-2"></div>
+    <div class="row workspace-foot mt-xxl-5">
+      <p>TinyMCE | Akinleye_dev</p>
+    </div>
+  </div>
+
 </body>
 <script src="/static/js/form-validate.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
