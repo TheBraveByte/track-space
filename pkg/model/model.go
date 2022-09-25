@@ -4,6 +4,7 @@ type Auth struct {
 	Token string
 }
 
+// User : Master struct model for user
 type User struct {
 	ID             string    `json:"_id" bson:"_id" Usage:"required,alphanumeric"`
 	FirstName      string    `json:"first_name" Usage:"required,alpha"`
@@ -26,6 +27,7 @@ type User struct {
 	RenewToken     string    `json:"renew_token" Usage:"jwt"`
 }
 
+// Project : Struct model for user project
 type Project struct {
 	ID             string `bson:"_id"`
 	ProjectName    string `json:"project_name" Usage:"required"`
@@ -36,6 +38,7 @@ type Project struct {
 	Status         string `json:"status"`
 }
 
+// Data : Struct model to navigate all user activity
 type Data struct {
 	ID      string `json:"_id" bson:"_id"`
 	Date    string `json:"date"`
@@ -46,6 +49,7 @@ type Data struct {
 	Total   int    `json:"total"`
 }
 
+// Email : struct model to transmit mail to user and admin
 type Email struct {
 	ID       string `json:"_id" bson:"_id"`
 	Subject  string `json:"subject"`
@@ -55,6 +59,7 @@ type Email struct {
 	Template string `json:"template"`
 }
 
+// Todo : struct model for todo schedule for use
 type Todo struct {
 	ID           string `json:"_id" bson:"_id"`
 	ToDoTask     string `json:"to_do_task"`

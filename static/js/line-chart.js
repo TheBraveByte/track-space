@@ -62,9 +62,9 @@ fetch('../data.json')
             .attr('x', width/2 )
             .attr('y', 25)
             .attr('text-anchor', 'middle')
-            .style('font-family', 'Overpass')
+            .style('font-family', 'Lato')
             .style('font-size', 16)
-            .text('Line Chart');
+            .text('Line chart');
 
 
         let line = d3.line()
@@ -75,7 +75,7 @@ fetch('../data.json')
         svg.append("path")
             .datum(data)
             .attr("d", line)
-            .style("fill", "none")
+            .style("fill", "#33465f")
             .style("stroke", "#33465f")
             .style("stroke-width", "2")
     })

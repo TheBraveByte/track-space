@@ -16,6 +16,7 @@ import (
 var webSkChan = make(chan wsmodel.SocketPayLoad)
 var Client = make(map[wsconfig.SocketConnection]string)
 
+// UpgradeSocketConn : variable to upgrade ChatRoom controller with a web socket connection
 var UpgradeSocketConn = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,

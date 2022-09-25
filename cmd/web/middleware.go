@@ -12,15 +12,12 @@ import (
 func IsAuthorized() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authToken, err := c.Request.Cookie("bearerToken")
-		// log.Println()
 		if err != nil {
 			if err == http.ErrNoCookie {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
 		}
-		// log.Println(authToken.Value)
-
 		if authToken.Value == "" {
 			_ = c.AbortWithError(http.StatusNoContent, errors.New("no value for token"))
 			return

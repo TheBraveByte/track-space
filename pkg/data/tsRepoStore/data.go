@@ -10,7 +10,7 @@ func UserData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
 	return userCollection
 }
 
-// MailData Setting up the database for the mail data collection
+// AdminData : Setting up the database for the Admin data collection
 func AdminData(dbClient *mongo.Client, collectionName string) *mongo.Collection {
 	var Admin = dbClient.Database("track_space").Collection(collectionName)
 	return Admin

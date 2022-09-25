@@ -5,8 +5,11 @@ import (
 	"log"
 )
 
-// HashPassword : this is to convert the user password using the hash algorithm
-// to generate string of bytes of character
+/*
+HashPassword : this is to convert the user password using the hash algorithm
+
+	to generate string of bytes of character
+*/
 func HashPassword(inputPassword string) string {
 	keyByte, err := bcrypt.GenerateFromPassword([]byte(inputPassword), 14)
 	if err != nil {
@@ -17,8 +20,11 @@ func HashPassword(inputPassword string) string {
 	return string(keyByte)
 }
 
-// VerifyPassword : for confirmation to check if the hashed password and the user
-// password  matches with each other when hashed
+/*
+VerifyPassword : for confirmation to check if the hashed password and the user
+
+	password  matches with each other when hashed
+*/
 func VerifyPassword(inputPassword, hashedPassword string) (bool, string) {
 	var hashMsg string
 	var validHash bool

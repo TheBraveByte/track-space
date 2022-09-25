@@ -164,7 +164,7 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		}
 
 		if count == 1 {
-			c.HTML(http.StatusOK, "login-page.html", gin.H{
+			c.HTML(http.StatusSeeOther, "login-page.html", gin.H{
 				"msg": "Email already registered on track-space. Log-in into your account",
 			})
 		} else {
@@ -422,6 +422,10 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	}
 }
 
+/*
+ResetPassword : this will help user to changes their previous password to a
+new changes when forgotten
+*/
 func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
@@ -450,7 +454,9 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var user model.User
+		tsData := sessions.Default(c)
 
+		password := fmt.Sprint(tsData.Get("password"))
 		if err := Validate.Struct(&user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -463,32 +469,37 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		user.Email = c.Request.Form.Get("user-email")
 		user.Password = key.HashPassword(c.Request.Form.Get("new-password"))
 
-		err := ts.tsDB.ResetUserPassword(user.Email, user.Password)
-		if err != nil {
-			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
-			return
-		}
-		tsData := sessions.Default(c)
-		TeamMessage := fmt.Sprintf(`
+		if user.Password != password {
+			err := ts.tsDB.ResetUserPassword(user.Email, user.Password)
+			if err != nil {
+				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+				return
+			}
+			TeamMessage := fmt.Sprintf(`
 			<strong>Reset User Password</strong><br>
 			Hi, %s:<br>
             <p>This is notify the team that user with an 
 			<strong> ID : </strong> %s reset account password.
 			</p>
 			`, "Track-space Team", tsData.Get("userID"))
-		TeamMailMsg := model.Email{
-			Subject:  "Password Reset",
-			Content:  TeamMessage,
-			Sender:   "trackspace@admin.com",
-			Receiver: "trackspace@admin.com",
-			Template: "email.html",
+			TeamMailMsg := model.Email{
+				Subject:  "Password Reset",
+				Content:  TeamMessage,
+				Sender:   "trackspace@admin.com",
+				Receiver: "trackspace@admin.com",
+				Template: "email.html",
+			}
+
+			ts.AppConfig.MailChan <- TeamMailMsg
+
+			c.HTML(http.StatusOK, "login-page.html", gin.H{
+				"resetMsg": "password successfully reset. Log-in into your account",
+			})
+		} else {
+			c.HTML(http.StatusTemporaryRedirect, "login-page.html", gin.H{
+				"resetMsg": "Cannot reset password. New Password same as previous",
+			})
 		}
-
-		ts.AppConfig.MailChan <- TeamMailMsg
-
-		c.HTML(http.StatusOK, "login-page.html", gin.H{
-			"resetMsg": "password successfully reset. Log-in into your account",
-		})
 	}
 }
 
@@ -614,15 +625,21 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 	}
 }
 
-// ProjectWorkspace :  this show the user workspace worksheet to execute
-// projects and also to make use of other tools
+/*
+ProjectWorkspace :  this show the user workspace worksheet to execute
+
+	projects and also to make use of other tools
+*/
 func (ts *TrackSpace) ProjectWorkspace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "work.html", gin.H{})
 	}
 }
 
-// PostWorkSpaceProject /*
+/*
+PostWorkSpaceProject : post the input content and store the content in the database of the
+specific user
+*/
 func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
@@ -929,6 +946,10 @@ func (ts *TrackSpace) ShowTodoTable() gin.HandlerFunc {
 	}
 }
 
+/*
+ShowTodoSchedule : this will show the selected schedule plans to show all it fulls
+details  and as well make changes to it
+*/
 func (ts *TrackSpace) ShowTodoSchedule() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var todo model.Todo
@@ -1069,6 +1090,10 @@ func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 	}
 }
 
+/*
+AdminPage : this is the Track-space admin page to have a full view of the register user and their
+important informations as well
+*/
 func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
@@ -1148,6 +1173,10 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 	}
 }
 
+/*
+AdminDeleteUser : this will allow the admin to delete any user straightaway from the database
+and also notify the admin team on the changes mades
+*/
 func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userId := c.Param("id")
@@ -1186,12 +1215,20 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 	}
 }
 
+/*
+ChatRoom : this load up the page for user to experience a simple real time communication
+*/
 func (ts *TrackSpace) ChatRoom() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "chat.html", gin.H{})
 	}
 }
 
+/*
+ChatRoomEndpoint : this is a page for online registered users to have full experience of real time
+communication with other user to communicate , interact as well discuss  and share ideas among themselves
+share
+*/
 func (ts *TrackSpace) ChatRoomEndpoint() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var res wsmodel.SocketResponse

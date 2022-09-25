@@ -16,9 +16,12 @@ type TrackClaims struct {
 	IPAddress string
 }
 
-// GenerateJWTToken : This functions helps to create a JWT token using the
-// SignedStringMethod of the ES256 algorithm using a TOKEN_KEY and the claims
-// to generate a token
+/*
+GenerateJWTToken : This functions helps to create a JWT token using the
+SignedStringMethod of the ES256 algorithm using a TOKEN_KEY and the claims
+
+	to generate a token
+*/
 func GenerateJWTToken(email, id, ipaddress string) (string, string, error) {
 	trackToken := TrackClaims{
 		RegisteredClaims: jwt.RegisteredClaims{

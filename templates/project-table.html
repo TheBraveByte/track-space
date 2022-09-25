@@ -6,14 +6,20 @@
   <meta content="IE=edge" http-equiv="X-UA-Compatible" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Track Space Project</title>
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
+  <!-- Data table Bootstrap  -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <!-- Notie js -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
     integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+  <!-- Custom CSS design -->
   <link href="/static/css/project-table.css" rel="stylesheet" />
 </head>
 
@@ -45,11 +51,11 @@
         </thead>
         <tbody>
           {{range $k, $v := $project}}
-  
+
           <!-- a slice of maps[string]interface{} -->
           <tr>
             {{range $a, $b := $v}}
-  
+
             {{ if eq $a "_id"}}
             <td>
               <a href="/auth/user/project-table/{{$b}}/show-project">{{$b}} </a>
@@ -67,10 +73,10 @@
             {{end}}
             {{end}}
             {{end}}
-  
+
           </tr>
           {{end}}
-  
+
         </tbody>
         <tfoot>
           <tr>
@@ -108,13 +114,13 @@
       text: msg,
     });
   }
-  {{ with .deleteProject}}
+  { { with .deleteProject} }
   notifyMsg("{{.}}", "info")
-  {{ end }}
+  { { end } }
 
-  {{ with .updateProject}}
+  { { with .updateProject} }
   notifyMsg("{{.}}", "info")
-  {{ end }}
+  { { end } }
 </script>
 
 </html>
