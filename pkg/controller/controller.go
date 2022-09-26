@@ -344,7 +344,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
-				c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
+				c.SetCookie("bearerToken", tokenGen, 60*60*24*7, "/", "localhost", false, true)
 				log.Println("Successfully login")
 
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
@@ -446,7 +446,7 @@ func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 		}
 		ts.AppConfig.MailChan <- TeamMailMsg
 
-		c.HTML(http.StatusOK, "reset-password.html", gin.H{})
+		c.HTML(http.StatusOK, "reset.html", gin.H{})
 	}
 }
 
@@ -492,7 +492,7 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 
 			ts.AppConfig.MailChan <- TeamMailMsg
 
-			c.HTML(http.StatusOK, "login-page.html", gin.H{
+			c.HTML(http.StatusSeeOther, "login-page.html", gin.H{
 				"resetMsg": "password successfully reset. Log-in into your account",
 			})
 		} else {
@@ -604,12 +604,24 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				return
 			}
 			statFile, err := json.MarshalIndent(r["data"], "", " ")
+
+			found := make(map[byte]bool)
+			index := 0
+			for x, y := range statFile{
+				if !found[y]{
+					found[y]= true
+					_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
+					statFile[index]= statFile[x]
+					index++
+				}
+			}
+			// fmt.Println(string(statFile))
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 
-			_ = ioutil.WriteFile("./data.json", statFile, 0o644)
+			// _ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
@@ -984,11 +996,11 @@ func (ts *TrackSpace) ShowTodoSchedule() gin.HandlerFunc {
 		}
 
 		for x, y := range TodoMap {
-			fmt.Println(x, y)
-			if x == "task" {
+			//fmt.Println(x, y)
+			if x == "to_do_task" {
 				todo.ToDoTask = y
 			}
-			if x == "date_schedule" {
+			if x == "schedule_date" {
 				todo.DateSchedule = y
 			}
 			if x == "start_time" {
@@ -1055,7 +1067,7 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 		var todo model.Todo
 		sourceLink := c.Param("src")
 		ok := primitive.IsValidObjectID(c.Param("id"))
-		if sourceLink != "todo" && !ok {
+		if sourceLink != "todo-table" && !ok {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
@@ -1071,7 +1083,7 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
-		c.HTML(http.StatusOK, "todo-table.html", gin.H{
+		c.HTML(http.StatusSeeOther, "todo-table.html", gin.H{
 			"deleteTodo": fmt.Sprintf("schedule plan with an id : %s successfully deleted", todo.ID),
 		})
 	}
@@ -1150,7 +1162,7 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 		}
 
 		var statCount [][]string
-		tsStat, err := os.Create("./ts-stats.csv")
+		tsStat, err := os.Create("./ts-json.csv")
 		if err != nil {
 			log.Println(err)
 		}

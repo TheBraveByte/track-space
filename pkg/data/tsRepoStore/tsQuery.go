@@ -368,7 +368,7 @@ func (tm *TsMongoDBRepo) UpdateUserStat(data model.Data, id string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "_id", Value: id}}
-	update := bson.D{{Key: "$push", Value: bson.D{{Key: "data", Value: bson.D{
+	update := bson.D{{Key: "$addToSet", Value: bson.D{{Key: "data", Value: bson.D{
 		{Key: "date", Value: data.Date},
 		{Key: "code", Value: data.Code},
 		{Key: "article", Value: data.Article},
@@ -376,7 +376,7 @@ func (tm *TsMongoDBRepo) UpdateUserStat(data model.Data, id string) error {
 		{Key: "todo", Value: data.Todo},
 		{Key: "total", Value: data.Total},
 	}}}}}
-
+			
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
 		log.Println("cannot update user document")

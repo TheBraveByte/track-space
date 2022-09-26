@@ -52,7 +52,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		authRouter.GET("/user/todo-table", h.ShowTodoTable())
 		authRouter.GET("/user/:src/:id/show-todo", h.ShowTodoSchedule())
 		authRouter.POST("/user/todo-table/:src/:id/change", h.ModifyUserTodo())
-		authRouter.GET("/user/todo/:src/:id/delete", h.DeleteTodo())
+		authRouter.GET("/user/show-todo/:src/:id/delete", h.DeleteTodo())
 
 		// Routes for websocket handlers
 		authRouter.GET("/user/chat", h.ChatRoom())
