@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-md-3"></div>
       <div class="col-md-6 set-task-container">
-        <form action="/auth/user/daily-task" method="post" novalidate class="needs-validation">
+        <form action="/auth/user/todo-table/show-todo/{{.TodoID}}/change" method="post" novalidate class="needs-validation">
           <h1>Track Space Todo</h1>
           <hr />
           <p class="todo">
@@ -34,8 +34,7 @@
               autocomplete="off" />
 
             <label class="form-label" for="schedule-date">Set Date</label>
-            <input type="date" name="schedule-date" id="date_schedule
-              class=" form-control" required autocomplete="off" value="{{.DateSchedule}}" />
+            <input type="date" name="schedule-date" id="schedule-date" class=" form-control" required autocomplete="off" value="{{.DateSchedule}}" />
           </div>
 
           <div class="row mt-5">
@@ -62,7 +61,7 @@
               <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
                 Yes
               </button>
-              <a href="javascript:void(0);" class="w-30 btn btn-md btn-danger" onclick="" id="delete-todo">
+              <a href="/auth/user/show-todo/todo-table/{{.TodoID}}/delete" type="button" class="w-40 btn btn-danger btn-md" id="delete-todo">
                 Delete
               </a>
             </div>
@@ -105,21 +104,6 @@
       }
 
       notifyMsg("{{.taskSaved}}", "success");
-    });
-</script>
-<script>
-  let task = document.getElementById("task");
-  let schedule = document.getElementById("date-schedule");
-  let startTime = document.getElementById("start-time");
-  let ednTime = document.getElementById("end-time");
-
-  document
-    .getElementById("delete-todo")
-    .addEventListener("click", function () {
-      task.nodeValue = "";
-      schedule.nodeValue = "";
-      startTime.nodeValue = "";
-      ednTime.innerText = "";
     });
 </script>
 

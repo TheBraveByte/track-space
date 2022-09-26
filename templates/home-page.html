@@ -349,13 +349,13 @@
     })
   }
 
-  { { with .success} }
+  {{ with .success}}
   notifyMsg("{{.}}", "success")
-  { { end } }
+  {{ end }}
 
-  { { with .error} }
+  {{ with .error}}
   notifyMsg("{{.}}", "error")
-  { { end } }
+  {{ end }}
 </script>
 
 </html>

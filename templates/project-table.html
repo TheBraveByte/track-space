@@ -24,7 +24,7 @@
 </head>
 
 <body>
-  {{$project := index .Project}}
+  {{$project := .Project}}
   <div class="head row text-center">
     <h1 class="title">Your Projects</h1>
   </div>
@@ -114,13 +114,13 @@
       text: msg,
     });
   }
-  { { with .deleteProject} }
+  {{ with .deleteProject}}
   notifyMsg("{{.}}", "info")
-  { { end } }
+  {{ end }}
 
-  { { with .updateProject} }
+  {{ with .updateProject}}
   notifyMsg("{{.}}", "info")
-  { { end } }
+  {{ end }}
 </script>
 
 </html>
