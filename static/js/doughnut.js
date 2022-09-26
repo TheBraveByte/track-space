@@ -1,6 +1,6 @@
-//to fecth data from json file
+//to fetch data from json file
 let data;
-fetch('../data.json')
+fetch('/static/json/data.json')
     .then(res => res.json())
     .then(jsondata => data = jsondata)
     .then(() => {
@@ -30,7 +30,9 @@ fetch('../data.json')
 
         // Compute the position of each group on the pie:
         let pie = d3.pie()
-            .value(function(d) {return d["total"]; })
+            .value(function (d) {
+                return d["total"];
+            })
         let data_ready = pie(data)
         // data_ready is an array of 17 objects
 
@@ -46,7 +48,9 @@ fetch('../data.json')
             .enter()
             .append('path')
             .attr('d', arcGenerator)
-            .attr('fill', function(d){ return(color(d.data.total)) })
+            .attr('fill', function (d) {
+                return (color(d.data.total))
+            })
             .attr("stroke", "white")
             .style("stroke-width", "2px")
             .style("opacity", 0.9)
@@ -59,10 +63,14 @@ fetch('../data.json')
             .data(data_ready)
             .enter()
             .append('text')
-            .text(function(d){ return `${d.data.total} total`})
-            .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+            .text(function (d) {
+                return `${d.data.total} total`
+            })
+            .attr("transform", function (d) {
+                return "translate(" + arcGenerator.centroid(d) + ")";
+            })
             .style("text-anchor", "middle")
-            .style('font-family', 'Overpass')
+            .style('font-family', 'Lato')
             .style("font-size", 10)
             .style('font-weight', 900)
             .attr('fill', "white")

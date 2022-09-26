@@ -1,7 +1,6 @@
-
 //to fetch data from json file
 let data;
-fetch('../data.json')
+fetch('/static/json/data.json')
     .then(res => res.json())
     .then(jsondata => data = jsondata)
     .then(() => {
@@ -43,7 +42,7 @@ fetch('../data.json')
             .attr("transform", "translate(0," + (height - padding) + ")")
             .call(xAxis);
         svg.append("g")
-            .attr("transform", "translate(" + padding+ ", 0)")
+            .attr("transform", "translate(" + padding + ", 0)")
             .call(yAxis);
 
         svg.selectAll("circle")
@@ -51,7 +50,7 @@ fetch('../data.json')
             .enter()
             .append("circle")
             .attr("cx", (item) => xScale(xAccessor(item)))
-            .attr("cy",(item) => yScale(item["total"]))
+            .attr("cy", (item) => yScale(item["total"]))
             .attr("r", (item) => 3.5)
             .attr("class", "point")
             .append("title")
@@ -59,7 +58,7 @@ fetch('../data.json')
 
         // line chart title
         svg.append('text')
-            .attr('x', width/2 )
+            .attr('x', width / 2)
             .attr('y', 25)
             .attr('text-anchor', 'middle')
             .style('font-family', 'Lato')
