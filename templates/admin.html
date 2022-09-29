@@ -194,7 +194,7 @@
   //to display the label data
   let datum;
 
-  fetch("./data.json")
+  fetch("/static/json/data.json'")
           .then(res => res.json())
           .then(jsondata => datum = jsondata)
           .then(() => {
