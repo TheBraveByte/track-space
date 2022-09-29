@@ -30,7 +30,7 @@ func IsAuthorized() gin.HandlerFunc {
 		}
 		c.Set("token", authToken.Value)
 		c.Set("email", authClaims.Email)
-		c.Set("password", authClaims.ID)
+		c.Set("_id", authClaims.ID)
 		c.Set("uid", authClaims.IPAddress)
 		c.Next()
 	}
