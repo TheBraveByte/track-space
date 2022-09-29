@@ -16,7 +16,7 @@ body {
 .sidebar {
   position: fixed;
   top: 0;
- 
+
   bottom: 0;
 
   left: 0;
@@ -101,7 +101,7 @@ body {
 
 .form-control-dark {
   color: #fff;
- 
+
 }
 
 .form-control-dark:focus {
