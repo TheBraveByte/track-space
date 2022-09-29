@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func Test_SetUpApp(t *testing.T) {
-	_, _, err := setUpApp()
-	if err != nil {
-		t.Errorf("no environment variable available")
-	}
-}
+//func Test_SetUpApp(t *testing.T) {
+//	_, _, err := setUpApp()
+//	if err != nil {
+//		t.Errorf("no environment variable available")
+//	}
+//}
 
 func TestEnvValue(t *testing.T) {
 

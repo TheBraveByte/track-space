@@ -52,6 +52,13 @@ func NewTrackSpace(appConfig *config.AppConfig, tsm *mongo.Client) *TrackSpace {
 	}
 }
 
+// NewTestTrackSpace A dump copy of the tracks-pace struct for unit testing
+func NewTestTrackSpace(appConfig *config.AppConfig) *TrackSpace {
+	return &TrackSpace{
+		AppConfig: appConfig,
+		tsDB:      tsRepoStore.NewTsMongoDBRepo(appConfig, nil)}
+}
+
 func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// var templateData temp.TemplateData
@@ -428,24 +435,6 @@ new changes when forgotten
 */
 func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tsData := sessions.Default(c)
-		UserMessage := fmt.Sprintf(`
-			<strong>Reset Password Notification</strong><br>
-			Hi, %s:<br>
-			<p>You made a request to reset your password 
-            for your account. if this request is not from 
-            you  kindly notify our help desk.
-			</p>
-			`, fmt.Sprint(tsData.Get("first-name")))
-		TeamMailMsg := model.Email{
-			Subject:  "Confirmation for Account Created",
-			Content:  UserMessage,
-			Sender:   "trackspace@admin.com",
-			Receiver: "trackspace@admin.com",
-			Template: "email.html",
-		}
-		ts.AppConfig.MailChan <- TeamMailMsg
-
 		c.HTML(http.StatusOK, "reset.html", gin.H{})
 	}
 }
@@ -607,11 +596,11 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 
 			found := make(map[byte]bool)
 			index := 0
-			for x, y := range statFile{
-				if !found[y]{
-					found[y]= true
+			for x, y := range statFile {
+				if !found[y] {
+					found[y] = true
 					_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
-					statFile[index]= statFile[x]
+					statFile[index] = statFile[x]
 					index++
 				}
 			}

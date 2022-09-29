@@ -24,3 +24,8 @@ func NewTsMongoDBRepo(app *config.AppConfig, tsm *mongo.Client) data.TrackSpaceD
 		TsMongoDB: tsm,
 	}
 }
+
+type TestTsMongoDBRepo struct {
+	AppConfig *config.AppConfig
+	TsMongoDB *mongo.Client
+}

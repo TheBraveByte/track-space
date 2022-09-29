@@ -57,7 +57,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		// Routes for websocket handlers
 		authRouter.GET("/user/chat", h.ChatRoom())
 		authRouter.GET("/ts", h.ChatRoomEndpoint())
-		authRouter.POST("/user/logout")
+		authRouter.POST("/user/logout", h.ExecuteLogOut())
 
 		//Admin routes
 		authRouter.GET("/admin", h.AdminPage())

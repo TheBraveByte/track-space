@@ -53,7 +53,7 @@ func GetDataFromChannel() {
 	}
 }
 
-// To get the list of user connected to the web socket
+// GetAllUsers To get the list of user connected to the web socket
 func GetAllUsers() []string {
 	var userSlices []string
 	for _, user := range Client {

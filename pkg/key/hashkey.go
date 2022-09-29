@@ -13,8 +13,7 @@ HashPassword : this is to convert the user password using the hash algorithm
 func HashPassword(inputPassword string) string {
 	keyByte, err := bcrypt.GenerateFromPassword([]byte(inputPassword), 14)
 	if err != nil {
-		log.Println(err)
-		panic("cannot generate hashed Password")
+		panic(err)
 
 	}
 	return string(keyByte)
