@@ -29,7 +29,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 	router.GET("/reset-password", h.ResetPassword())
 	router.POST("/reset-password", h.UpdatePassword())
 
-	router.GET("/user/log-out", h.ExecuteLogOut())
+	//router.GET("/user/log-out", h.ExecuteLogOut())
 
 	authRouter := routes.Group("/auth")
 
@@ -57,7 +57,7 @@ func Routes(routes *gin.Engine, h controller.TrackSpace) {
 		// Routes for websocket handlers
 		authRouter.GET("/user/chat", h.ChatRoom())
 		authRouter.GET("/ts", h.ChatRoomEndpoint())
-		authRouter.POST("/user/logout", h.ExecuteLogOut())
+		authRouter.GET("/user/logout", h.ExecuteLogOut())
 
 		//Admin routes
 		authRouter.GET("/admin", h.AdminPage())
