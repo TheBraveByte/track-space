@@ -111,19 +111,7 @@
   $(document).ready(function () {
     $("#TodoTable").DataTable();
   });
-  function notifyMsg(msg, type) {
-    notie.alert({
-      type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-      text: msg,
-    });
-  }
-  {{ with .deleteTodo}}
-  notifyMsg("{{.}}", "info")
-  {{ end }}
 
-  {{ with .updateTodo}}
-    notifyMsg("{{.}}", "info")
-  {{ end }}
 </script>
 
 </html>
