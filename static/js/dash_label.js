@@ -5,7 +5,6 @@ fetch('/static/json/data.json')
     .then(jsondata => datum = jsondata)
     .then(() => {
 
-
             const lastDataItem = datum[datum.length - 1];
 
             //total articles
@@ -19,6 +18,10 @@ fetch('/static/json/data.json')
             //total code
             const code = lastDataItem.code
             document.getElementById("code").textContent += ` ${code}`;
+            
+            //todo
+            const todo = lastDataItem.todo
+            document.getElementById("todo").textContent += ` ${todo}`;
 
             //total
             const total = lastDataItem.total
