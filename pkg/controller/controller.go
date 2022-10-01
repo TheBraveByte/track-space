@@ -1,14 +1,12 @@
 package controller
 
 import (
-	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -594,23 +592,12 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			}
 			statFile, err := json.MarshalIndent(r["data"], "", " ")
 
-			found := make(map[byte]bool)
-			index := 0
-			for x, y := range statFile {
-				if !found[y] {
-					found[y] = true
-					_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
-					statFile[index] = statFile[x]
-					index++
-				}
-			}
-			// fmt.Println(string(statFile))
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 
-			// _ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
+			_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
@@ -818,8 +805,9 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		if err != nil {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
-		c.HTML(http.StatusOK, "project-table.html", gin.H{
-			"updateProject": fmt.Sprintf("%s successfully updated", project.ProjectName),
+
+		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
+			"updateProject": fmt.Sprintf("%s project updated successfully", project.ProjectName),
 		})
 	}
 }
@@ -848,9 +836,8 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
 
-		// c.Redirect(http.StatusSeeOther, "/auth/user/dashboard")
-		c.HTML(http.StatusSeeOther, "project-table.html", gin.H{
-			"deleteProject": fmt.Sprintf("project with an id : %s successfully deleted", project.ID),
+		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
+			"deleteProject": fmt.Sprintf("%s project successfully deleted", project.ProjectName),
 		})
 	}
 }
@@ -1042,7 +1029,7 @@ func (ts *TrackSpace) ModifyUserTodo() gin.HandlerFunc {
 			log.Println("Error while storing using user project data")
 			return
 		}
-		c.HTML(http.StatusOK, "todo-table.html", gin.H{
+		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
 			"updateTodo": fmt.Sprintf("%s planned schedule changed", todo.ToDoTask),
 		})
 	}
@@ -1072,7 +1059,7 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
 		}
-		c.HTML(http.StatusSeeOther, "todo-table.html", gin.H{
+		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
 			"deleteTodo": fmt.Sprintf("schedule plan with an id : %s successfully deleted", todo.ID),
 		})
 	}
@@ -1093,7 +1080,7 @@ func (ts *TrackSpace) ExecuteLogOut() gin.HandlerFunc {
 
 /*
 AdminPage : this is the Track-space admin page to have a full view of the register user and their
-important informations as well
+important information as well
 */
 func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -1116,7 +1103,6 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 
 		TotalUser = len(documents)
 
-		// tsDoc["del"] ="delete"
 		for _, document := range documents {
 			for k, v := range document {
 				tsDoc[k] = v
@@ -1150,23 +1136,25 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 			tsUser = append(tsUser, tsDoc)
 		}
 
-		var statCount [][]string
-		tsStat, err := os.Create("./ts-json.csv")
-		if err != nil {
-			log.Println(err)
+		type userStat struct {
+			total string
+			todo  string
+			users string
 		}
 
-		tsStatCSV := csv.NewWriter(tsStat)
-		statCount = [][]string{
-			{"users", "projects", "todo"},
-			{strconv.Itoa(TotalUser), strconv.Itoa(TotalProject), strconv.Itoa(TotalTodo)},
+		stat := userStat{
+			total: strconv.Itoa(TotalProject),
+			todo:  strconv.Itoa(TotalTodo),
+			users: strconv.Itoa(TotalUser),
 		}
 
-		err = tsStatCSV.WriteAll(statCount)
+		statData, err := json.MarshalIndent(stat, "", "  ")
 		if err != nil {
-			log.Println("error while writing data to a csv file")
+			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
+			return
 		}
-		tsStatCSV.Flush()
+
+		_ = ioutil.WriteFile("./static/json/stat.json", statData, 0o644)
 
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"tsAdmin": tsUser,
@@ -1176,7 +1164,7 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 
 /*
 AdminDeleteUser : this will allow the admin to delete any user straightaway from the database
-and also notify the admin team on the changes mades
+and also notify the admin team on the changes made
 */
 func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -1187,7 +1175,6 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: errors.New("invalid url parameters")})
 			return
 		}
-
 		err := ts.tsDB.AdminDeleteUserData(userId)
 		if err != nil {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
