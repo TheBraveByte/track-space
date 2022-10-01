@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />
-    <title>Track-Space Dashboard</title>
+    <title>Track-space|Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
           integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -41,9 +41,9 @@
 
         }
 
-        .feather-24 {
-            width: 24px;
-            height: 24px;
+        .feather-20 {
+            width: 20px;
+            height: 20px;
         }
 
         .doughnut-cont {
@@ -114,7 +114,13 @@
             <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/auth/user/workspace">
+                        <a class="nav-link active" aria-current="page" href="/auth/user/dashboard">
+                            <i data-feather="activity"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/user/workspace">
                             <i data-feather="folder-plus"></i>
                             Add Project
                         </a>
@@ -158,10 +164,10 @@
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h3 class="">Dashboard</h3>
                 <div class="">
-                    <h5>
-                        <i data-feather="user" class="feather-24"></i>
+                    <p>
+                        <i data-feather="user" class="feather-20"></i>
                         {{.FirstName}} {{.LastName}}
-                    </h5>
+                    </p>
                 </div>
 
             </div>
@@ -188,6 +194,10 @@
                         <div class="chart-label-cont">
                             <p>Text</p>
                             <div id="text" class="total"><span>Total:</span></div>
+                        </div>
+                        <div class="chart-label-cont">
+                            <p>Todo</p>
+                            <div id="todo" class="total"><span>Total:</span></div>
                         </div>
                     </div>
                     <!--line chart label-->
