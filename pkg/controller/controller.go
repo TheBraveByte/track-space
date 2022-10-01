@@ -321,7 +321,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		switch {
 		case email == user.Email:
 			// check to verify for the stored hashed password in database
-			ok, msg := ts.tsDB.VerifyLogin(userID, password, user.Password)
+			ok, _ := ts.tsDB.VerifyLogin(userID, password, user.Password)
 			if ok {
 				// check to match hashed password and the user password input
 				token, newToken, err := auth.GenerateJWTToken(user.Email, userID, IPAddress)
@@ -359,7 +359,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 
 			} else {
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
-					"error": msg,
+					"error": "invalid password, input correct password",
 				})
 			}
 		case user.Email == "trackspace@admin.com" && user.Password == "@_trackspace_":
@@ -496,11 +496,11 @@ func (ts *TrackSpace) Todo(count map[string]int, countTodo int) {
 	count["todoNo"] = countTodo
 }
 
-func (ts *TrackSpace) Code(count map[string]int, countText int) {
+func (ts *TrackSpace) Text(count map[string]int, countText int) {
 	count["text"] = countText
 }
 
-func (ts *TrackSpace) Text(count map[string]int, countCode int) {
+func (ts *TrackSpace) Code(count map[string]int, countCode int) {
 	count["code"] = countCode
 }
 
@@ -530,12 +530,13 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				if k == "project_details" {
 					switch v := value.(type) {
 					case primitive.A:
-						countCode, countText, countArticle := 0, 0, 0
+						var countCode, countText, countArticle = 0, 0, 0
 						// _ is the index and y is the array of structs
 						for _, y := range v {
 							switch tools := y.(type) {
 							case primitive.M:
 								for i, j := range tools {
+									//fmt.Println(i, j)
 									if i == "created_at" {
 										storedDate = fmt.Sprint(j)
 									}
@@ -564,19 +565,14 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				}
 			}
 
-			code := count["code"]
-			text := count["text"]
-			article := count["article"]
-			todo := count["todoNo"]
-			totalProjects := count["article"] + count["text"] + count["code"]
-
-			var tsStat model.Data
-			tsStat.Article = article
-			tsStat.Code = code
-			tsStat.Date = currentDate
-			tsStat.Text = text
-			tsStat.Todo = todo
-			tsStat.Total = totalProjects
+			tsStat := model.Data{
+				Date:    currentDate,
+				Code:    count["code"],
+				Article: count["article"],
+				Text:    count["text"],
+				Todo:    count["todoNo"],
+				Total:   count["article"] + count["text"] + count["code"],
+			}
 
 			if currentDate == storedDate {
 				err = ts.tsDB.UpdateUserStat(tsStat, userID)
@@ -597,7 +593,7 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				return
 			}
 
-			_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
+			_ = ioutil.WriteFile("./static/json/data.json", statFile, 0644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
@@ -668,7 +664,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 
 		// c.Redirect(http.StatusSeeOther, "/auth/user/workspace")
 		c.HTML(http.StatusOK, "work.html", gin.H{
-			"save": fmt.Sprintf("%v successfully added to your project list", project.ProjectName),
+			"save": fmt.Sprintf("%v added to your projects", project.ProjectName),
 		})
 	}
 }
@@ -837,7 +833,7 @@ func (ts *TrackSpace) DeleteProject() gin.HandlerFunc {
 		}
 
 		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
-			"deleteProject": fmt.Sprintf("%s project successfully deleted", project.ProjectName),
+			"deleteProject": fmt.Sprintf("%s project delete successfully. Go back to dashboard", project.ProjectName),
 		})
 	}
 }
@@ -894,7 +890,9 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 			log.Println("error from the session storage")
 		}
 
-		c.HTML(http.StatusOK, "todo.html", gin.H{})
+		c.HTML(http.StatusOK, "todo.html", gin.H{
+			"addTodo": fmt.Sprintf("%s added to schedule plans", todo.ToDoTask),
+		})
 	}
 }
 
@@ -1060,7 +1058,7 @@ func (ts *TrackSpace) DeleteTodo() gin.HandlerFunc {
 			return
 		}
 		c.HTML(http.StatusSeeOther, "dash.html", gin.H{
-			"deleteTodo": fmt.Sprintf("schedule plan with an id : %s successfully deleted", todo.ID),
+			"deleteTodo": fmt.Sprintf(" %s schedule plan delete successfully. Go back to dashboard", todo.ID),
 		})
 	}
 }
@@ -1154,7 +1152,7 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 			return
 		}
 
-		_ = ioutil.WriteFile("./static/json/stat.json", statData, 0o644)
+		_ = ioutil.WriteFile("./static/json/stat.json", statData, 0644)
 
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"tsAdmin": tsUser,
