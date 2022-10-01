@@ -6,13 +6,6 @@ import (
 	"testing"
 )
 
-//func Test_SetUpApp(t *testing.T) {
-//	_, _, err := setUpApp()
-//	if err != nil {
-//		t.Errorf("no environment variable available")
-//	}
-//}
-
 func TestEnvValue(t *testing.T) {
 
 	err := os.Setenv("MONGODB_URI", "mongodb+srv://ayaaakinleye:2701Akin2000@cluster0.byrpjo8.mongodb.net/test")

@@ -23,45 +23,6 @@ import (
 var app config.AppConfig
 
 func main() {
-	portNumber, URI, err := setUpApp()
-	if err != nil {
-		log.Fatalln("cannot find environment variables")
-
-	}
-	// connecting to the database
-	Client := db.DatabaseConnection(URI)
-
-	defer func() {
-		if err = Client.Disconnect(context.TODO()); err != nil {
-			log.Fatal(err)
-			return
-		}
-	}()
-
-	repo := controller.NewTrackSpace(&app, Client)
-
-	appRouter := gin.New()
-	err = appRouter.SetTrustedProxies([]string{"127.0.0.1"})
-
-	if err != nil {
-		log.Println(err)
-		log.Println("cannot access untrusted server proxy")
-
-	}
-
-	appRouter.SetFuncMap(template.FuncMap{})
-	appRouter.Static("/static", "./static")
-	appRouter.LoadHTMLGlob("templates/*.html")
-
-	Routes(appRouter, *repo)
-
-	err = appRouter.Run(portNumber)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func setUpApp() (string, string, error) {
 	gob.Register(model.User{})
 	gob.Register(model.Auth{})
 	gob.Register(model.Project{})
@@ -104,5 +65,40 @@ func setUpApp() (string, string, error) {
 	//Listening to PayLoad from the websocket
 	go ws.GetDataFromChannel()
 
-	return portNumber, mongoDBURI, nil
+	//return portNumber, mongoDBURI, nil
+	if err != nil {
+		log.Fatalln("cannot find environment variables")
+
+	}
+	// connecting to the database
+	Client := db.DatabaseConnection(mongoDBURI)
+
+	defer func() {
+		if err = Client.Disconnect(context.TODO()); err != nil {
+			log.Fatal(err)
+			return
+		}
+	}()
+
+	repo := controller.NewTrackSpace(&app, Client)
+
+	appRouter := gin.New()
+	err = appRouter.SetTrustedProxies([]string{"127.0.0.1"})
+
+	if err != nil {
+		log.Println(err)
+		log.Println("cannot access untrusted server proxy")
+
+	}
+
+	appRouter.SetFuncMap(template.FuncMap{})
+	appRouter.Static("/static", "./static")
+	appRouter.LoadHTMLGlob("templates/*.html")
+
+	Routes(appRouter, *repo)
+
+	err = appRouter.Run(portNumber)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -5,16 +5,6 @@ import (
 	"testing"
 )
 
-//
-//func TestListenToMailChannel(t *testing.T) {
-//
-//	t.Run("ListenToMailChannel", func(t *testing.T) {
-//		ListenToMailChannel()
-//		<-app.MailChan
-//		return
-//	})
-//}
-
 func TestSendMailToUser(t *testing.T) {
 
 	tests := []struct {
