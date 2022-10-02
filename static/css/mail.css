@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+
+body{
+    font-family: Lato,sans-serif;
+    background-color: #aeb2b8;
+}
+
+h3{
+    color: #33456f;
+}
+.main-content{
+    margin: 3rem auto;
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    
+}
+
+.line{
+    min-height: 4px; 
+    width:100%
+}
+
+.text-msg{
+    text-align: left;
+    padding-left:2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.footer-link{
+    text-decoration: none;
+    color: #33456f;
+    
+}
