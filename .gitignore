@@ -8,7 +8,7 @@
 
 # Test binary, built with `go test -c`
 *.test
-
+$2a$12$*qOlXAyF.dtYFFBi/2UKA3uKN2y98lkHWP3X.LFvMOcAEFHbgC1r7.
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
