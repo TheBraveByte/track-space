@@ -19,4 +19,4 @@ $2a$12$*qOlXAyF.dtYFFBi/2UKA3uKN2y98lkHWP3X.LFvMOcAEFHbgC1r7.
 *.vscode
 .env
 
-.idea
+*.idea
