@@ -30,9 +30,6 @@ import (
 	"github.com/yusuf/track-space/pkg/model"
 )
 
-// Validate - to help check for a validated json database model
-var Validate = validator.New()
-
 /*
 TrackSpace Implement the repository pattern to access multiple package
 all at once this will give me access to the app configuration package
@@ -59,7 +56,6 @@ func NewTestTrackSpace(appConfig *config.AppConfig) *TrackSpace {
 
 func (ts *TrackSpace) HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// var templateData temp.TemplateData
 		c.HTML(http.StatusOK, "home-page.html", gin.H{
 			"authenticate": 0,
 		})
@@ -142,7 +138,7 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		user.Password = key.HashPassword(c.Request.Form.Get("password"))
 
 		// Server side validation of the user input from a form
-		if err := Validate.Struct(user); err != nil {
+		if err := ts.AppConfig.Validator.Struct(user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
@@ -150,18 +146,32 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 			}
 		}
 
-		tsData := sessions.Default(c)
-		tsData.Set("email", user.Email)
-		tsData.Set("password", user.Password)
+		//tsData := sessions.Default(c)
+		//model.SessionData{
+		//	UserID: user.ID,
+		//	Email:    "",
+		//	Password: "",
+		//}
+		//tsData.Set("session_data", )
+		//
+		////tsData.Set("email", user.Email)
+		////tsData.Set("password", user.Password)
 
 		count, userID, err := ts.tsDB.InsertUserInfo(user.Email, user.Password)
-		tsData.Set("userID", userID)
 
 		if err != nil {
 			log.Println(err)
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			return
 		}
+		tsData := sessions.Default(c)
+		userData := model.SessionData{
+			UserID:   userID,
+			Email:    user.Email,
+			Password: user.Password,
+		}
+		tsData.Set("session_data", userData)
+
 		if err := tsData.Save(); err != nil {
 			log.Println("error from the session storage")
 			_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
@@ -195,8 +205,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		var user model.User
 
 		tsData := sessions.Default(c)
-		userID := fmt.Sprint(tsData.Get("userID"))
-		user.Email = fmt.Sprint(tsData.Get("email"))
+		userData := tsData.Get("session_data").(model.SessionData)
 
 		if err := c.Request.ParseForm(); err != nil {
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -218,13 +227,13 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		tsData.Set("first-name", user.FirstName)
 
 		// Server side validation of the user input from a form
-		if err := Validate.Struct(user); err != nil {
+		if err := ts.AppConfig.Validator.Struct(user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				return
 			}
 		}
-		err := ts.tsDB.UpdateUserInfo(user, userID, t1, t2)
+		err := ts.tsDB.UpdateUserInfo(user, userData.UserID, t1, t2)
 		if err != nil {
 			log.Println("Cannot update user info")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
@@ -255,7 +264,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
             <strong> ID:</strong> %s and <strong>IPAddress :</strong> of %s
             sign up for track-space.
 			</p>
-			`, "track-space Team", userID, user.IPAddress)
+			`, "track-space Team", userData.UserID, user.IPAddress)
 		TeamMailMsg := model.Email{
 			Subject:  "Confirmation for Account Created",
 			Content:  TeamMessage,
@@ -290,6 +299,7 @@ with the Bearer Token
 func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tsData := sessions.Default(c)
+		userData := tsData.Get("session_data").(model.SessionData)
 		var templateData temp.TemplateData
 		templateData.IsAuthenticated = 1
 
@@ -298,10 +308,6 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			return
 		}
 
-		email := fmt.Sprint(tsData.Get("email"))
-		password := fmt.Sprint(tsData.Get("password"))
-		userID := fmt.Sprint(tsData.Get("userID"))
-		// fmt.Println(userID, email, password)
 		IPAddress := c.Request.RemoteAddr
 
 		// Posted form value
@@ -310,7 +316,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		user.Password = c.Request.Form.Get("password")
 
 		// Server side validation of the user input from a form
-		if err := Validate.Struct(&user); err != nil {
+		if err := ts.AppConfig.Validator.Struct(&user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
@@ -319,12 +325,12 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 		}
 
 		switch {
-		case email == user.Email:
+		case userData.Email == user.Email:
 			// check to verify for the stored hashed password in database
-			ok, _ := ts.tsDB.VerifyLogin(userID, password, user.Password)
+			ok, _ := ts.tsDB.VerifyLogin(userData.UserID, userData.Password, user.Password)
 			if ok {
 				// check to match hashed password and the user password input
-				token, newToken, err := auth.GenerateJWTToken(user.Email, userID, IPAddress)
+				token, newToken, err := auth.GenerateJWTToken(user.Email, userData.UserID, IPAddress)
 				if err != nil {
 					log.Println("cannot generate json web token")
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
@@ -344,7 +350,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					return
 				}
 
-				err = ts.tsDB.UpdateUserField(userID, tokenGen, newTokenGen)
+				err = ts.tsDB.UpdateUserField(userData.UserID, tokenGen, newTokenGen)
 				if err != nil {
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
@@ -407,7 +413,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			tokenGen := authData["auth"][0]
 			newTokenGen := authData["auth"][1]
 
-			err = ts.tsDB.UpdateUserField(userID, tokenGen, newTokenGen)
+			err = ts.tsDB.UpdateUserField(userData.UserID, tokenGen, newTokenGen)
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
@@ -444,7 +450,7 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 		tsData := sessions.Default(c)
 
 		password := fmt.Sprint(tsData.Get("password"))
-		if err := Validate.Struct(&user); err != nil {
+		if err := ts.AppConfig.Validator.Struct(&user); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 			}
@@ -515,9 +521,8 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 		t, ok := c.Get("token")
 		if ok {
 			tsData := sessions.Default(c)
-			userID := fmt.Sprint(tsData.Get("userID"))
-
-			user, err := ts.tsDB.SendUserDetails(userID)
+			userData := tsData.Get("session_data").(model.SessionData)
+			user, err := ts.tsDB.SendUserDetails(userData.UserID)
 			if err != nil {
 				_ = c.AbortWithError(http.StatusNotFound, gin.Error{Err: err})
 				return
@@ -575,13 +580,13 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 			}
 
 			if currentDate == storedDate {
-				err = ts.tsDB.UpdateUserStat(tsStat, userID)
+				err = ts.tsDB.UpdateUserStat(tsStat, userData.UserID)
 				if err != nil {
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
 			}
-			r, err := ts.tsDB.GetUserStatByID(userID)
+			r, err := ts.tsDB.GetUserStatByID(userData.UserID)
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
@@ -628,7 +633,8 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var project model.Project
 		tsData := sessions.Default(c)
-		userID := fmt.Sprint(tsData.Get("userID"))
+		userData := tsData.Get("session_data").(model.SessionData)
+		
 
 		if err := tsData.Save(); err != nil {
 			_ = c.AbortWithError(http.StatusNoContent, gin.Error{Err: err})
@@ -648,7 +654,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		project.UpdatedAt = time.Now().Format("2006-01-02")
 
 		// Server side validation of the user input from a form
-		if err := Validate.Struct(&project); err != nil {
+		if err := ts.AppConfig.Validator.Struct(&project); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
@@ -656,7 +662,7 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 			}
 		}
 
-		err := ts.tsDB.StoreProjectData(userID, project)
+		err := ts.tsDB.StoreProjectData(userData.UserID, project)
 		if err != nil {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 			return
@@ -679,12 +685,10 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 		var allProjects []map[string]interface{}
 
 		tsData := sessions.Default(c)
-		userID := fmt.Sprintf("%s", tsData.Get("userID"))
+		userData := tsData.Get("session_data").(model.SessionData)
 
-		// fmt.Println(tsData.Get("userID"))
-		fmt.Println("user id --> in show project table ", userID)
 
-		user, err := ts.tsDB.SendUserDetails(userID)
+		user, err := ts.tsDB.SendUserDetails(userData.UserID)
 		if err != nil {
 			log.Println("cannot get user project data from the database")
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
@@ -793,11 +797,12 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 		project.CreatedAt = time.Now().Format("2006-01-02")
 
 		tsData := sessions.Default(c)
-		userID := fmt.Sprint(tsData.Get("userID"))
+		userData := tsData.Get("session_data").(model.SessionData)
+	
 
 		log.Println(projectID)
 
-		err := ts.tsDB.ModifyProjectData(userID, projectID, project)
+		err := ts.tsDB.ModifyProjectData(userData.UserID, projectID, project)
 		if err != nil {
 			_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 		}
@@ -856,6 +861,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var todo model.Todo
 		tsData := sessions.Default(c)
+		userData := tsData.Get("session_data").(model.SessionData)
 
 		if err := c.Request.ParseForm(); err != nil {
 			log.Println("cannot parse the daily task form")
@@ -863,7 +869,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 			return
 		}
 
-		userID := fmt.Sprintf("%s", tsData.Get("userID"))
+		userID := userData.UserID
 		todo.ID = primitive.NewObjectID().Hex()
 		todo.ToDoTask = c.Request.Form.Get("task")
 		todo.DateSchedule = c.Request.Form.Get("schedule-date")
@@ -871,7 +877,7 @@ func (ts *TrackSpace) PostTodoData() gin.HandlerFunc {
 		todo.EndTime = c.Request.Form.Get("end-time")
 		todo.Status = "Not done"
 		// Server side validation of the user input from a form
-		if err := Validate.Struct(&todo); err != nil {
+		if err := ts.AppConfig.Validator.Struct(&todo); err != nil {
 			if _, ok := err.(*validator.InvalidValidationError); !ok {
 				_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
 				log.Println(err)
@@ -904,7 +910,8 @@ func (ts *TrackSpace) ShowTodoTable() gin.HandlerFunc {
 		var allTodo []map[string]interface{}
 
 		tsData := sessions.Default(c)
-		userID := fmt.Sprintf("%s", tsData.Get("userID"))
+		userData := tsData.Get("session_data").(model.SessionData)
+		userID := userData.UserID
 
 		user, err := ts.tsDB.SendUserDetails(userID)
 		if err != nil {

@@ -6,65 +6,71 @@ type Auth struct {
 
 // User : Master struct model for user
 type User struct {
-	ID             string    `json:"_id" bson:"_id" Usage:"required,alphanumeric"`
-	FirstName      string    `json:"first_name" Usage:"required,alpha"`
-	LastName       string    `json:"last_name" Usage:"required,alpha"`
-	Email          string    `json:"email" Usage:"required,email"`
-	Password       string    `json:"password" Usage:"min=8,max=20"`
-	YrsOfExp       string    `json:"yrs_of_exp" Usage:"numeric"`
-	Country        string    `json:"country" Usage:"required,alpha"`
-	PhoneNumber    string    `json:"phone_number" Usage:"required"`
-	IPAddress      string    `json:"ip_address"`
-	Address        string    `json:"address" Usage:"required"`
-	Profession     string    `json:"profession"`
-	Stack          []string  `json:"stack"`
-	ProjectDetails []Project `json:"project_details" bson:"project_details"`
-	Todo           []Todo    `json:"todo" bson:"todo"`
-	Data           []Data    `json:"data" bson:"data"`
-	CreatedAt      string    `json:"created_at" Usage:"datetime=2006-01-02"`
-	UpdatedAt      string    `json:"updated_at" Usage:"datetime=2006-01-02"`
-	Token          string    `json:"token" Usage:"jwt"`
-	RenewToken     string    `json:"renew_token" Usage:"jwt"`
+	ID             string    `bson:"_id" Usage:"required,alphanumeric"`
+	FirstName      string    `bson:"first_name" Usage:"required,alpha"`
+	LastName       string    `bson:"last_name" Usage:"required,alpha"`
+	Email          string    `bson:"email" Usage:"required,email"`
+	Password       string    `bson:"password" Usage:"min=8,max=20"`
+	YrsOfExp       string    `bson:"yrs_of_exp" Usage:"numeric"`
+	Country        string    `bson:"country" Usage:"required,alpha"`
+	PhoneNumber    string    `bson:"phone_number" Usage:"required"`
+	IPAddress      string    `bson:"ip_address"`
+	Address        string    `bson:"address" Usage:"required"`
+	Profession     string    `bson:"profession"`
+	Stack          []string  `bson:"stack"`
+	ProjectDetails []Project `bson:"project_details"`
+	Todo           []Todo    `bson:"todo"`
+	Data           []Data    `bson:"data"`
+	CreatedAt      string    `bson:"created_at" Usage:"datetime=2006-01-02"`
+	UpdatedAt      string    `bson:"updated_at" Usage:"datetime=2006-01-02"`
+	Token          string    `bson:"token" Usage:"jwt"`
+	RenewToken     string    `bson:"renew_token" Usage:"jwt"`
 }
 
 // Project : Struct model for user project
 type Project struct {
 	ID             string `bson:"_id"`
-	ProjectName    string `json:"project_name" Usage:"required"`
-	ProjectContent string `json:"project_content"`
-	ToolsUseAs     string `json:"tools_use_as" Usage:"required"`
-	UpdatedAt      string `json:"updated_at"`
-	CreatedAt      string `json:"created_at"`
-	Status         string `json:"status"`
+	ProjectName    string `bson:"project_name" Usage:"required"`
+	ProjectContent string `bson:"project_content"`
+	ToolsUseAs     string `bson:"tools_use_as" Usage:"required"`
+	UpdatedAt      string `bson:"updated_at"`
+	CreatedAt      string `bson:"created_at"`
+	Status         string `bson:"status"`
 }
 
 // Data : Struct model to navigate all user activity
 type Data struct {
-	ID      string `json:"_id" bson:"_id"`
-	Date    string `json:"date"`
-	Code    int    `json:"code"`
-	Article int    `json:"article"`
-	Text    int    `json:"text"`
-	Todo    int    `json:"todo"`
-	Total   int    `json:"total"`
+	ID      string `bson:"_id"`
+	Date    string `bson:"date"`
+	Code    int    `bson:"code"`
+	Article int    `bson:"article"`
+	Text    int    `bson:"text"`
+	Todo    int    `bson:"todo"`
+	Total   int    `bson:"total"`
 }
 
 // Email : struct model to transmit mail to user and admin
 type Email struct {
-	ID       string `json:"_id" bson:"_id"`
-	Subject  string `json:"subject"`
-	Content  string `json:"content"`
-	Receiver string `json:"receiver" Usage:"required"`
-	Sender   string `json:"sender" Usage:"required"`
-	Template string `json:"template"`
+	ID       string `bson:"_id"`
+	Subject  string `bson:"subject"`
+	Content  string `bson:"content"`
+	Receiver string `bson:"receiver" Usage:"required"`
+	Sender   string `bson:"sender" Usage:"required"`
+	Template string `bson:"template"`
 }
 
 // Todo : struct model for todo schedule for use
 type Todo struct {
-	ID           string `json:"_id" bson:"_id"`
-	ToDoTask     string `json:"to_do_task"`
-	DateSchedule string `json:"schedule_date"`
-	StartTime    string `json:"start_time"`
-	EndTime      string `json:"end_time"`
-	Status       string `json:"status"`
+	ID           string `bson:"_id"`
+	ToDoTask     string `bson:"to_do_task"`
+	DateSchedule string `bson:"schedule_date"`
+	StartTime    string `bson:"start_time"`
+	EndTime      string `bson:"end_time"`
+	Status       string `bson:"status"`
+}
+
+type SessionData struct {
+	UserID   string
+	Email    string
+	Password string
 }
