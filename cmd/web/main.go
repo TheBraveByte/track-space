@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/gob"
+	"github.com/go-playground/validator/v10"
 	_ "go.mongodb.org/mongo-driver/mongo"
 	"html/template"
 	"log"
@@ -21,6 +22,7 @@ import (
 )
 
 var app config.AppConfig
+var validate *validator.Validate
 
 func main() {
 	gob.Register(model.User{})
@@ -29,14 +31,18 @@ func main() {
 	gob.Register(model.Todo{})
 	gob.Register(model.Email{})
 	gob.Register(model.Data{})
+	gob.Register(model.SessionData{})
 	gob.Register(wsconfig.SocketConnection{})
 	gob.Register(wsmodel.SocketPayLoad{})
 	gob.Register(wsmodel.SocketResponse{})
 
+	// Validate - to help check for a validated json database model
+	validate = validator.New()
+
 	mailChannel := make(chan model.Email)
 	app.MailChan = mailChannel
-	app.AppInProduction = false
-	app.UseTempCache = false
+
+	app.Validator = validate
 
 	// load environment variables
 	err := godotenv.Load()
