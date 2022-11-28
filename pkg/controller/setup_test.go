@@ -30,8 +30,7 @@ func TrackSpaceSetUp() *gin.Engine {
 
 	mailChannel := make(chan model.Email)
 	appConfig.MailChan = mailChannel
-	appConfig.AppInProduction = false
-	appConfig.UseTempCache = false
+
 
 	defer close(appConfig.MailChan)
 

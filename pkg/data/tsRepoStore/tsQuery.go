@@ -64,7 +64,7 @@ func (tm *TsMongoDBRepo) UpdateUserInfo(user model.User, id, t1, t2 string) erro
 
 	defer cancelCtx()
 	filter := bson.D{{Key: "_id", Value: id}}
-
+	// update := bson.D{{Key: "$set", Value: user}}
 	update := bson.D{{Key: "$set", Value: bson.D{
 		{Key: "first_name", Value: user.FirstName},
 		{Key: "last_name", Value: user.LastName},
@@ -182,6 +182,7 @@ func (tm *TsMongoDBRepo) StoreProjectData(id string, project model.Project) erro
 	defer cancelCtx()
 
 	filter := bson.D{{Key: "_id", Value: id}}
+	// update := bson.D{{Key: "$push", Value: bson.D{{Key: "project_details", Value: project}}}}
 	update := bson.D{{Key: "$push", Value: bson.D{
 		{Key: "project_details", Value: bson.D{
 			{Key: "_id", Value: project.ID},
@@ -233,6 +234,7 @@ func (tm *TsMongoDBRepo) ModifyProjectData(userId, id string, project model.Proj
 		{Key: "_id", Value: userId},
 		{Key: "project_details._id", Value: id},
 	}
+	// update := bson.D{{Key: "$set", Value: bson.D{{Key: "project_details", Value: project}}}}
 	update := bson.D{{Key: "$set", Value: bson.D{
 		{Key: "project_details.$._id", Value: project.ID},
 		{Key: "project_details.$.project_name", Value: project.ProjectName},
@@ -276,6 +278,7 @@ func (tm *TsMongoDBRepo) StoreTodoData(todo model.Todo, id string) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "_id", Value: id}}
+	// update := bson.D{{Key: "$push", Value: bson.D{{Key: "todo", Value: todo}}}}
 	update := bson.D{{Key: "$push", Value: bson.D{
 		{Key: "todo", Value: bson.D{
 			{Key: "_id", Value: todo.ID},
@@ -325,6 +328,7 @@ func (tm *TsMongoDBRepo) ModifyTodoData(id string, todo model.Todo) error {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancelCtx()
 	filter := bson.D{{Key: "todo._id", Value: id}}
+	// update := bson.D{{Key: "$set", Value: bson.D{{Key: "todo", Value: todo}}}}
 	update := bson.D{{Key: "$set", Value: bson.D{
 		{Key: "todo.$._id", Value: todo.ID},
 		{Key: "todo.$.to_do_task", Value: todo.ToDoTask},
@@ -376,7 +380,7 @@ func (tm *TsMongoDBRepo) UpdateUserStat(data model.Data, id string) error {
 		{Key: "todo", Value: data.Todo},
 		{Key: "total", Value: data.Total},
 	}}}}}
-			
+
 	_, err := UserData(tm.TsMongoDB, "user").UpdateOne(ctx, filter, update)
 	if err != nil {
 		log.Println("cannot update user document")
