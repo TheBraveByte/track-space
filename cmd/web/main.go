@@ -45,10 +45,10 @@ func main() {
 	app.Validator = validate
 
 	// load environment variables
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("No .env file available")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("No .env file available")
+	// }
 
 	mongoDBURI := os.Getenv("MONGODB_URI")
 	if mongoDBURI == "" {
