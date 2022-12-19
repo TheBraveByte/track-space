@@ -88,6 +88,7 @@ func main() {
 
 	repo := controller.NewTrackSpace(&app, Client)
 
+	gin.SetMode(gin.ReleaseMode)
 	appRouter := gin.New()
 	err = appRouter.SetTrustedProxies([]string{"127.0.0.1"})
 
