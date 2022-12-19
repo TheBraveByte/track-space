@@ -1,26 +1,18 @@
 [
  {
   "article": 0,
-  "code": 0,
-  "date": "2022-11-28",
+  "code": 1,
+  "date": "2022-11-29",
   "text": 1,
   "todo": 0,
-  "total": 1
- },
- {
-  "article": 0,
-  "code": 0,
-  "date": "2022-11-28",
-  "text": 1,
-  "todo": 1,
-  "total": 1
+  "total": 2
  },
  {
   "article": 0,
   "code": 1,
-  "date": "2022-11-28",
+  "date": "2022-11-29",
   "text": 1,
-  "todo": 1,
+  "todo": 2,
   "total": 2
  }
 ]
