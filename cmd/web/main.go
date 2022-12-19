@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	_"github.com/joho/godotenv"
 
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
@@ -71,16 +71,11 @@ func main() {
 	//Listening to PayLoad from the websocket
 	go ws.GetDataFromChannel()
 
-	//return portNumber, mongoDBURI, nil
-	if err != nil {
-		log.Fatalln("cannot find environment variables")
-
-	}
 	// connecting to the database
 	Client := db.DatabaseConnection(mongoDBURI)
 
 	defer func() {
-		if err = Client.Disconnect(context.TODO()); err != nil {
+		if err := Client.Disconnect(context.TODO()); err != nil {
 			log.Fatal(err)
 			return
 		}
@@ -90,7 +85,7 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	appRouter := gin.New()
-	err = appRouter.SetTrustedProxies([]string{"127.0.0.1"})
+	err := appRouter.SetTrustedProxies([]string{"127.0.0.1"})
 
 	if err != nil {
 		log.Println(err)
