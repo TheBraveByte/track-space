@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"encoding/gob"
-	"github.com/go-playground/validator/v10"
-	_ "go.mongodb.org/mongo-driver/mongo"
 	"html/template"
 	"log"
 	"os"
 
+	"github.com/go-playground/validator/v10"
+	_ "go.mongodb.org/mongo-driver/mongo"
+
 	"github.com/gin-gonic/gin"
-	_"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv"
 
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
@@ -21,8 +22,10 @@ import (
 	"github.com/yusuf/track-space/pkg/wsmodel"
 )
 
-var app config.AppConfig
-var validate *validator.Validate
+var (
+	app      config.AppConfig
+	validate *validator.Validate
+)
 
 func main() {
 	gob.Register(model.User{})
@@ -53,13 +56,11 @@ func main() {
 	mongoDBURI := os.Getenv("MONGODB_URI")
 	if mongoDBURI == "" {
 		log.Fatalln("mongodb cluster uri not found : ")
-
 	}
 
 	portNumber := os.Getenv("PORT_NUMBER")
 	if portNumber == "" {
 		log.Fatalln("No local server port number created!")
-
 	}
 
 	defer close(app.MailChan)
@@ -68,7 +69,7 @@ func main() {
 	// Listening to the localhost mail server
 	go ListenToMailChannel()
 
-	//Listening to PayLoad from the websocket
+	// Listening to PayLoad from the websocket
 	go ws.GetDataFromChannel()
 
 	// connecting to the database
@@ -85,10 +86,10 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	appRouter := gin.New()
-	err := appRouter.SetTrustedProxies([]string{"127.0.0.1"})
+	proxyErr := appRouter.SetTrustedProxies([]string{"127.0.0.1"})
 
-	if err != nil {
-		log.Println(err)
+	if proxyErr != nil {
+		log.Println(proxyErr)
 		log.Println("cannot access untrusted server proxy")
 
 	}
@@ -99,7 +100,7 @@ func main() {
 
 	Routes(appRouter, *repo)
 
-	err = appRouter.Run(portNumber)
+	err := appRouter.Run(portNumber)
 	if err != nil {
 		log.Fatal(err)
 	}
