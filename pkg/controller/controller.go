@@ -51,7 +51,8 @@ func NewTrackSpace(appConfig *config.AppConfig, tsm *mongo.Client) *TrackSpace {
 func NewTestTrackSpace(appConfig *config.AppConfig) *TrackSpace {
 	return &TrackSpace{
 		AppConfig: appConfig,
-		tsDB:      tsRepoStore.NewTsMongoDBRepo(appConfig, nil)}
+		tsDB:      tsRepoStore.NewTsMongoDBRepo(appConfig, nil),
+	}
 }
 
 func (ts *TrackSpace) HomePage() gin.HandlerFunc {
@@ -158,7 +159,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 		////tsData.Set("password", user.Password)
 
 		count, userID, err := ts.tsDB.InsertUserInfo(user.Email, user.Password)
-
 		if err != nil {
 			log.Println(err)
 			_ = c.AbortWithError(http.StatusBadRequest, gin.Error{Err: err})
@@ -342,7 +342,8 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 				tokenGen := authData["auth"][0]
 				newTokenGen := authData["auth"][1]
 
-				//saving the refresh token
+				// saving the refresh token
+				tsData.Set("token", tokenGen)
 				tsData.Set("refreshToken", newTokenGen)
 				if err := tsData.Save(); err != nil {
 					log.Println("error from the session storage")
@@ -355,8 +356,6 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 					return
 				}
-				c.SetCookie("bearerToken", tokenGen, 60*60*24*7, "/", "localhost", false, true)
-				log.Println("Successfully login")
 
 				c.HTML(http.StatusOK, "home-page.html", gin.H{
 					"success":      "You have successfully logged-in on track-space. Go to dashboard",
@@ -412,14 +411,18 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			authData["auth"] = []string{token, newToken}
 			tokenGen := authData["auth"][0]
 			newTokenGen := authData["auth"][1]
-
+			
+			tsData.Set("refreshToken", newTokenGen)
 			err = ts.tsDB.UpdateUserField(userData.UserID, tokenGen, newTokenGen)
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-			c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
-			log.Println("Successfully login")
+			
+
+			// c.Header("Authorization", "Bearer "+tokenGen)
+			// c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
+			// log.Println("Successfully login")
 
 			c.HTML(http.StatusOK, "home-page.html", gin.H{
 				"success":   "logged in successfully! Go to Admin",
@@ -445,7 +448,6 @@ func (ts *TrackSpace) ResetPassword() gin.HandlerFunc {
 
 func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		var user model.User
 		tsData := sessions.Default(c)
 
@@ -535,13 +537,13 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				if k == "project_details" {
 					switch v := value.(type) {
 					case primitive.A:
-						var countCode, countText, countArticle = 0, 0, 0
+						countCode, countText, countArticle := 0, 0, 0
 						// _ is the index and y is the array of structs
 						for _, y := range v {
 							switch tools := y.(type) {
 							case primitive.M:
 								for i, j := range tools {
-									//fmt.Println(i, j)
+									// fmt.Println(i, j)
 									if i == "created_at" {
 										storedDate = fmt.Sprint(j)
 									}
@@ -592,13 +594,12 @@ func (ts *TrackSpace) GetDashBoard() gin.HandlerFunc {
 				return
 			}
 			statFile, err := json.MarshalIndent(r["data"], "", " ")
-
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
 
-			_ = ioutil.WriteFile("./static/json/data.json", statFile, 0644)
+			_ = ioutil.WriteFile("./static/json/data.json", statFile, 0o644)
 
 			// this controller with still be updated as I progress
 			if err := tsData.Save(); err != nil {
@@ -634,7 +635,6 @@ func (ts *TrackSpace) PostWorkSpaceProject() gin.HandlerFunc {
 		var project model.Project
 		tsData := sessions.Default(c)
 		userData := tsData.Get("session_data").(model.SessionData)
-		
 
 		if err := tsData.Save(); err != nil {
 			_ = c.AbortWithError(http.StatusNoContent, gin.Error{Err: err})
@@ -686,7 +686,6 @@ func (ts *TrackSpace) ShowProjectTable() gin.HandlerFunc {
 
 		tsData := sessions.Default(c)
 		userData := tsData.Get("session_data").(model.SessionData)
-
 
 		user, err := ts.tsDB.SendUserDetails(userData.UserID)
 		if err != nil {
@@ -798,7 +797,6 @@ func (ts *TrackSpace) ModifyUserProject() gin.HandlerFunc {
 
 		tsData := sessions.Default(c)
 		userData := tsData.Get("session_data").(model.SessionData)
-	
 
 		log.Println(projectID)
 
@@ -977,7 +975,7 @@ func (ts *TrackSpace) ShowTodoSchedule() gin.HandlerFunc {
 		}
 
 		for x, y := range TodoMap {
-			//fmt.Println(x, y)
+			// fmt.Println(x, y)
 			if x == "to_do_task" {
 				todo.ToDoTask = y
 			}
@@ -1159,7 +1157,7 @@ func (ts *TrackSpace) AdminPage() gin.HandlerFunc {
 			return
 		}
 
-		_ = ioutil.WriteFile("./static/json/stat.json", statData, 0644)
+		_ = ioutil.WriteFile("./static/json/stat.json", statData, 0o644)
 
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"tsAdmin": tsUser,
