@@ -88,7 +88,7 @@ func (ts *TrackSpace) PostContact() gin.HandlerFunc {
 			Subject:  "Help Desk Message",
 			Content:  TeamMessage,
 			Sender:   email,
-			Receiver: "trackspace@admin.com",
+			Receiver: "official.trackspace@gmail.com",
 			Template: "email.html",
 		}
 		ts.AppConfig.MailChan <- TeamMailMsg
@@ -104,7 +104,7 @@ func (ts *TrackSpace) PostContact() gin.HandlerFunc {
 		mailMsg := model.Email{
 			Subject:  "Confirmation Message",
 			Content:  message,
-			Sender:   "trackspace@admin.com",
+			Sender:   "official.trackspace@gmail.com",
 			Receiver: email,
 			Template: "email.html",
 		}
@@ -146,17 +146,6 @@ func (ts *TrackSpace) PostSignUpPage() gin.HandlerFunc {
 				return
 			}
 		}
-
-		//tsData := sessions.Default(c)
-		//model.SessionData{
-		//	UserID: user.ID,
-		//	Email:    "",
-		//	Password: "",
-		//}
-		//tsData.Set("session_data", )
-		//
-		////tsData.Set("email", user.Email)
-		////tsData.Set("password", user.Password)
 
 		count, userID, err := ts.tsDB.InsertUserInfo(user.Email, user.Password)
 		if err != nil {
@@ -250,7 +239,7 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		mailMsg := model.Email{
 			Subject:  "Confirmation for Account Created",
 			Content:  message,
-			Sender:   "trackspace@admin.com",
+			Sender:   "official.trackspace@gmail.com",
 			Receiver: fmt.Sprint(tsData.Get("email")),
 			Template: "email.html",
 		}
@@ -268,8 +257,8 @@ func (ts *TrackSpace) PostUserInfo() gin.HandlerFunc {
 		TeamMailMsg := model.Email{
 			Subject:  "Confirmation for Account Created",
 			Content:  TeamMessage,
-			Sender:   "trackspace@admin.com",
-			Receiver: "trackspace@admin.com",
+			Sender:   "official.trackspace@gmail.com",
+			Receiver: "official.trackspace@gmail.com",
 			Template: "email.html",
 		}
 
@@ -367,7 +356,7 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 					"error": "invalid password, input correct password",
 				})
 			}
-		case user.Email == "trackspace@admin.com" && user.Password == "@_trackspace_":
+		case user.Email == "official.trackspace@gmail.com" && user.Password == "@_trackspace_":
 			// Setting up the login authentication for admin
 			adminInfo, err := ts.tsDB.GetAdminInfo()
 			var (
@@ -411,14 +400,13 @@ func (ts *TrackSpace) PostLoginPage() gin.HandlerFunc {
 			authData["auth"] = []string{token, newToken}
 			tokenGen := authData["auth"][0]
 			newTokenGen := authData["auth"][1]
-			
+
 			tsData.Set("refreshToken", newTokenGen)
 			err = ts.tsDB.UpdateUserField(userData.UserID, tokenGen, newTokenGen)
 			if err != nil {
 				_ = c.AbortWithError(http.StatusInternalServerError, gin.Error{Err: err})
 				return
 			}
-			
 
 			// c.Header("Authorization", "Bearer "+tokenGen)
 			// c.SetCookie("bearerToken", tokenGen, 60*60*24*1200, "/", "localhost", false, true)
@@ -480,8 +468,8 @@ func (ts *TrackSpace) UpdatePassword() gin.HandlerFunc {
 			TeamMailMsg := model.Email{
 				Subject:  "Password Reset",
 				Content:  TeamMessage,
-				Sender:   "trackspace@admin.com",
-				Receiver: "trackspace@admin.com",
+				Sender:   "official.trackspace@gmail.com",
+				Receiver: "official.trackspace@gmail.com",
 				Template: "email.html",
 			}
 
@@ -1195,8 +1183,8 @@ func (ts *TrackSpace) AdminDeleteUser() gin.HandlerFunc {
 		mailMsg := model.Email{
 			Subject:  "Confirmation for Deleted Account",
 			Content:  message,
-			Sender:   "trackspace@admin.com",
-			Receiver: "trackspace@admin.com",
+			Sender:   "official.trackspace@gmail.com",
+			Receiver: "official.trackspace@gmail.com",
 			Template: "email.html",
 		}
 

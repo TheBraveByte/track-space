@@ -8,10 +8,9 @@ import (
 	"os"
 
 	"github.com/go-playground/validator/v10"
-	_ "go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
@@ -48,13 +47,13 @@ func main() {
 	app.Validator = validate
 
 	// load environment variables
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("No .env file available")
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("No .env file available")
+	}
 
-	mongoDBURI := os.Getenv("MONGODB_URI")
-	if mongoDBURI == "" {
+	mongodbURI := os.Getenv("MONGODB_URI")
+	if mongodbURI == "" {
 		log.Fatalln("mongodb cluster uri not found : ")
 	}
 
@@ -63,17 +62,19 @@ func main() {
 		log.Fatalln("No local server port number created!")
 	}
 
+	mailPass := os.Getenv("MAIL_PASSWORD")
+
 	defer close(app.MailChan)
 
 	log.Println("Application starting mail server listening to channel")
 	// Listening to the localhost mail server
-	go ListenToMailChannel()
+	go ListenToMailChannel(mailPass)
 
 	// Listening to PayLoad from the websocket
 	go ws.GetDataFromChannel()
 
 	// connecting to the database
-	Client := db.DatabaseConnection(mongoDBURI)
+	Client := db.DatabaseConnection(mongodbURI)
 
 	defer func() {
 		if err := Client.Disconnect(context.TODO()); err != nil {
@@ -100,7 +101,7 @@ func main() {
 
 	Routes(appRouter, *repo)
 
-	err := appRouter.Run(portNumber)
+	err = appRouter.Run(portNumber)
 	if err != nil {
 		log.Fatal(err)
 	}
