@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	_"github.com/joho/godotenv"
 
 	"github.com/yusuf/track-space/pkg/config"
 	"github.com/yusuf/track-space/pkg/controller"
@@ -47,10 +47,10 @@ func main() {
 	app.Validator = validate
 
 	// load environment variables
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("No .env file available")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("No .env file available")
+	// }
 
 	mongodbURI := os.Getenv("MONGODB_URI")
 	if mongodbURI == "" {
@@ -101,7 +101,7 @@ func main() {
 
 	Routes(appRouter, *repo)
 
-	err = appRouter.Run(portNumber)
+	err := appRouter.Run(portNumber)
 	if err != nil {
 		log.Fatal(err)
 	}
