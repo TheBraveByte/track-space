@@ -11,18 +11,18 @@ func TestSendMailToUser(t *testing.T) {
 		name string
 		m    model.Email
 	}{
-		{name: "track-spaceAdmin", m: model.Email{
+		{name: "track space", m: model.Email{
 
 			Subject:  "Email confirmation",
 			Content:  "Hello world",
-			Receiver: "trackspace@admin.com",
-			Sender:   "trackspace@admin.com",
+			Receiver: "official.trackspacegmail.com",
+			Sender:   "official.trackspacegmail.com",
 			Template: "",
 		}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			SendMail(tt.m)
+			SendMail(tt.m,"@_trackspace_")
 		})
 	}
 }

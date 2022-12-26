@@ -1,52 +1,59 @@
 package main
 
 import (
-	"crypto/tls"
+	_"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
+	"time"
 
+	mail "github.com/xhit/go-simple-mail/v2"
 	"github.com/yusuf/track-space/pkg/model"
-	"gopkg.in/gomail.v2"
 )
 
-func SendMail(m model.Email){
-	msg := gomail.NewMessage()
-	msg.SetHeader("From", m.Sender)
-	msg.SetHeader("To", m.Receiver)
-	msg.SetHeader("Subject", m.Subject)
+func SendMail(m model.Email, password string){
+	mailServer := mail.NewSMTPClient()
+	mailServer.Host = "smtp.gmail.com"
+	mailServer.Port= 465
+	mailServer.Password = password
+	mailServer.Username = m.Sender
+	mailServer.Encryption = mail.EncryptionSSLTLS
+	mailServer.ConnectTimeout = 100 * time.Second
+	mailServer.SendTimeout= 100 * time.Second
+
+	mailClient, err := mailServer.Connect()
+	if err != nil{
+		log.Panicln(err)
+	}
+
+	msg := mail.NewMSG()
+	msg.SetFrom(m.Sender).AddTo(m.Receiver).SetSubject(m.Subject)
 	if m.Template == ""{
-		msg.SetBody("text/html", m.Content)
-	}else{
-		d, err := ioutil.ReadFile(fmt.Sprintf("./mail-template/%s", m.Template))
+		msg.SetBody(mail.TextHTML, m.Content)
+	} else{
+		data, err := ioutil.ReadFile(fmt.Sprintf("./mail-template/%s", m.Template))
 		if err != nil{
 			log.Panic(err)
 		}
-		template := string(d)
-		mailToSend := strings.Replace(template, "[%body%]", m.Content, 1)
-		msg.SetBody("text/html", mailToSend)
-		
+		temp := string(data)
+		mailToSend := strings.Replace(temp, "[%body%]",m.Content, 1)
+		msg.SetBody(mail.TextHTML, mailToSend)
 	}
-	dailMail := gomail.NewDialer("smtp.gmail.com", 587, m.Sender, "Akinleye123")
-	dailMail.TLSConfig = &tls.Config{
-		InsecureSkipVerify: false,
-	}
-	if err := dailMail.DialAndSend(msg); err != nil{
+	if err := msg.Send(mailClient); err != nil{
 		log.Println(err)
-		panic(err)
-	}else{
+	} else{
 		log.Println("Email Sent Successfully")
-		return
 	}
+
 }
 
 
-func ListenToMailChannel() {
+func ListenToMailChannel(password string) {
 	func() {
 		for {
 			mailMsg := <-app.MailChan
-			SendMail(mailMsg)
+			SendMail(mailMsg, password)
 		}
 	}()
 }

@@ -81,13 +81,14 @@ func (ts *TrackSpace) PostContact() gin.HandlerFunc {
 
 		TeamMessage := fmt.Sprintf(`
 			<strong>Help Desk Message</strong><br>
+			<p>Email from %s</p>
 			Hi, %s:<br>
 			<p>%s</p>
-			`, "track-space Team", msg)
+			`, email ,"Trackspace Team", msg)
 		TeamMailMsg := model.Email{
 			Subject:  "Help Desk Message",
 			Content:  TeamMessage,
-			Sender:   email,
+			Sender:   "official.trackspace@gmail.com",
 			Receiver: "official.trackspace@gmail.com",
 			Template: "email.html",
 		}
