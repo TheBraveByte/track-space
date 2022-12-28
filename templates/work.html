@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
     integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Custom css design -->
+  <!-- Custom css design -->
   <link rel="stylesheet" href="/static/css/work.css" />
   <!-- TinyMce editor API -->
   <script src="https://cdn.tiny.cloud/1/wxxxigs2nnc6k02msdd8p668si3yl9u6ox1bv1hmx0vk5wf0/tinymce/6/tinymce.min.js"
@@ -110,7 +110,7 @@
           <textarea id="myTextarea" name="myText"></textarea>
         </div>
 
-        <div class="reset-submit-btn row mt-xxl-5">
+        <div class="reset-submit-btn mt-xxl-5">
           <div class="col-md-4">
             <a href="/auth/user/dashboard" class="w-40 btn btn-dark btn-md">
               Back
@@ -145,17 +145,17 @@
   ValidateForm()
   document.getElementById("submit").addEventListener("click", function () {
     var myContent = tinymce.activeEditor.getContent();
-    
+
   })
   function notifyMsg(msg, type) {
-      notie.alert({
-        type: type,
-        text: msg,
-      });
-    }
-    {{ with .save}}
-    notifyMsg("{{.}}", "success")
-    {{ end }}
+    notie.alert({
+      type: type,
+      text: msg,
+    });
+  }
+  { { with .save} }
+  notifyMsg("{{.}}", "success")
+  { { end } }
 </script>
 
 </html>

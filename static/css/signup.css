@@ -5,17 +5,47 @@
 /*#566277 *!*/
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body{
     font-family: Lato,sans-serif;
-
+    overflow-x: hidden;
     background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
-
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0;
+}
+@media (max-width: 640px) {
+    body{
+        font-family: Lato,sans-serif;
+        background-color: #77889e;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 20px;
+    }
 }
 
 .form-container{
     background-color: #ffffff;
+    width: 650px;
+    min-height: 500px;
     border-radius: 5px;
-    margin-bottom: 3rem;
+    padding-top: 10px;
+}
+@media (max-width: 640px) {
+    .form-container{
+        background-color: #ffffff;
+        width: 100%;
+        min-height: 500px;
+        border-radius: 5px;
+    }
 }
 h1{
     margin-bottom: 2rem;
@@ -28,14 +58,19 @@ h1{
     margin-left: 50;
     margin-right: 50;
     text-align: center;
-    padding-left: 5rem;
-    padding-right: 5rem;
 }
 
 .signUp-header{
-    padding-left: 4rem;
-    padding-right: 4rem;
-    margin-bottom: 1rem;
+    width: 80%;
+    text-align: center;
+    margin: 1rem auto;
+}
+@media (max-width: 640px) {
+    .signUp-header{
+        width: 100%;
+        text-align: center;
+        margin: 1rem auto;
+    }
 }
 .signUp-header p {
     color: #33465f;
@@ -54,8 +89,8 @@ h1{
     color: #1d2021;
 }
 .details{
-    padding-left: 4rem;
-    padding-right: 4rem;
+    width: 100%;
+    margin: auto;
 }
 .terms {
     text-align: left;
@@ -78,7 +113,7 @@ h1{
 }
 
 .sign-up {
-
+    width: 95%;
     background-image: linear-gradient(180deg, rgba(86, 98, 119, 1), rgba(86, 98, 119, 1));
     margin-bottom: 15px;
     color: #ffffff;
@@ -100,6 +135,7 @@ h1{
 
 
 .bt {
+    width: 100%;
     background-color: #ffffff;
     margin-bottom: 10px;
     border-radius: 30px;
@@ -111,7 +147,8 @@ h1{
 }
 
 .alt-login {
-    margin-bottom: 0.5rem;
+    width: 95%;
+    margin: 0.5rem auto;
 }
 
 .ft {

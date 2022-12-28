@@ -43,9 +43,23 @@ hr {
     padding-bottom: 5rem;
     margin: 3rem 3rem;
 }
-
+@media (max-width: 700px) {
+    .project-container{
+        background-color: #ffffff;
+        padding: 0 15px; 
+        padding-bottom: 5rem;
+        margin: 3rem 15px;
+    }
+    
+}
 table{
    color: #33465f;
+}
+@media (max-width: 640px) {
+    table{
+        color: #33465f;
+        font-size: 0.85rem;
+     }
 }
 table tfoot tr th{
     color: #1d2021;

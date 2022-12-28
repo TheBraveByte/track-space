@@ -18,6 +18,15 @@ body {
     color: #33465f;
     font-weight: normal;
 }
+@media (max-width: 700px) {
+    .track {
+        padding-left: 0;
+        margin-top: 2.0rem;
+        margin-bottom: 20px;
+        color: #33465f;
+        font-weight: normal;
+    }
+}
 
 hr:not([size]) {
     height: 4px;
@@ -51,7 +60,23 @@ ul li {
     margin-bottom: 3rem;
     margin-left: 3rem;
     margin-right: 3rem;
+    padding: 30px;
+    text-align: center;
+}
+@media (max-width: 700px) {
+    .workspace-container {
+        width: 100%;
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 15px;
+    }
+}
 
+.form-hold {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .form-control {
@@ -64,17 +89,16 @@ ul li {
 }
 
 .reset-submit-btn {
+    width: 100%;
     margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .workspace-foot {
     margin-top: 40px;
     text-align: center;
-}
-
-.mode-btn {
-    justify-items: left;
-
 }
 
 .workspace-foot {

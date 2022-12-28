@@ -23,8 +23,7 @@
 
 <body>
     <main>
-        <div class="row">
-            <div class="col-md-3"></div>
+        <div class="hold">
             <div class="col-md-6 set-task-container">
                 <form action="/auth/user/todo" method="post" novalidate class="needs-validation">
                     <h1>Track Space Todo</h1>
@@ -54,13 +53,13 @@
                                 autocomplete="off" />
                         </div>
                     </div>
-                    <div class="row reset-submit-btn mt-xxl-5">
-                        <div class="col-md-4 mt-5">
+                    <div class="reset-submit-btn mt-xxl-5">
+                        <div class="mt-5">
                             <button class="w-30 btn btn-md btn-back btn-dark">
                                 <a href="/auth/user/dashboard"> Back </a>
                             </button>
                         </div>
-                        <div class="col-md-4 offset-md-4 mt-5">
+                        <div class="mt-5">
                             <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
                                 Submit
                             </button>
@@ -71,7 +70,6 @@
                     <p>@akinleye_dev 2022</p>
                 </div>
             </div>
-            <div class="col-md-3"></div>
         </div>
     </main>
 </body>
@@ -108,10 +106,10 @@
         });
     }
 
-    {{ with .addTodo}}
+    { { with .addTodo} }
     notifyMsg("{{.}}", "info")
-    {{ end }}
+    { { end } }
 
-    </script>
+</script>
 
 </html>

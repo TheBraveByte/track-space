@@ -9,7 +9,7 @@
   <title>User|Show Project</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <!-- Custom CSS design -->
+  <!-- Custom CSS design -->
   <link rel="stylesheet" href="/static/css/work.css" />
   <!-- Tiny MCE editor API -->
   <script src="https://cdn.tiny.cloud/1/wxxxigs2nnc6k02msdd8p668si3yl9u6ox1bv1hmx0vk5wf0/tinymce/6/tinymce.min.js"
@@ -22,7 +22,12 @@
     background-color: #f9f9fb;
   }
 
- 
+  @media (max-width: 700px) {
+    body {
+      padding: 50px 15px;
+      background-color: #f9f9fb;
+    }
+  }
 </style>
 
 <body>
@@ -30,73 +35,71 @@
     <h2 class="track">Track space Workspace</h2>
   </div>
   <!-- <main> -->
-    <div class="workspace-container row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8 mt-xl-5">
-       
+  <div class="workspace-container">
+    <div class="mt-xl-5 form-hold">
 
-        <form action="/auth/user/project-table/show-project/{{.projectID}}/change" method="post" novalidate
-          class="needs-validation">
-          <div>
-            <p class="work-list">
-              Make modification to your previous project and keep track of new changes
-            </p>
-            <ul>
-              <li>Vet through your Code.</li>
-              <li>Check for error in your Article</li>
-              <li>Comment to explain to others</li>
-              <li>Review your document using grammarly</li>
-            </ul>
-          </div>
-          <hr />
-          <br />
-          <p class="notice">
-            Rename the project name & the type of file use in the box below
+
+      <form action="/auth/user/project-table/show-project/{{.projectID}}/change" method="post" novalidate
+        class="needs-validation">
+        <div>
+          <p class="work-list">
+            Make modification to your previous project and keep track of new changes
           </p>
+          <ul>
+            <li>Vet through your Code.</li>
+            <li>Check for error in your Article</li>
+            <li>Comment to explain to others</li>
+            <li>Review your document using grammarly</li>
+          </ul>
+        </div>
+        <hr />
+        <br />
+        <p class="notice">
+          Rename the project name & the type of file use in the box below
+        </p>
 
-          <div class="project row">
+        <div class="project row">
 
-            <div class="col">
-              <input class="form-control" type="text" name="project-name" id="project-name"
-                placeholder="Enter the name of your project" required autocomplete="off" value="{{.projectName}}" />
-            </div>
-
-            <div class="col">
-              <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
-                placeholder="Add tools used i.e text-editor,source code & comment" required autocomplete="off"
-                value="{{.toolsUseAs}}" />
-            </div>
-
+          <div class="col">
+            <input class="form-control" type="text" name="project-name" id="project-name"
+              placeholder="Enter the name of your project" required autocomplete="off" value="{{.projectName}}" />
           </div>
-          <div class="mt-xxl-5 mt-5 editor">
-            <textarea id="myTextarea" name="myText"></textarea>
+
+          <div class="col">
+            <input class="form-control" type="text" name="project-tool-use" id="project-tool-use"
+              placeholder="Add tools used i.e text-editor,source code & comment" required autocomplete="off"
+              value="{{.toolsUseAs}}" />
           </div>
 
-          <div class="reset-submit-btn row mt-xxl-5">
-            <div class="col-md-4">
-              <a href="/auth/user/project-table" class="w-40 btn btn-dark btn-md">
-                Back
-              </a>
-            </div>
-            <div class="mode-btn col-md-4 offset-md-4">
-              <button id="submit" type="submit" class="w-40 btn btn-dark btn-md">
-                Submit
-              </button>
-              <!-- will need to work on this delete button-->
-              <a href="/auth/user/project-table/{{.projectID}}/delete" type="button" class="w-40 btn btn-danger btn-md"
-                id="delete-project">
-                Delete
-              </a>
-            </div>
-          </div>
-        </form>
+        </div>
+        <div class="mt-xxl-5 mt-5 editor">
+          <textarea id="myTextarea" name="myText"></textarea>
+        </div>
 
-      </div>
-      <div class="col-md-2"></div>
-      <div class="row workspace-foot mt-xxl-5">
-        <p>TinyMCE | Akinleye_dev</p>
-      </div>
+        <div class="reset-submit-btn mt-xxl-5">
+          <div class="">
+            <a href="/auth/user/project-table" class="w-40 btn btn-dark btn-md">
+              Back
+            </a>
+          </div>
+          <div class="mode-btn">
+            <button id="submit" type="submit" class="w-40 btn btn-dark btn-md">
+              Submit
+            </button>
+            <!-- will need to work on this delete button-->
+            <a href="/auth/user/project-table/{{.projectID}}/delete" type="button" class="w-40 btn btn-danger btn-md"
+              id="delete-project">
+              Delete
+            </a>
+          </div>
+        </div>
+      </form>
+
     </div>
+    <div class="row workspace-foot mt-xxl-5">
+      <p>TinyMCE | Akinleye_dev</p>
+    </div>
+  </div>
   <!-- </main> -->
 
   <script src="/static/js/jquery-3.5.1.min.js"></script>
@@ -114,7 +117,7 @@
   <script>
     ValidateForm();
     $('#myTextarea').html('{{.projectContent}}')
-      var myContent = tinymce.activeEditor.getContent();
+    var myContent = tinymce.activeEditor.getContent();
 
   </script>
   <script>

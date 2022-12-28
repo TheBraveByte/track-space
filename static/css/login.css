@@ -3,13 +3,41 @@
 body{
     font-family: Lato,sans-serif;
     background-color: #77889e;
-
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 640px) {
+    body{
+        font-family: Lato,sans-serif;
+        background-color: #77889e;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+    }
 }
 
 .form-container{
     background-color: #ffffff;
+    width: 550px;
     min-height: 500px;
     border-radius: 5px;
+    padding-top: 10px;
+}
+@media (max-width: 640px) {
+    .form-container{
+        background-color: #ffffff;
+        width: 100%;
+        min-height: 500px;
+        border-radius: 5px;
+    }
+}
+
+.form--input {
+    width: 100%;
 }
 h1{
     margin-bottom: 2rem;
@@ -19,12 +47,8 @@ h1{
 }
 
 #login-form{
-    margin-top: 2rem;
-    margin-left: 50;
-    margin-right: 50;
+    margin: 2rem auto;
     text-align: center;
-    padding-left: 5rem;
-    padding-right: 5rem;
 }
 .signUp-header{
     padding-left: 4rem;
@@ -38,11 +62,12 @@ h1{
     font-size: 1.5rem;
 } 
 .details{
-    padding-left: 4rem;
-    padding-right: 4rem;
+    width: 75%;
+    margin: auto;
 }
 
 .sign-in {
+    width: 75%;
     background-color: #ffffff;
     margin-bottom: 10px;
     border-radius: 25px;
@@ -51,13 +76,14 @@ h1{
     justify-items: center;
     border: 3px solid #6b7d9c;
     color: #33465f;
+    margin-top: 10px;
+
 }
 
 
 .login-bt{
+    width: 100%;
     justify-items: center;
-    padding-left: 13rem;
-    padding-right: 13rem;
 }
 .sign-in:hover{
     background-color: #6b7d9c;;

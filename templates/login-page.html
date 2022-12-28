@@ -18,28 +18,28 @@
 </head>
 
 <body>
-  <div class="row align-items-center justify-content-center" id="login-form">
+  <div class="" id="login-form">
     <h1>Track-space</h1>
     <div class="col-md-3"></div>
-    <div class="col-md-6 form-container">
+    <div class="form-container">
       <form action="/login" method="post" class="needs-validation" novalidate>
         <div class="row signUp-header mt-5">
           <p>Sign in your account</p>
 
         </div>
-        <div class="row mb-3 details">
+        <div class="mb-3 details">
           <div class="mb-3">
-            <input aria-label="Email" class="form-control mb-3" name="email" placeholder="Enter Email" type="text"
-              required />
+            <input aria-label="Email" class="form-control mb-3 form--input" name="email" placeholder="Enter Email"
+              type="text" required />
           </div>
           <div class="mb-3">
-            <input aria-label="Password" class="form-control mb-3" name="password" placeholder="Enter Password"
-              type="password" required />
+            <input aria-label="Password" class="form-control mb-3 form--input" name="password"
+              placeholder="Enter Password" type="password" required />
           </div>
         </div>
 
-        <div class="row mt-3 login-bt">
-          <button class="sign-in w-30 btn btn-md" type="submit">Login</button>
+        <div class="mt-3 login-bt">
+          <button class="sign-in" type="submit">Login</button>
         </div>
         <div class="row fp mt-4">
           <div class="col-md-4">
@@ -70,13 +70,13 @@
       text: msg,
     })
   }
-  {{ with .msg}}
+  { { with .msg} }
   notifyMsg("{{.}}", "info")
-  {{ end }}
+  { { end } }
 
-  {{ with .resetMsg}}
+  { { with .resetMsg} }
   notifyMsg("{{.}}", "info")
-  {{ end }}
+  { { end } }
   ValidateForm();
 </script>
 

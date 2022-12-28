@@ -2,7 +2,7 @@
 
 body {
     font-family: Lato,sans-serif;
-
+    padding: 50px 0;
     background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
 }
 
@@ -13,6 +13,33 @@ body {
     padding-left: 5rem;
     padding-right: 5rem;
 
+}
+.hold {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 765px) {
+    body {
+        font-family: Lato,sans-serif;
+        padding: 50px 0px;
+        background-image: linear-gradient(180deg, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
+    }
+    .set-task-container {
+        background-color: #ffffff;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+       padding: 15px;
+       border-radius: 10px;
+    }    
+    .hold {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 15px;
+    }
 }
 
 h1 {
@@ -52,6 +79,13 @@ hr {
     color: #ffffff;
 }
 
+.reset-submit-btn {
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .workspace-foot {
     margin-top: 6rem;
     display: flex;
@@ -62,4 +96,11 @@ hr {
 .workspace-foot p {
     text-align: center;
     font-weight: light;
+}
+.btn--hold {
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -18,10 +18,10 @@
 
 <body>
   <main>
-    <div class="row">
-      <div class="col-md-3"></div>
+    <div class="hold">
       <div class="col-md-6 set-task-container">
-        <form action="/auth/user/todo-table/show-todo/{{.TodoID}}/change" method="post" novalidate class="needs-validation">
+        <form action="/auth/user/todo-table/show-todo/{{.TodoID}}/change" method="post" novalidate
+          class="needs-validation">
           <h1>Track Space Todo</h1>
           <hr />
           <p class="todo">
@@ -34,7 +34,8 @@
               autocomplete="off" />
 
             <label class="form-label" for="schedule-date">Set Date</label>
-            <input type="date" name="schedule-date" id="schedule-date" class=" form-control" required autocomplete="off" value="{{.DateSchedule}}" />
+            <input type="date" name="schedule-date" id="schedule-date" class=" form-control" required autocomplete="off"
+              value="{{.DateSchedule}}" />
           </div>
 
           <div class="row mt-5">
@@ -49,21 +50,24 @@
                 value="{{.EndTime}}" />
             </div>
           </div>
-          <div class="row reset-submit-btn mt-xxl-5">
+          <div class="reset-submit-btn mt-xxl-5">
             <p>click any of the button below</p>
             <p><strong>Yes</strong> - Done. <strong>No</strong> - Not done</p>
-            <div class="col-md-4">
-              <button class="w-30 btn btn-md btn-dark btn-back">
-                <a href="/auth/user/todo-table"> No </a>
-              </button>
-            </div>
-            <div class="col-md-4 offset-md-4">
-              <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
-                Yes
-              </button>
-              <a href="/auth/user/show-todo/todo-table/{{.TodoID}}/delete" type="button" class="w-40 btn btn-danger btn-md" id="delete-todo">
-                Delete
-              </a>
+            <div class="btn--hold">
+              <div>
+                <button class="w-30 btn btn-md btn-dark btn-back">
+                  <a href="/auth/user/todo-table"> No </a>
+                </button>
+              </div>
+              <div class="">
+                <button type="submit" class="w-30 btn btn-md btn-submit" id="submit-btn">
+                  Yes
+                </button>
+                <a href="/auth/user/show-todo/todo-table/{{.TodoID}}/delete" type="button"
+                  class="w-40 btn btn-danger btn-md" id="delete-todo">
+                  Delete
+                </a>
+              </div>
             </div>
           </div>
         </form>
@@ -71,7 +75,6 @@
           <p>@akinleye_dev 2022</p>
         </div>
       </div>
-      <div class="col-md-3"></div>
     </div>
   </main>
 </body>

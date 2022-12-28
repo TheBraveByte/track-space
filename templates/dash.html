@@ -2,15 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="" />
     <title>Track-space|Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
-          integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+        integrity="sha512-UrjLcAek5jbj1vwGbXkviPHtgSNVNQCedX7cBIMDdSI2iZtUcZcoTh2Sqc8R9mVcijOjFUi1IlxhfrE1uWaIog=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <script src="https://unpkg.com/feather-icons"></script>
 
     <link rel="stylesheet" href="/static/css/dash.css" />
@@ -34,6 +35,7 @@
             display: block;
 
         }
+
         #doughnut svg {
             margin-left: auto;
             margin-right: auto;
@@ -52,6 +54,7 @@
             display: flex;
             align-items: center;
         }
+
         .doughnut-label {
             width: fit-content;
             height: 50%;
@@ -64,6 +67,7 @@
             flex-direction: column;
             gap: 10px;
         }
+
         .chart-label {
             width: 90%;
             background-color: #fcfcfd;
@@ -74,6 +78,7 @@
             display: flex;
             gap: 10px;
         }
+
         .chart-label-cont {
             width: fit-content;
             padding: 5px 20px;
@@ -84,194 +89,221 @@
             flex-direction: column;
             align-items: center;
         }
-        .chart-label-cont > p {
+
+        .chart-label-cont>p {
             margin: 0;
             font-weight: 600;
             font-size: 0.85rem;
         }
+
         .total {
             font-size: 0.75rem;
             font-weight: 900;
             margin-top: -5px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-label {
+                width: 100%;
+                background-color: #fcfcfd;
+                margin: 20px auto;
+                padding: 8px;
+                border: 1px solid lightgrey;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .chart-label-cont {
+                width: fit-content;
+                padding: 5px 18px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                background-color: #e2e8f0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<header class="navbar sticky-top flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Track-space</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+    <header class="navbar sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Track-space</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</header>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </header>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-            <div class="position-sticky pt-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/auth/user/dashboard">
-                            <i data-feather="activity"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/user/workspace">
-                            <i data-feather="folder-plus"></i>
-                            Add Project
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/user/todo">
-                            <i data-feather="calendar"></i>
-                            Set Todo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/user/project-table">
-                            <i data-feather="folder"></i>
-                            Projects
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/user/todo-table">
-                            <i data-feather="calendar"></i>
-                            Schedule Plans
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/user/chat">
-                            <i data-feather="message-square"></i>
-                            Chatroom
-                        </a>
-                    </li>
-                    <li class="nav-item mt-xxl-5">
-                        <a class="nav-link" href="/auth/user/logout">
-                            <i data-feather="log-out"></i>
-                            Log out
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/auth/user/dashboard">
+                                <i data-feather="activity"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/user/workspace">
+                                <i data-feather="folder-plus"></i>
+                                Add Project
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/user/todo">
+                                <i data-feather="calendar"></i>
+                                Set Todo
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/user/project-table">
+                                <i data-feather="folder"></i>
+                                Projects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/user/todo-table">
+                                <i data-feather="calendar"></i>
+                                Schedule Plans
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/auth/user/chat">
+                                <i data-feather="message-square"></i>
+                                Chatroom
+                            </a>
+                        </li>
+                        <li class="nav-item mt-xxl-5">
+                            <a class="nav-link" href="/auth/user/logout">
+                                <i data-feather="log-out"></i>
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h3 class="">Dashboard</h3>
-                <div class="">
-                    <p>
-                        <i data-feather="user" class="feather-20"></i>
-                        {{.FirstName}} {{.LastName}}
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="mb-2">
-                    <h4>
-                        <i data-feather="activity" class="feather-24"></i>
-                        Your workflow stat
-                    </h4>
-                </div>
-
-                <div>
-                    <!--line chart label-->
-                    <div class="chart-label">
-                        <div class="chart-label-cont">
-                            <p>Article</p>
-                            <div id="article" class="total"><span>Total:</span></div>
-                        </div>
-                        <div class="chart-label-cont">
-                            <p>Code</p>
-                            <div id="code" class="total"><span>Total:</span></div>
-                        </div>
-                        <div class="chart-label-cont">
-                            <p>Text</p>
-                            <div id="text" class="total"><span>Total:</span></div>
-                        </div>
-                        <div class="chart-label-cont">
-                            <p>Todo</p>
-                            <div id="todo" class="total"><span>Total:</span></div>
-                        </div>
+                    <h3 class="">Dashboard</h3>
+                    <div class="">
+                        <p>
+                            <i data-feather="user" class="feather-20"></i>
+                            {{.FirstName}} {{.LastName}}
+                        </p>
                     </div>
-                    <!--line chart label-->
-                    <div class="chart"></div>
+
                 </div>
 
-                <div class="doughnut-cont">
-                    <!--line chart label-->
-                    <div class="doughnut-label">
-                        <div class="chart-label-cont">
-                            <p>Total:</p>
-                            <div id="total" class="total"></div>
-                        </div>
+                <div class="row">
+                    <div class="mb-2">
+                        <h4>
+                            <i data-feather="activity" class="feather-24"></i>
+                            Your workflow stat
+                        </h4>
                     </div>
-                    <!--line chart label-->
-                    <div id="doughnut"></div>
-                </div>
-            </div>
 
-        </main>
+                    <div>
+                        <!--line chart label-->
+                        <div class="chart-label">
+                            <div class="chart-label-cont">
+                                <p>Article</p>
+                                <div id="article" class="total"><span>Total:</span></div>
+                            </div>
+                            <div class="chart-label-cont">
+                                <p>Code</p>
+                                <div id="code" class="total"><span>Total:</span></div>
+                            </div>
+                            <div class="chart-label-cont">
+                                <p>Text</p>
+                                <div id="text" class="total"><span>Total:</span></div>
+                            </div>
+                            <div class="chart-label-cont">
+                                <p>Todo</p>
+                                <div id="todo" class="total"><span>Total:</span></div>
+                            </div>
+                        </div>
+                        <!--line chart label-->
+                        <div class="chart"></div>
+                    </div>
+
+                    <div class="doughnut-cont">
+                        <!--line chart label-->
+                        <div class="doughnut-label">
+                            <div class="chart-label-cont">
+                                <p>Total:</p>
+                                <div id="total" class="total"></div>
+                            </div>
+                        </div>
+                        <!--line chart label-->
+                        <div id="doughnut"></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
     </div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
         integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
         crossorigin="anonymous"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.js"
         integrity="sha512-NHRCwRf2LnVSlLDejCA9oS3fG3/FLSQIPCjAWl3M7tVi5wszwr6FxkjotWnQDXLE+aLKcxRrzFDNEgXj9nvkPw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-//to display the label data*
-<script src="/static/js/dash_label.js"></script>
+    //to display the label data*
+    <script src="/static/js/dash_label.js"></script>
 
-<script>
-    feather.replace({ "aria-hidden": "true" });
-</script>
-<script type="module" src="/static/js/line-chart.js"></script>
-<script type="module" src="/static/js/doughnut.js"></script>
-<script>
-    function notifyMsg(msg, type) {
-        notie.alert({
-            type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-            text: msg,
-            position: 'bottom',
-        });
-    }
+    <script>
+        feather.replace({ "aria-hidden": "true" });
+    </script>
+    <script type="module" src="/static/js/line-chart.js"></script>
+    <script type="module" src="/static/js/doughnut.js"></script>
+    <script>
+        function notifyMsg(msg, type) {
+            notie.alert({
+                type: type, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+                text: msg,
+                position: 'bottom',
+            });
+        }
 
-    {{ with .updateProject}}
-    notifyMsg("{{.}}", "info")
-    {{ end }}
+        { { with .updateProject} }
+        notifyMsg("{{.}}", "info")
+        { { end } }
 
-    {{ with .deleteProject}}
-    notifyMsg("{{.}}", "warning")
-    {{ end }}
+        { { with .deleteProject} }
+        notifyMsg("{{.}}", "warning")
+        { { end } }
 
-    {{ with .deleteTodo}}
-    notifyMsg("{{.}}", "warning")
-    {{ end }}
+        { { with .deleteTodo} }
+        notifyMsg("{{.}}", "warning")
+        { { end } }
 
-    {{ with .updateTodo}}
-    notifyMsg("{{.}}", "info")
-    {{ end }}
-</script>
+        { { with .updateTodo} }
+        notifyMsg("{{.}}", "info")
+        { { end } }
+    </script>
 
 </body>
 
