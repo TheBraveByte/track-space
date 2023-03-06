@@ -2,12 +2,29 @@
 
 * {
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 body {
     background: #77889e;
     font-family: Lato,sans-serif;
+    padding: 10px;
+}
 
+@media (max-width: 765px) {
+    body {
+        background: #77889e;
+        font-family: Lato,sans-serif;
+        padding: 25px;
+    }
+    .chat-container {
+        margin-top: 2rem;
+        background-color: #ffffff;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: 8px;
+    
+    }
 }
 
 .chat-container {
