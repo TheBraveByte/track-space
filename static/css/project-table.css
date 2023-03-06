@@ -1,6 +1,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
+* {
+    overflow-x: hidden;
+}
 body{
     font-family: Lato,sans-serif;
     background-image: linear-gradient(to right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));
@@ -54,12 +57,18 @@ hr {
 }
 table{
    color: #33465f;
+   display: block;
+   overflow-x: auto;
+   white-space: nowrap;
 }
 @media (max-width: 640px) {
     table{
         color: #33465f;
         font-size: 0.85rem;
-     }
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;    
+    }
 }
 table tfoot tr th{
     color: #1d2021;

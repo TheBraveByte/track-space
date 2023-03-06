@@ -6,6 +6,9 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
+* {
+    overflow-x: hidden;
+}
 body {
     font-family: Lato,sans-serif;
     background-image: linear-gradient(to right, rgba(198, 201, 206, 1), rgba(86, 98, 119, 1));

@@ -2,9 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
     <meta name="description" content="" />
     <title>Track-space|Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css"
@@ -19,6 +20,10 @@
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <style>
+        * {
+            overflow-x: hidden;
+        }
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
@@ -124,6 +129,19 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+            }
+
+            .doughnut-label {
+                min-width: fit-content;
+                height: 50%;
+                background-color: #fcfcfd;
+                padding: 12px;
+                margin-right: 10px;
+                border: 1px solid lightgrey;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
