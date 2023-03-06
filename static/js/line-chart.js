@@ -34,6 +34,7 @@ fetch('/static/json/data.json')
                 .style("background-color", "#fcfcfd")
                 .style("border-radius", "10px")
                 .style("border", "1px solid lightgrey")
+                .style("font-size", "1rem")
 
 
             //setting the x and y-axis
@@ -56,14 +57,14 @@ fetch('/static/json/data.json')
                 .text((item) => `Article: ${item["article"]}, Code: ${item["code"]}, Text: ${item["text"]}`);
 
             // line chart title
-            svg.append('text')
-                .attr('x', width/2 )
-                .attr('y', 440)
-                .attr('text-anchor', 'middle')
-                .style('font-family', 'Lato')
-                .style('font-size', 16)
-                .style('font-weight', 900)
-                .text('Line chart');
+            // svg.append('text')
+            //     .attr('x', width/2 )
+            //     .attr('y', 440)
+            //     .attr('text-anchor', 'middle')
+            //     .style('font-family', 'Lato')
+            //     .style('font-size', 16)
+            //     .style('font-weight', 900)
+            //     .text('Line chart');
 
             let line = d3.line()
                 .x((item) => xScale(xAccessor(item)))
