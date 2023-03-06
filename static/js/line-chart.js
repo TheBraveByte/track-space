@@ -5,9 +5,9 @@ fetch('/static/json/data.json')
     .then(jsondata => data = jsondata)
     .then(() => {
             //to set the width, height and padding of the svg
-            let width = 350; //900
-            let height = 190; //450
-            let padding = 25; //50
+            const width = 900;
+            const height = 450;
+            const padding = 50;
 
             //to set the x scale/axis
 
@@ -30,8 +30,7 @@ fetch('/static/json/data.json')
             //appending svg tag to the chart div
             const svg = d3.select(".chart")
                 .append("svg")
-                .attr("width", '90%')
-                .attr("height", height)
+                .attr("viewBox", `0 0 ${height} ${width}`)
                 .style("background-color", "#fcfcfd")
                 .style("border-radius", "10px")
                 .style("border", "1px solid lightgrey")
