@@ -36,7 +36,7 @@ fetch('/static/json/data.json')
 
         // shape helper to build arcs:
         let arcGenerator = d3.arc()
-            .innerRadius(100)
+            .innerRadius(50)
             .outerRadius(radius)
             .cornerRadius(10);
 
