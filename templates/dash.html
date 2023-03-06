@@ -43,6 +43,14 @@
 
         }
 
+        #doughnut svg {
+            width: 100%;
+            height: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
         .chart {
             min-width: 300px;
             max-width: fit-content;
@@ -57,25 +65,25 @@
             max-height: fit-content;
         }
 
-        #doughnut svg {
-            width: 100%;
-            height: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-
         .feather-20 {
             width: 20px;
             height: 20px;
         }
 
         .doughnut-cont {
-            /* width: 90%; */
+            width: 90%;
             margin: 50px auto;
             display: flex;
             /* align-items: center; */
-            /* border: 1px solid red; */
+            border: 1px solid red;
+        }
+
+        .chart-cont {
+            width: 90%;
+            margin: 50px auto;
+            display: flex;
+            /* align-items: center; */
+            border: 1px solid red;
         }
 
         .doughnut-label {
@@ -291,7 +299,9 @@
                             </div>
                         </div>
                         <!--line chart label-->
-                        <div class="chart"></div>
+                        <div class="chart-cont">
+                            <div class="chart"></div>
+                        </div>
                     </div>
 
                     <!-- class="doughnut-cont" -->

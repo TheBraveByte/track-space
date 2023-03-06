@@ -5,9 +5,9 @@ fetch('/static/json/data.json')
     .then(jsondata => data = jsondata)
     .then(() => {
         // set the dimensions and margins of the graph
-        let width = 500;
-        let height = 500;
-        let margin = 40;
+        let width = 350; //400
+        let height = 350; //400
+        let margin = 40; //40
 
         // The radius of the pie-plot is half the width or half the height (the smallest one). I subtract a bit of margin.
         let radius = Math.min(width, height) / 2 - margin
@@ -36,7 +36,7 @@ fetch('/static/json/data.json')
 
         // shape helper to build arcs:
         let arcGenerator = d3.arc()
-            .innerRadius(50)
+            .innerRadius(width/3)
             .outerRadius(radius)
             .cornerRadius(10);
 
