@@ -5,9 +5,9 @@ fetch('/static/json/data.json')
     .then(jsondata => data = jsondata)
     .then(() => {
             //to set the width, height and padding of the svg
-            const width = 900;
-            const height = 450;
-            const padding = 50;
+            const width = 300;
+            const height = 180;
+            const padding = 25;
 
             //to set the x scale/axis
 
