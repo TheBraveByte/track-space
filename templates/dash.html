@@ -37,22 +37,22 @@
         .chart svg {
             width: 100%;
             height: auto;
-            margin-left: auto;
-            margin-right: auto;
+            /* margin-left: auto;
+            margin-right: auto; */
             display: block;
 
         }
 
         #doughnut svg {
             width: 100%;
-            height: 100%;
-            margin-left: auto;
-            margin-right: auto;
+            height: auto;
+            /* margin-left: auto;
+            margin-right: auto; */
             display: block;
         }
 
         .chart {
-            width: 70%;
+            width: 500px;
             height: auto;
             /* min-width: 300px;
             max-width: fit-content;
@@ -61,10 +61,12 @@
         }
 
         #doughnut {
-            min-width: 300px;
+            width: 500px;
+            height: auto;
+            /* min-width: 300px;
             max-width: fit-content;
             min-height: 300px;
-            max-height: fit-content;
+            max-height: fit-content; */
         }
 
         .feather-20 {
@@ -137,25 +139,37 @@
 
         @media (max-width: 768px) {
             .chart {
-                min-width: 250px;
+                width: 100%;
+                height: fit-content;
+                /* min-width: 250px;
                 max-width: 100%;
                 min-height: 250px;
-                max-height: fit-content;
+                max-height: fit-content; */
             }
 
             #doughnut {
                 margin-top: 30px;
-                min-width: 250px;
+                width: 100%;
+                height: fit-content;
+                /* min-width: 250px;
                 max-width: 100%;
                 min-height: 250px;
-                max-height: fit-content;
+                max-height: fit-content; */
             }
 
             .doughnut-cont {
-                /* width: 90%; */
+                width: 90%;
                 margin: 50px auto;
                 display: block;
                 /* border: 1px solid red; */
+            }
+
+            .chart-cont {
+                width: 90%;
+                margin: 50px auto;
+                display: block;
+                /* align-items: center; */
+                border: 1px solid red;
             }
 
             .chart-label {

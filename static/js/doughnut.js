@@ -15,8 +15,7 @@ fetch('/static/json/data.json')
         // append the svg object to the div called 'doughnut'
         let svg = d3.select("#doughnut")
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("viewBox", `0 0 ${width} ${height}`)
             .append("g")
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
