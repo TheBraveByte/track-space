@@ -30,7 +30,7 @@ fetch('/static/json/data.json')
             //appending svg tag to the chart div
             const svg = d3.select(".chart")
                 .append("svg")
-                .attr("viewBox", `0 0 ${height} ${width}`)
+                .attr("viewBox", `0 0 ${width} ${height}`)
                 .style("background-color", "#fcfcfd")
                 .style("border-radius", "10px")
                 .style("border", "1px solid lightgrey")

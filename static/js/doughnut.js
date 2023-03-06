@@ -5,8 +5,8 @@ fetch('/static/json/data.json')
     .then(jsondata => data = jsondata)
     .then(() => {
         // set the dimensions and margins of the graph
-        let width = 400;
-        let height = 400;
+        let width = 500;
+        let height = 500;
         let margin = 40;
 
         // The radius of the pie-plot is half the width or half the height (the smallest one). I subtract a bit of margin.
