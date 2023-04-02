@@ -1,20 +1,25 @@
 # Track-space
 
-Track-space is a project management monolithic web application which serve as a workspace for professionals ranging from technical to non-technical field such as software developers,data analyst,writers as well as set their future schedule plans and a secured interactive space to communicate with others.
+### Introduction
 
-### Steps to start Track-space application
+Track-space is a monolithic web application that provides a workspace for professionals from different fields. It includes features for collaboration, communication, and task management, enabling teams to stay organized and on track with their projects.
 
-    i. Make sure you have the Go Complier 1.18.3+ installed on your machine
+### Prerequisites
+Before running the Track-space application, ensure that your machine has Go Compiler version 1.18.3 or higher installed. This ensures that the application runs smoothly without any errors.
 
-    ii. Go to the terminal make sure you are in the right directory of the application.
+### Installation
+* To Clone the Track-space repository from GitHub onto your local machine.
+* Open a terminal and navigate to the directory where the application is stored.
+* Run the command go mod tidy in the terminal to update all the third-party packages and libraries required to run the application. Make sure that you are connected to the internet.
+* Run the command go mod tidy again in the terminal to synchronize all the dependencies.
+* Google mail server is integrated using goroutines
+* Run the script run.sh in the terminal by typing ./run.sh. This script builds and runs the application simultaneously on your machine (PC).
+* Open your favorite web browser and visit the URL http://localhost:8080 to access the Track-space application on a local server.
 
-    iii. Type go mod tidy and press Enter to update all the third party packages and libraries (Be connected to the internet)
+### Conclusion
 
-    iv. Type go mod tidy and press Enter to sync all the dependencies
+By following the above steps, you should be able to successfully run Track-space on your local machine. The application offers a wide range of features for professionals, such as collaboration, communication, and task management, that can help streamline and optimize project workflows. Check out the application and see how it can benefit your team!
 
-    v. Type mailhog in the terminal and press enter to start the local mail server in the terminal to avoid future error which running the application.
+### Notice
 
-    vi. Type ./run.sh and press Enter to build and run the application at the same time on you machine(PC)
-
-    vii. Lastly, go to you favourite web browser and search for localhost:8080 then press Enter. You have successfully start the application on a local server on your machine. Goodluck & Enjoy.
-
+To prevent future errors when running the application, it's necessary to set up a local mail server. If you're using Google mail server, you don't need to use mailhog. Instead, you should configure the application to use your Google mail server settings
