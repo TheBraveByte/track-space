@@ -1,87 +1,46 @@
 # WS
 
-WS is a package that import WSconfig package which provides a WebSocket connection setup on the server side with Gorilla. It allows you to easily create and manage WebSocket connections for your applications.
-
-### Installation
-To install Wesocket package, you can use the go get command:
-
-go get github.com/gorilla/websocket
-
-### Usage
-To use WSConfig, you first need to import it into your Go program:
-go get github.com/yusuf/pkg/wsconfig
-
-```go
-conn, err := wsconfig.New(url)
-if err != nil {
-    log.Fatal(err)
-}
-defer conn.Close()
-The url argument is a string that specifies the URL of the WebSocket server.
-
-Once you have established a connection, you can send and receive messages using the WriteMessage and ReadMessage functions:
-
-lua
-Copy code
-err = conn.WriteMessage(websocket.TextMessage, []byte("Hello, world!"))
-if err != nil {
-    log.Fatal(err)
-}
-
-_, message, err := conn.ReadMessage()
-if err != nil {
-    log.Fatal(err)
-}
-fmt.Println(string(message))
-```
+Package **ws** provides a basic implementation of a websocket server. It uses the Gorilla WebSocket library to handle the websocket communication. The package is used to initialize the websocket connection and channel, upgrade the ChatRoom controller with a web socket connection, get data via a channel, and send back response data to the channel.
 
 ### Features
 
-#### WSConfig provides the following features:
+* **UpgradeSocketConn**: variable to upgrade ChatRoom controller with a web socket connection.
 
-#### WebSocket connection setup
-WSConfig makes it easy to set up WebSocket connections on the server side with Gorilla. You can create a new connection by calling the wsconfig.New function.
+* **GetDataFromChannel()**: goroutine method that will get payload data via channel.
 
-#### Message sending and receiving
-Once you have established a connection, you can send and receive messages using the WriteMessage and ReadMessage functions.
+* **GetAllUsers()**: function that returns a list of users connected to the websocket.
 
-#### Connection closing
-WSConfig provides a Close function that can be used to close the WebSocket connection when you are finished with it. This function should be called in a defer statement to ensure that the connection is always properly closed.
+* **BroadCastToAll(resp wsmodel.SocketResponse)**: function that writes a response to all connected users.
 
-Examples
-Here's an example of using WSConfig to create a WebSocket connection:
+* **SendDataToChannel(socketConn *wsconfig.SocketConnection)**: goroutine method that will send back response data back to the channel.
+
+### Usage
+To use the package, import it in your application:
 
 ```go
-
-package main
-
 import (
-    "fmt"
-    "log"
-
-    "github.com/username/wsconfig"
-    "github.com/gorilla/websocket"
+	"github.com/yusuf/track-space/pkg/ws"
 )
 
-func main() {
-    url := "ws://localhost:8080/ws"
-    conn, err := wsconfig.New(url)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer conn.Close()
+// To upgrade the ChatRoom controller with a web socket connection, use the UpgradeSocketConn variable:
 
-    err = conn.WriteMessage(websocket.TextMessage, []byte("Hello, world!"))
+
+http.HandleFunc("/chat-room", func(w http.ResponseWriter, r *http.Request) {
+    conn, err := ws.UpgradeSocketConn.Upgrade(w, r, nil)
     if err != nil {
-        log.Fatal(err)
+        log.Println(err)
+        return
     }
 
-    _, message, err := conn.ReadMessage()
-    if err != nil {
-        log.Fatal(err)
-    }
-    fmt.Println(string(message))
-}
+    // Handle the websocket connection
+    go ws.SendDataToChannel(wsconfig.NewSocketConnection(conn))
+    go ws.GetDataFromChannel()
+})
+
 ```
-#### Contributing
-If you find a bug or would like to contribute to WSConfig, please submit an issue or a pull request on the GitHub repository: https://github.com/username/wsconfig.
+
+In the above example, `SendDataToChannel` and `GetDataFromChannel` are used to handle the websocket communication.
+
+### Contributions
+
+Contributions to the package are welcome. You can submit an issue to report a bug or suggest an enhancement. You can also fork the package and submit a pull request with your changes.
